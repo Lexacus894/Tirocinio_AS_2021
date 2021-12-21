@@ -107,7 +107,7 @@ public ArrayList<nomiCombinazioni> listaCombinazioni = new  ArrayList<nomiCombin
 	
 	
 	public  ArrayList<nomiCombinazioni> procedura() throws IOException, InterruptedException{
-		String csvFile = "C:\\Users\\alex8\\Desktop\\DP\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\predictions\\combinations_to_test.csv";
+		String csvFile = "C:\\Users\\alex8\\Documents\\GitHub\\Tirocinio_AS_2021\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\combinations_to_test.csv";
 	    String line = "";
 
 	    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {

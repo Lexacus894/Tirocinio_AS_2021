@@ -218,8 +218,8 @@ public class Parser {
 			}	
 			else if (ptype.equals("command")) {
 				if(visitor==true) {
-					ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
-					compilation.accept(visitor2);
+					//ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
+					//compilation.accept(visitor2);
 				} 
 				else {
 					ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);

@@ -3,8 +3,8 @@
 	      package it.unisa.javat;
 	          
 	      public class VersionBuild {
-	        static final public String buildnum = "975";
+	        static final public String buildnum = "977";
 	        static final public String builduser = "alex8";
-	        static final public String builddate = "21-12-2021 16:30:23";  
+	        static final public String builddate = "21-12-2021 17:03:53";  
 	      }
 	      

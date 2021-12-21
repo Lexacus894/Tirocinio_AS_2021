@@ -240,7 +240,7 @@ public class Process {
 			}
 		
 		//Feature extraction combinazioni per Observer
-		else if (bool==true) {
+		else if (bool==true && isObs==true) {
 			
 		    try {
 				Info(true);
