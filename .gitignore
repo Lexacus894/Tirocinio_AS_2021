@@ -30,3 +30,6 @@ GeneratoreFeature/JavaT/DATASET.csv
 GeneratoreFeature/JavaT/DATASET_OBS.csv
 GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_to_test.csv
 GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/roles_predictions.csv
+GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/roles_predictions.csv
+GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_to_test.csv
+GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_mokup.csv

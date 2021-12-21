@@ -574,7 +574,7 @@ _projectName = path;
 			}
 			else if (r.equals("4")) {
 				BatchCommand bc2 = new BatchCommand();
-				bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe C:\\Users\\alex8\\Desktop\\DP\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\InstancesClassifierTester.py");
+				bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe C:\\Users\\alex8\\Documents\\GitHub\\Tirocinio_AS_2021\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\InstancesClassifierTester.py");
 			}
 			else if (r.equals("5")) {
 				bool=false;
