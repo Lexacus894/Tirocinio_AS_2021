@@ -132,7 +132,7 @@ public class Process {
 			System.out.println("-------------FINE Process -----------------");
 			
 			
-			filename="DATASET.csv";
+			filename="DATASET_OBS.csv";
 			
 			
 			
@@ -224,7 +224,7 @@ public class Process {
 				System.out.println("-------------FINE Process -----------------");
 				
 				
-				filename="DATASET_OBS.csv";
+				filename="DATASET_COM.csv";
 				
 				
 				
