@@ -548,7 +548,13 @@ _projectName = path;
 		
 		//Selezione fase da eseguire
 		while (!r.equals("6")) {
-			Utils.print("Inserire un numero corrispondente alla fase che si vuole eseguire:\n 1 - Estrazione feature dei ruoli\n 2 - Classificazione dei ruoli\n 3 - Estrazione feature delle combinazioni\n 4 - Classificazione delle istanze\n 5 - Estrazione feature dei ruoli Command\n 6 - Fine esecuzione");
+			Utils.print("Inserire un numero corrispondente alla fase che si vuole eseguire:\n "
+					+ "1 - Estrazione feature dei ruoli Observer\n "
+					+ "2 - Classificazione dei ruoli Observer\n "
+					+ "3 - Estrazione feature delle combinazioni Observer\n "
+					+ "4 - Classificazione delle istanze Observer\n "
+					+ "5 - Estrazione feature dei ruoli Command\n "
+					+ "6 - Fine esecuzione");
 			r=sc.nextLine();
 			
 			if (r.equals("1")) {
@@ -558,7 +564,7 @@ _projectName = path;
 			}
 			else if (r.equals("2")) {
 				BatchCommand bc = new BatchCommand();
-				bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe C:\\Users\\alex8\\Desktop\\DP\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\RolesClassifierTester.py");
+				bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe C:\\Users\\alex8\\Documents\\GitHub\\Tirocinio_AS_2021\\GeneratoreFeature\\JavaT\\OBSClassifier\\tester\\RolesClassifierTester.py");
 				
 			}
 			else if (r.equals("3")) {
