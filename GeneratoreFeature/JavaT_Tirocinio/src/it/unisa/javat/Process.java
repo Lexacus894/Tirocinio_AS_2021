@@ -239,7 +239,7 @@ public class Process {
 			}
 		
 		//Estrazione feature delle combinazioni (Observer)
-		else if (bool==true) {
+		else if (bool==true && dptype.equals("obs")) {
 			
 		    try {
 				Info(true);
@@ -356,7 +356,128 @@ _projectName = path;
             creaCSV3(filename);
 		    
 		 
-		} //fine else boole=true
+		} //fine else bool=true
+		
+		//Estrazione feature delle combinazioni (Command)
+		else if(bool==true && dptype.equals("com")) {
+			
+		    try {
+				Info(true);
+				
+				
+
+				
+					 
+				 listaFeature3 = new ArrayList<Feature3>();
+					 
+			     Lettura lettura = new Lettura();
+			     listaCombinazioni= lettura.procedura();
+			     
+			     for (nomiCombinazioni nomi : listaCombinazioni) {
+			    	 Feature3 elemento= analisi(nomi);
+			    	 listaFeature3.add(elemento);
+			    	 System.out.println(nomi.toString());
+			     }
+			     listaFeature=new ArrayList<Feature>();
+				    
+				    listaFeature=new ArrayList<Feature>();
+
+				    for (nomiCombinazioni nomi : listaCombinazioni) {
+				    	Utils.print(nomi.toString());
+				    }
+				   
+			        System.out.println("-------------ArrayList Feature  CREATO -----------------");
+				    
+				   
+			     
+
+				    _params = new Parameters(args, this.getClass().getName());
+					_params.print();
+					
+					
+					for(int i=0;i<listaFeature3.size();i++) {
+				    	Feature3 riga= listaFeature3.get(i);
+				    	Utils.print(riga.toString());
+					}
+					
+					
+					
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+String path=_params.getProjectPath();
+String _projectDir;
+String _projectName;
+
+int pos = path.lastIndexOf(File.separator);
+if (pos > -1) {
+_projectDir = path.substring(0, pos);
+_projectName = path.substring(pos + 1);
+} else {
+_projectDir = ".";
+_projectName = path;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+					
+					
+					
+
+					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+					_project.print();
+								
+					List<String> files = _project.getSourceFiles();
+					for(String s: files) {
+						Utils.print("Source file:"+s);
+					}
+
+					_parser = new Parser(_params.getJavaVersion());
+					_parser.addClasspath(_project.getSourcePath());
+					_parser.addClasspaths(_project.getBinaryPath());
+					_parser.addClasspaths(_project.getLibraryPath());
+					_parser.print();
+				 
+			
+					
+					 
+					for (String s : files) {
+						try {	
+							System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+
+									_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
+									
+									String folder = s;
+									String nomeProgetto=_project.getProjectName();
+
+
+									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
+									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
+									//break;
+								
+						} catch (LocalException e) {
+							Utils.print(e);
+						}			
+					}	
+
+			
+			
+			
+		} catch (LocalException e) {
+			Utils.print(e);
+		}//fine Catch
+		    
+			filename="Combination_to_test_MIO.csv";
+            creaCSV3(filename);
+		    
+		 
+		}
+		
 
 	
 	}	//fineProcess
@@ -559,34 +680,48 @@ _projectName = path;
 					);
 			r=sc.nextLine();
 			
-			
-			if (r.equals("1")) { //Estrazione feature dei ruoli (Observer)
+			//OBSERVER - ESTRAZIONE FEATURE DEI RUOLI - OBSERVER
+			if (r.equals("1")) { 
+				bool=false;
 				dptype="obs";
 				new Process(args);
 			}
+			
+			//OBSERVER - CLASSIFICAZIONE DEI RUOLI - OBSERVER
 			else if (r.equals("2")) {
 				BatchCommand bc = new BatchCommand();
 				bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
 			}
+			
+			//OBSERVER - ESTRAZIONE FEATURE DELLE COMBINAZIONI - OBSERVER
 			else if (r.equals("3")) {
 				bool=true;
+				dptype="obs";
 			    new Process(args);
 			}
+			
+			//OBSERVER - CLASSIFICAZIONE DELLE ISTANZE - OBSERVER
 			else if (r.equals("4")) {
 				BatchCommand bc2 = new BatchCommand();
 				bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
 			}
+			
+			//COMMAND - ESTRAZIONE FEATURE DEI RUOLI - COMMAND
 			else if (r.equals("5")) {
+				bool=false;
+				dptype="com";
 				//new Process(args);
 				Utils.print("Non ancora implementato.");
 			}
+			
 			else if (r.equals("6")) {
 				//BatchCommand bc = new BatchCommand();
 				//bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
 				Utils.print("Non ancora implementato.");
 			}
 			else if (r.equals("7")) {
-				//bool=true;
+				bool=true;
+				dptype="com";
 			    //new Process(args);
 				Utils.print("Non ancora implementato.");
 			}

@@ -1,3 +1,9 @@
 
 GeneratoreFeature/JavaT_Tirocinio/DATASET.csv
 GeneratoreFeature/JavaT_Tirocinio/DATASET_OBS.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/combinations_mokup.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/combinations_to_test.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/instances_predictions.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/roles_predictions.csv
+GeneratoreFeature/JavaT_Tirocinio/predictions/combinations_mokup.csv
+GeneratoreFeature/JavaT_Tirocinio/softwares/TestSoftware.csv
