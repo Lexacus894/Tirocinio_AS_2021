@@ -30,6 +30,7 @@ public class Process {
 	ArrayList<Feature> listaFeature;
 	private String filename;
 	static boolean bool=false;
+	static String dptype="";
 	ArrayList<nomiCombinazioni> listaCombinazioni;
 	ArrayList<Feature3> listaFeature3;
 
@@ -53,8 +54,8 @@ public class Process {
 	
 	public Process(String[] args) throws IOException, InterruptedException {
 		
-		
-		if (bool==false) {
+		//Estrazione feature dei ruoli (Observer)
+		if (bool==false && dptype.equals("obs")) {
 		try {
 			Info(true);
 			
@@ -130,7 +131,7 @@ public class Process {
 			System.out.println("-------------FINE Process -----------------");
 			
 			
-			filename="DATASET.csv";
+			filename="DATASET_OBS.csv";
 			
 			
 			
@@ -143,7 +144,102 @@ public class Process {
 			Utils.print(e);
 			System.exit(1);
 		}
-		} else if (bool==true) {
+		}
+		
+		//Estrazione feature dei ruoli (Command)
+		else if (bool==false && dptype.equals("com")) {
+			try {
+				Info(true);
+				
+				
+			
+				//Crea ArrayList per inserire i vettori di Feature 
+				//DOBBIAMO PORTARLO NEL CLASSVISITOR DEVO SOLO CAPIRE COME 
+			    listaFeature=new ArrayList<Feature>();
+			    
+			    System.out.println("-------------ArrayList Feature  CREATO -----------------");
+			    
+				
+			    _params = new Parameters(args, this.getClass().getName());
+				_params.print();
+				
+			
+				
+				String path=_params.getProjectPath();
+				String _projectDir;
+				String _projectName;
+				
+				int pos = path.lastIndexOf(File.separator);
+				if (pos > -1) {
+					_projectDir = path.substring(0, pos);
+					_projectName = path.substring(pos + 1);
+				} else {
+					_projectDir = ".";
+					_projectName = path;
+				}
+				
+				
+				
+				
+				_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+				_project.print();
+							
+				List<String> files = _project.getSourceFiles();
+				for(String s: files) {
+					Utils.print("Source file:"+s);
+				}
+
+				_parser = new Parser(_params.getJavaVersion());
+				_parser.addClasspath(_project.getSourcePath());
+				_parser.addClasspaths(_project.getBinaryPath());
+				_parser.addClasspaths(_project.getLibraryPath());
+				_parser.print();
+				
+				System.out.println("-------------DOVE SONO ?? -----------------");
+				
+				
+			
+				 
+				for (String s : files) {
+					try {	
+						System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+
+								_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
+								
+								String folder = s;
+								String nomeProgetto=_project.getProjectName();
+
+								//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
+								_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
+								//break;
+							
+					} catch (LocalException e) {
+						Utils.print(e);
+					}			
+				}	
+
+				//String fileName = "Dataset.csv";
+			    //creafileCSV(fileName);
+				System.out.println("-------------FINE Process -----------------");
+				
+				
+				filename="DATASET_COM.csv";
+				
+				
+				
+				creaCSV(filename);
+				
+				
+
+				Info(false);
+			} catch (LocalException e) {
+				Utils.print(e);
+				System.exit(1);
+			}
+			}
+		
+		//Estrazione feature delle combinazioni (Observer)
+		else if (bool==true) {
 			
 		    try {
 				Info(true);
@@ -330,7 +426,7 @@ _projectName = path;
 
 	          }
 
-	          System.out.println("CSV file Ã¨ stato creato con successo !!!");
+	          System.out.println("Il file CSV (" + fileName + ") è stato creato con successo!");
 
 
 		} catch(Exception e) {
@@ -408,7 +504,7 @@ _projectName = path;
 
 	          }
 
-	          System.out.println("CSV file Ã¨ stato creato con successo !!!");
+	          System.out.println("Il file CSV ("+ fileName +") è stato creato con successo!");
 
 
 		} catch(Exception e) {
@@ -449,16 +545,23 @@ _projectName = path;
 		Scanner sc = new Scanner(System.in);
 		String r="";
 		
-		while(!r.equals("5")) {
+		while(!r.equals("9")) {
 			Utils.print("Inserire numero corrispondente alla fase da eseguire\n"
-					+ "1 - Estrazione feature dei ruoli\n"
-					+ "2 - 2\n"
-					+ "3 - Estrazione feature delle combinazioni\n"
-					+ "4 - Classificazione delle istanze\n"
-					+ "5 - Fine esecuzione\n"
+					+ "1 - Estrazione feature dei ruoli (Observer)\n"
+					+ "2 - Classificazione dei ruoli (Observer)\n"
+					+ "3 - Estrazione feature delle combinazioni (Observer)\n"
+					+ "4 - Classificazione delle istanze (Observer)\n"
+					+ "5 - Estrazione feature dei ruoli (Command)\n"
+					+ "6 - Classificazione dei ruoli (Command)\n"
+					+ "7 - Estrazione feature delle combinazioni (Command)\n"
+					+ "8 - Classificazione delle istanze (Command)\n"
+					+ "9 - Fine esecuzione\n"
 					);
 			r=sc.nextLine();
-			if (r.equals("1")) {
+			
+			
+			if (r.equals("1")) { //Estrazione feature dei ruoli (Observer)
+				dptype="obs";
 				new Process(args);
 			}
 			else if (r.equals("2")) {
@@ -472,6 +575,25 @@ _projectName = path;
 			else if (r.equals("4")) {
 				BatchCommand bc2 = new BatchCommand();
 				bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
+			}
+			else if (r.equals("5")) {
+				//new Process(args);
+				Utils.print("Non ancora implementato.");
+			}
+			else if (r.equals("6")) {
+				//BatchCommand bc = new BatchCommand();
+				//bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
+				Utils.print("Non ancora implementato.");
+			}
+			else if (r.equals("7")) {
+				//bool=true;
+			    //new Process(args);
+				Utils.print("Non ancora implementato.");
+			}
+			else if (r.equals("8")) {
+				//BatchCommand bc2 = new BatchCommand();
+				//bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
+				Utils.print("Non ancora implementato.");
 			}
 		}
 		sc.close();

@@ -1,37 +1,3 @@
-# Compiled class file
-*.class
 
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-GeneratoreFeature/JavaT/DATASET.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_mokup.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_to_test.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/instances_predictions.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/roles_predictions.csv
-GeneratoreFeature/JavaT/DATASET.csv
-GeneratoreFeature/JavaT/DATASET_OBS.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_to_test.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/roles_predictions.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/roles_predictions.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_to_test.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_mokup.csv
-GeneratoreFeature/JavaT/OBSClassifier/tester/predictions/combinations_mokup.csv
-GeneratoreFeature/JavaT/Combination_to_test_MIO.csv
+GeneratoreFeature/JavaT_Tirocinio/DATASET.csv
+GeneratoreFeature/JavaT_Tirocinio/DATASET_OBS.csv
