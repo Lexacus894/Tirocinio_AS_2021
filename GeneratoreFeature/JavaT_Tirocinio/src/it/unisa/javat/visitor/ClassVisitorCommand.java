@@ -205,11 +205,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			String nomeClasse=binding.getQualifiedName();
 			
-			boolean bool;
+			//boolean bool;
 			
-			if(bool=cercaSottostringaClasse(nomeClasse,"Subject")) {feat.setClassDeclarationKeyword(1);
-			 } else if (bool=cercaSottostringaClasse(nomeClasse,"Observer")) {feat.setClassDeclarationKeyword(2);
-			 } else {feat.setClassDeclarationKeyword(3);}
+			if(cercaSottostringaClasse(nomeClasse,"Subject")) {
+				feat.setClassDeclarationKeyword(1);
+			} 
+			else if (cercaSottostringaClasse(nomeClasse,"Observer")) {
+				feat.setClassDeclarationKeyword(2);
+			} 
+			else {
+				feat.setClassDeclarationKeyword(3);
+			}
 
 			if(Modifier.isAbstract(binding.getModifiers())) {
 			feat.setClassType(2);
@@ -222,7 +228,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (superclass != null) {
 			feat.setHasSuperclass(2);
 			Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
-		} else { feat.setHasSuperclass(1);}
+		} 
+		else { 
+			feat.setHasSuperclass(1);
+		}
 
 		feat.setImplementsInterfaces(1);
 		ITypeBinding[] interfaces = binding.getInterfaces();
@@ -310,14 +319,18 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if(controllo==false) {
 		if(bool=cercaSottostringaClasse(nomeMetodo,"Subject")) {feat.setMethodDeclarationKeyword(1);
 		                                                        controllo=true;
-		 } else if (bool=cercaSottostringaClasse(nomeMetodo,"Observer")) {feat.setMethodDeclarationKeyword(2);
-		                                                                  controllo=true;
-		 } else {feat.setMethodDeclarationKeyword(3);;}
+		} 
+		else if (bool=cercaSottostringaClasse(nomeMetodo,"Observer")) {
+			feat.setMethodDeclarationKeyword(2);
+		    controllo=true;
+		} 
+		else {
+			feat.setMethodDeclarationKeyword(3);;
+			}
 		} 
 
 		if(Modifier.isAbstract(binding.getModifiers())) {
-		feat.setClassType(2);
-		
+			feat.setClassType(2);
 		}
 		
 		return true;
@@ -377,7 +390,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// ED AGGIUNGERLA ALL'AarrayList NomeVariabiliLista , UTILIZZATO SUCCESSIVAMENTE NELLE VISITE DEI FOR 
 		// PER VERIFICARE SE C'E' UN ITERAZIONE  SULLA VARIABILE DI TIPO COLLEZIONE 
 		
-		if (cercaSottostringaClasse(tipoVariabile,"ArrayList") ||(cercaSottostringaClasse(tipoVariabile,"List")) ) {
+		if (cercaSottostringaClasse(tipoVariabile,"ArrayList") || (cercaSottostringaClasse(tipoVariabile,"List"))) {
     	
 			nomeQuadre= node.fragments().toString();
 			
@@ -413,13 +426,12 @@ public class ClassVisitorCommand extends ASTVisitor {
     		    nomeVariabiliLista.add(appoggio);
     		    
 	    		
-	    		} else { //inizio else della condizion : se è presente la stringa "new"
-	    			     //nella dichiarazione delle variabili	
-	                     	int i = nomeQuadre.length();
-	                     	String nomeVariabile = nomeQuadre.substring(1,i-1);
-		                    nomeVariabiliLista.add(nomeVariabile);
-
-	    		        } //fine else sottostringa "new"
+	    		} 
+			else { //inizio else della condizion : se è presente la stringa "new" nella dichiarazione delle variabili	
+				int i = nomeQuadre.length();
+	            String nomeVariabile = nomeQuadre.substring(1,i-1);
+		        nomeVariabiliLista.add(nomeVariabile);
+		    } //fine else sottostringa "new"
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
