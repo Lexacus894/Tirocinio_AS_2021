@@ -118,7 +118,7 @@ public class Process {
 							String nomeProgetto=_project.getProjectName();
 
 							//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-							_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
+							_parser.parse(dptype,_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
 							//break;
 						
 				} catch (LocalException e) {
@@ -210,7 +210,7 @@ public class Process {
 								String nomeProgetto=_project.getProjectName();
 
 								//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-								_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
+								_parser.parse(dptype,_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
 								//break;
 							
 					} catch (LocalException e) {
@@ -337,7 +337,7 @@ _projectName = path;
 
 
 									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
+									_parser.parse(dptype,_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
 									//break;
 								
 						} catch (LocalException e) {
@@ -457,7 +457,7 @@ _projectName = path;
 
 
 									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
+									_parser.parse(dptype,_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
 									//break;
 								
 						} catch (LocalException e) {
@@ -710,7 +710,7 @@ _projectName = path;
 			else if (r.equals("5")) {
 				bool=false;
 				dptype="com";
-				//new Process(args);
+				new Process(args);
 				Utils.print("Non ancora implementato.");
 			}
 			
