@@ -207,14 +207,20 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			//boolean bool;
 			
-			if(cercaSottostringaClasse(nomeClasse,"Subject")) {
+			if(cercaSottostringaClasse(nomeClasse,"Command")) {
 				feat.setClassDeclarationKeyword(1);
 			} 
-			else if (cercaSottostringaClasse(nomeClasse,"Observer")) {
+			else if (cercaSottostringaClasse(nomeClasse,"Invoker") || cercaSottostringaClasse(nomeClasse,"Sender")) {
 				feat.setClassDeclarationKeyword(2);
-			} 
-			else {
+			}
+			else if (cercaSottostringaClasse(nomeClasse,"Receiver")) {
 				feat.setClassDeclarationKeyword(3);
+			}
+			else if (cercaSottostringaClasse(nomeClasse,"Client")) {
+				feat.setClassDeclarationKeyword(4);
+			}
+			else {
+				feat.setClassDeclarationKeyword(5);
 			}
 
 			if(Modifier.isAbstract(binding.getModifiers())) {
@@ -317,15 +323,16 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		boolean bool;
 		if(controllo==false) {
-		if(bool=cercaSottostringaClasse(nomeMetodo,"Subject")) {feat.setMethodDeclarationKeyword(1);
-		                                                        controllo=true;
-		} 
-		else if (bool=cercaSottostringaClasse(nomeMetodo,"Observer")) {
-			feat.setMethodDeclarationKeyword(2);
-		    controllo=true;
-		} 
-		else {
-			feat.setMethodDeclarationKeyword(3);;
+			if(bool=cercaSottostringaClasse(nomeMetodo,"Command")) {
+				feat.setMethodDeclarationKeyword(1);
+				controllo=true;
+			} 
+			else if (bool=cercaSottostringaClasse(nomeMetodo,"execute")) {
+				feat.setMethodDeclarationKeyword(2);
+				controllo=true;
+			} 
+			else {
+				feat.setMethodDeclarationKeyword(3);;
 			}
 		} 
 
