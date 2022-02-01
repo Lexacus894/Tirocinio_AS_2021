@@ -218,10 +218,12 @@ public class Parser {
 					//compilation.accept(visitor2);
 				}
 			} 
+			//CLASSVISITOR RUOLI OBSERVER
 			else if (dptype.equals("obs")) {
 				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
 			}
+			//CLASSVISITOR RUOLI COMMAND
 			else if (dptype.equals("com")) {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
