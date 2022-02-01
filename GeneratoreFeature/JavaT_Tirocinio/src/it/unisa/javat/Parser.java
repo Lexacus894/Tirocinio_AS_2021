@@ -33,7 +33,6 @@ import dataset.Feature3;
 import it.unisa.javat.LocalException;
 import it.unisa.javat.visitor.ClassVisitor;
 import it.unisa.javat.visitor.ClassVisitor2;
-import it.unisa.javat.visitor.ClassVisitorCommand;
 import it.unisa.javat.FileManager;
 import it.unisa.javat.JarFilenameFilter;
 import it.unisa.javat.Utils;
@@ -176,7 +175,7 @@ public class Parser {
 		}
 	}
 
-	public void parse(String dptype, String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<Feature> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
+	public void parse(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<Feature> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
 
 		Utils.print("Parsing file:" + fileName);
 		try {
@@ -208,6 +207,7 @@ public class Parser {
 			
 			
 			if(visitor==true) {
+<<<<<<< HEAD
 				if (dptype.equals("obs")) {
 					ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
 					compilation.accept(visitor2);
@@ -227,6 +227,14 @@ public class Parser {
 			else if (dptype.equals("com")) {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
+=======
+			ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
+			compilation.accept(visitor2);
+			} else {
+				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
+				compilation.accept(visitor0);
+				
+>>>>>>> parent of 892bb7e (Aggiornato Parser con ClassVisitorCommand)
 			}
 			System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
 
