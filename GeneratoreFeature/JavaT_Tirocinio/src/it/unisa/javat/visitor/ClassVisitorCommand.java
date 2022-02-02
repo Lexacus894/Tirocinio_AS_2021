@@ -54,7 +54,7 @@ import it.unisa.javat.Utils;
 
 public class ClassVisitorCommand extends ASTVisitor {
 	
-  private static final int i = 0;
+	private static final int i = 0;
 
 	CompilationUnit _compilation;
 	Document _document;
@@ -62,10 +62,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	Stack<Scope> _scope;
 	ArrayList<FeatureCommand> arrayListFeature;
 
-	
 	boolean obs=false , cobs=false; 
 	boolean ccobs=false , cccobs=false; 
-
 
 	FeatureCommand feat;
 
@@ -94,9 +92,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 	    listaClassiListener = new ArrayList<String>();
 	    
-		
 	    feat = new FeatureCommand(folder,nomeProgetto,1,1,1,1,1,1,1);
-
 
 	}
 
@@ -116,8 +112,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
 		Utils.print("[CU " + node.getClass().getSimpleName());
 		
-		
-		
 		nomeVariabiliLista = new ArrayList<String>();
 		listaVariabili=new ArrayList<strutturaVariabile>();
 
@@ -133,7 +127,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print(" ]CU");
 		arrayListFeature.add(feat);
 		
-		
 		_scope.pop();
 	}
 
@@ -146,7 +139,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 			return false;
 		}
 		Utils.print("  [PD " + node.getClass().getSimpleName() + " " + binding.getName() + " ]");
-		
 		
 		return true;
 	}
@@ -179,10 +171,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 		ITypeBinding superclass = binding.getSuperclass();
 
-        //ITypeBinding[] interfaccie= binding.getInterfaces() ;
-       	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 		if (binding.isInterface()) {
 			feat.setClassType(3);
 			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
@@ -190,30 +178,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setClassType(1);
 			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 
-			
 			String nomeClasse=binding.getQualifiedName();
 			
-			//boolean bool;
-			
 			if(cercaSottostringaClasse(nomeClasse,"Command")) {
-				feat.setClassDeclarationKeyword(1);
-			} 
-			else if (cercaSottostringaClasse(nomeClasse,"Invoker") || cercaSottostringaClasse(nomeClasse,"Sender")) {
 				feat.setClassDeclarationKeyword(2);
 			}
-			else if (cercaSottostringaClasse(nomeClasse,"Receiver")) {
-				feat.setClassDeclarationKeyword(3);
-			}
-			else if (cercaSottostringaClasse(nomeClasse,"Client")) {
-				feat.setClassDeclarationKeyword(4);
-			}
 			else {
-				feat.setClassDeclarationKeyword(5);
+				feat.setClassDeclarationKeyword(1);
 			}
 
 			if(Modifier.isAbstract(binding.getModifiers())) {
-			feat.setClassType(2);
-			
+				feat.setClassType(2);
 			}
 			
 			feat.setFQNClass(binding.getName()+".java");
@@ -311,18 +286,13 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String nomeMetodo=binding.toString();
 		
-		boolean bool;
 		if(controllo==false) {
-			if(bool=cercaSottostringaClasse(nomeMetodo,"Command")) {
-				feat.setMethodDeclarationKeyword(1);
-				controllo=true;
-			} 
-			else if (bool=cercaSottostringaClasse(nomeMetodo,"execute")) {
+			if (cercaSottostringaClasse(nomeMetodo,"execute")) {
 				feat.setMethodDeclarationKeyword(2);
 				controllo=true;
 			} 
 			else {
-				feat.setMethodDeclarationKeyword(3);;
+				feat.setMethodDeclarationKeyword(1);;
 			}
 		} 
 
@@ -534,22 +504,18 @@ public class ClassVisitorCommand extends ASTVisitor {
 					+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
 		}
 		
-		String istruzioneChiamata =node.toString();
-		boolean bool=cercaAdd(istruzioneChiamata);
+		String istruzioneChiamata = node.toString();
 		
-		if (bool) { 
-			//feat.setAddListenerMethod(2); 
-		};
+		if (hasAddCommandMethod(istruzioneChiamata)) {
+			feat.setAddCommandMethod(2);
+		}
 		
-		istruzioneChiamata =node.toString();
-	    bool=cercaRemove(istruzioneChiamata);
-	    
-	    if (bool) { 
-	    	//feat.setRemoveListenerMethod(2);
-	    };
-	  
+		if (executesCommand(istruzioneChiamata)) {
+			feat.setExecutesCommand(2);
+		}
 		
 			return true;
+			
 	}
 	
 	
@@ -620,16 +586,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 				cicloDopo.push(stringa);
 			}
 		}
-       // IVariableBinding f=  node.resolveFieldBinding();
-		
-		
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
-	
-		
-		
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 		
 		return true;
 	}
@@ -689,6 +645,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print("    ]FOREN");
 	}
 	
+	//VariableDeclarationStatement
 	@Override
 	public boolean visit(VariableDeclarationStatement node) {
 		
@@ -736,7 +693,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print(" ]VAR");
 	}
 	
-	
+	//Array Access
 	@Override
 	public boolean visit(ArrayAccess node) {
 		
@@ -813,6 +770,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	 */
 
 	/****/
+	
+	//FINE VISITE
 
 	private String printModifiers(int mod) {
 		String modifier = "";
@@ -905,94 +864,27 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 	}
 	
-	public boolean cercaCollezione(String dichiarazione) {
+	//Metodo per la ricerca di un metodo che crea/aggiunge un nuovo comando
+	public boolean hasAddCommandMethod(String istruzione) {
 		
-		boolean bool=false;
-		String sottoStringa="List";
-		
-		int max = dichiarazione.length() - sottoStringa.length();
-		
-		
-		 test:
-			    for (int i = 0; i <= max; i++) {
-			      int n = sottoStringa.length();
-			      int j = i;
-			      int k = 0;
-			      while (n-- != 0) {
-			        if (dichiarazione.charAt(j++) != sottoStringa.charAt(k++)) {
-			          continue test;
-			        }
-			      }
-
-			      // a questo punto è stata effettuata una ricerca
-			      // sarà possibile produrre un output			
-			      bool = true;
-			      break test;
-			    }
-		
-		return bool;
+		if ((istruzione.contains(".add") || istruzione.contains("new")) && istruzione.contains("Command")) {
+			return true;	
+		}
+		else {
+			return false;
+		}
 	}
 	
-	public boolean cercaAdd(String istruzione) {
+	//Metodo per la ricerca di un metodo che invoca l'execute() di un comando
+	public boolean executesCommand(String istruzione) {
 		
-		
-		boolean bool = false;
-		String sottoStringa=".add";
-		
-		int max = istruzione.length() - sottoStringa.length();
-		
-		
-		 test:
-			    for (int i = 0; i <= max; i++) {
-			      int n = sottoStringa.length();
-			      int j = i;
-			      int k = 0;
-			      while (n-- != 0) {
-			        if (istruzione.charAt(j++) != sottoStringa.charAt(k++)) {
-			          continue test;
-			        }
-			      }
-
-			      // a questo punto è stata effettuata una ricerca
-			      // sarà possibile produrre un output			
-			      bool = true;
-			      break test;
-			    }
-	
-		return bool;
-		
+		if (istruzione.contains(".execute()")) {
+			return true;	
+		}
+		else {
+			return false;
+		}
 	}
-	
-	public boolean cercaRemove(String istruzione) {
-		
-		
-		boolean bool = false;
-		String sottoStringa=".remove";
-		
-		int max = istruzione.length() - sottoStringa.length();
-		
-		
-		 test:
-			    for (int i = 0; i <= max; i++) {
-			      int n = sottoStringa.length();
-			      int j = i;
-			      int k = 0;
-			      while (n-- != 0) {
-			        if (istruzione.charAt(j++) != sottoStringa.charAt(k++)) {
-			          continue test;
-			        }
-			      }
-
-			      // a questo punto è stata effettuata una ricerca
-			      // sarà possibile produrre un output			
-			      bool = true;
-			      break test;
-			    }
-	
-		return bool;
-		
-	}
-	
 	
 	public boolean cercaSottostringaClasse(String classe , String sottoStringa) {
 	
@@ -1020,4 +912,33 @@ public class ClassVisitorCommand extends ASTVisitor {
 			    }
 		return bool;
 	}
+	
+	/*public boolean cercaCollezione(String dichiarazione) {
+	
+	boolean bool=false;
+	String sottoStringa="List";
+	
+	int max = dichiarazione.length() - sottoStringa.length();
+	
+	
+	 test:
+		    for (int i = 0; i <= max; i++) {
+		      int n = sottoStringa.length();
+		      int j = i;
+		      int k = 0;
+		      while (n-- != 0) {
+		        if (dichiarazione.charAt(j++) != sottoStringa.charAt(k++)) {
+		          continue test;
+		        }
+		      }
+
+		      // a questo punto è stata effettuata una ricerca
+		      // sarà possibile produrre un output			
+		      bool = true;
+		      break test;
+		    }
+	
+	return bool;
+}*/
+	
 }
