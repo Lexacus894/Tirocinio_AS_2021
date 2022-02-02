@@ -30,9 +30,11 @@ import org.eclipse.text.edits.TextEdit;
 
 import dataset.Feature;
 import dataset.Feature3;
+import dataset.FeatureCommand;
 import it.unisa.javat.LocalException;
 import it.unisa.javat.visitor.ClassVisitor;
 import it.unisa.javat.visitor.ClassVisitor2;
+import it.unisa.javat.visitor.ClassVisitorCommand;
 import it.unisa.javat.FileManager;
 import it.unisa.javat.JarFilenameFilter;
 import it.unisa.javat.Utils;
@@ -174,7 +176,8 @@ public class Parser {
 			throw new LocalException("Error compiling file '" + fileName + "': " + ioe.getMessage());
 		}
 	}
-
+	
+	//Parser per l'Observer pattern
 	public void parse(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<Feature> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
 
 		Utils.print("Parsing file:" + fileName);
@@ -205,36 +208,13 @@ public class Parser {
 
 			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
 			
-			
 			if(visitor==true) {
-<<<<<<< HEAD
-				if (dptype.equals("obs")) {
-					ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
-					compilation.accept(visitor2);
-				}
-				//DA IMPLEMENTARE - CLASSVISITOR2 PER COMMAND
-				else if (dptype.equals("com")) {
-					//ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
-					//compilation.accept(visitor2);
-				}
+				ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
+				compilation.accept(visitor2);
 			} 
-			//CLASSVISITOR RUOLI OBSERVER
-			else if (dptype.equals("obs")) {
+			else {
 				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
-			}
-			//CLASSVISITOR RUOLI COMMAND
-			else if (dptype.equals("com")) {
-				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
-				compilation.accept(visitor0);
-=======
-			ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
-			compilation.accept(visitor2);
-			} else {
-				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
-				compilation.accept(visitor0);
-				
->>>>>>> parent of 892bb7e (Aggiornato Parser con ClassVisitorCommand)
 			}
 			System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
 
@@ -318,4 +298,56 @@ public class Parser {
 			throw new LocalException("Error parsing file '" + fileName + "': " + ioe.getMessage());
 		}
 	}
+	
+	//Parser per il Command pattern
+	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommand> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
+
+		Utils.print("Parsing file:" + fileName);
+		try {
+			String str = FileManager.readFileToString(filePath + File.separator + fileName);
+
+			ASTParser parser = ASTParser.newParser(AST.JLS9);
+			parser.setSource(str.toCharArray());
+
+			parser.setResolveBindings(true);
+			parser.setBindingsRecovery(true);
+
+			parser.setKind(ASTParser.K_COMPILATION_UNIT);
+			parser.setUnitName(project + File.separator + fileName);
+			parser.setEnvironment(_classpath, new String[] { filePath }, new String[] { "UTF8" }, true);
+
+			Map<String, String> options = JavaCore.getOptions();
+			JavaCore.setComplianceOptions(_javaVersion, options);
+			parser.setCompilerOptions(options);
+
+			Document document = new Document(str);
+
+			final CompilationUnit compilation = (CompilationUnit) parser.createAST(null);
+
+			AST ast = compilation.getAST();
+			ASTRewrite rewriter = ASTRewrite.create(ast);
+			compilation.recordModifications();
+
+			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
+			
+			if(visitor==true) {
+				//DA IMPLEMENTARE
+				//ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
+				//compilation.accept(visitor2);
+			} 
+			else {
+				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
+				compilation.accept(visitor0);
+			}
+			System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
+
+			//
+		} 
+		
+		catch (IOException ioe) {
+			throw new LocalException("Error parsing file '" + fileName + "': " + ioe.getMessage());
+		}
+		
+	}
+	
 }

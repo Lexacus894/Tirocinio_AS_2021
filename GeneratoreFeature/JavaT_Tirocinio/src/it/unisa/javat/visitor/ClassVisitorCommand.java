@@ -48,6 +48,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 
 import dataset.Feature;
+import dataset.FeatureCommand;
 import dataset.strutturaVariabile;
 import it.unisa.javat.Utils;
 
@@ -59,14 +60,14 @@ public class ClassVisitorCommand extends ASTVisitor {
 	Document _document;
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
-	ArrayList<Feature> arrayListFeature;
+	ArrayList<FeatureCommand> arrayListFeature;
 
 	
 	boolean obs=false , cobs=false; 
 	boolean ccobs=false , cccobs=false; 
 
 
-	Feature feat;
+	FeatureCommand feat;
 
     boolean controllo=false;
 	ArrayList<String> nomeVariabiliLista;
@@ -82,7 +83,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	boolean ChangeState2=false;
 
 
-	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<Feature> arrayListFeatureVisitor, String folder,String nomeProgetto) {
+	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommand> arrayListFeatureVisitor, String folder,String nomeProgetto) {
 		_compilation = compilation;
 		_document = document;
 		_rewriter = rewriter;
@@ -94,8 +95,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	    listaClassiListener = new ArrayList<String>();
 	    
 		
-	    feat = new Feature(folder,"c",1,1,1,0,0,0,1,1,0,0,1,1);
-	    feat.setSfotwareName(nomeProgetto);
+	    feat = new FeatureCommand(folder,nomeProgetto,1,1,1,1,1,1,1);
 
 
 	}
@@ -128,7 +128,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(CompilationUnit node) {
        for (strutturaVariabile var : listaVariabili) {
         	
-        	System.out.println("NOME :  "+var.getNomeVariabile()+"    BOOL:"+var.getlocaleGlobale());
+        	System.out.println("NOME : " + var.getNomeVariabile() + " BOOL: " + var.getlocaleGlobale());
         }
 		Utils.print(" ]CU");
 		arrayListFeature.add(feat);
@@ -168,7 +168,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]ID");
 	}
 
-	// Type Declaration
+	// Type Declaration - ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
@@ -177,23 +177,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 			return false;
 		}
 
-	
-		
-		
 		ITypeBinding superclass = binding.getSuperclass();
-		
-		
-        
-        
-       ITypeBinding[] interfaccie= binding.getInterfaces() ;
-       
-     
-       		
-       
-		
-		
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        //ITypeBinding[] interfaccie= binding.getInterfaces() ;
+       	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		if (binding.isInterface()) {
 			feat.setClassType(3);
@@ -253,6 +241,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(TypeDeclaration node) {
 		Utils.print("  ]TD");
 	}
+	
+	
 
 	// Enum Declaration
 	@Override
@@ -304,7 +294,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print("  ]AD");
 	}
 
-	// Method Declaration
+	// Method Declaration - ClassType, MethodDeclarationKeyword
 	@Override
 	public boolean visit(MethodDeclaration node) {
 		
@@ -348,11 +338,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]MD");
 	}
 
-	// Field Declaration
+	// Field Declaration - CollectionVariables
 	@Override
 	public boolean visit(FieldDeclaration node) {
 		
-		ChangeState2 = false;
+		/*ChangeState2 = false;
 
 		
 		String stringa="NO";
@@ -453,7 +443,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setCollectionVariables(2);
 		}else feat.setCollectionVariables(1);
 		
-				
+		*/		
 		return true;
 	}
 
@@ -478,7 +468,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	
 	
 
-	// Method Invocation
+	// Method Invocation - SCMCallAbsMethod, AddListener, RemoveListener
 	@Override
 	public boolean visit(MethodInvocation node) {
 		String stringa="NO";
@@ -534,7 +524,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			int modificatore = mbinding2.getModifiers(); 
 	        if (Modifier.isAbstract(modificatore)) {
 	        	// il metodo invocato è di tipo astratto 
-	        	feat.setSCMCallAbsMethod(2);
+	        	//feat.setSCMCallAbsMethod(2);
 	        	astrattoTrovato=true;
 	        } // fine if controllo se il modificatore del metodo è astratto
 			} //fine if astrattoTrovato
@@ -547,12 +537,16 @@ public class ClassVisitorCommand extends ASTVisitor {
 		String istruzioneChiamata =node.toString();
 		boolean bool=cercaAdd(istruzioneChiamata);
 		
-		if (bool) { feat.setAddListenerMethod(2); };
+		if (bool) { 
+			//feat.setAddListenerMethod(2); 
+		};
 		
 		istruzioneChiamata =node.toString();
 	    bool=cercaRemove(istruzioneChiamata);
 	    
-	    if (bool) { feat.setRemoveListenerMethod(2);; };
+	    if (bool) { 
+	    	//feat.setRemoveListenerMethod(2);
+	    };
 	  
 		
 			return true;
@@ -566,7 +560,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	}
 	
 	
-	
+	//ForStatement - ScanCollectionMethod
 	@Override
 	public boolean visit(ForStatement node){
 		//Restituisce la stringa del costrutto For 
@@ -582,7 +576,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		        	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
 		        	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
 		        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-		        		 feat.setAfterChangeStateIterateOverList(2);
+		        		 //feat.setAfterChangeStateIterateOverList(2);
 		        		 break;
 		        	}		
 		}
@@ -593,7 +587,7 @@ public class ClassVisitorCommand extends ASTVisitor {
     	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
         for (String nomeVariabile : nomeVariabiliLista) {
         	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-        		feat.setScanCollectionMethod(2);
+        		//feat.setScanCollectionMethod(2);
         		inStatement=true;
         	}
         }
@@ -609,7 +603,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print(" ]FOR");
 	}
 	
-	
+	//FieldAccess - ChangeState
 	@Override
 	public boolean visit(FieldAccess node) {
 		Utils.print("     [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
@@ -617,7 +611,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		for(strutturaVariabile var: listaVariabili) {
 			String contenuto= var.getNomeVariabile();
 			if(nomeAccesso.equals(contenuto)) {
-				feat.setChangeState(2);
+				//feat.setChangeState(2);
 				String stringa="SI";
 				cicloDopo.push(stringa);
 				ChangeState2 = true;
@@ -646,7 +640,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 	}
 	
-
+	//EnhancedForStatement - ScanCollectionMethod, AfterChangeStateIterateOverList
 	@Override
 	public boolean visit(EnhancedForStatement node) {
 		
@@ -669,10 +663,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 		        	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
 		        	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
 		        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-		        		 feat.setAfterChangeStateIterateOverList(2);
+		        		 //feat.setAfterChangeStateIterateOverList(2);
 		        	}
 			
-			feat.setAfterChangeStateIterateOverList(2);
+			//feat.setAfterChangeStateIterateOverList(2);
 		}
 		
 		
@@ -680,7 +674,7 @@ public class ClassVisitorCommand extends ASTVisitor {
         	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
         	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
         	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-        		feat.setScanCollectionMethod(2);
+        		//feat.setScanCollectionMethod(2);
         		inStatement=true;
         	}
         }
