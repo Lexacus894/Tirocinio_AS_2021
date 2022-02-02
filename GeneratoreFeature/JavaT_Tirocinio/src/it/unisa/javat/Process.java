@@ -21,8 +21,6 @@ import dataset.Feature;
 import dataset.Feature3;
 import dataset.FeatureCommand;
 
- 
-
 public class Process {
 
 	private Parameters _params;	
@@ -48,7 +46,7 @@ public class Process {
 	+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
 
 	//CSV file header (Ruoli Observer)
-	private static final String FILE_HEADER_COM = "SoftwareName;FQNClass;ClassDeclarationKeyword;MethodDeclarationKeyword;ClassType;ExecutesCommand;"
+	private static final String FILE_HEADER_COM = "SoftwareName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
 		 	  		+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces";
 	 
  	  
@@ -64,19 +62,14 @@ public class Process {
 		try {
 			Info(true);
 			
-			
-		
 			//Crea ArrayList per inserire i vettori di Feature 
 			//DOBBIAMO PORTARLO NEL CLASSVISITOR DEVO SOLO CAPIRE COME 
 		    listaFeature=new ArrayList<Feature>();
 		    
 		    System.out.println("-------------ArrayList Feature  CREATO -----------------");
 		    
-			
 		    _params = new Parameters(args, this.getClass().getName());
 			_params.print();
-			
-		
 			
 			String path=_params.getProjectPath();
 			String _projectDir;
@@ -90,9 +83,6 @@ public class Process {
 				_projectDir = ".";
 				_projectName = path;
 			}
-			
-			
-			
 			
 			_project = new Project(_params.getProjectPath(),_params.getOutputPath());
 			_project.print();
@@ -109,10 +99,7 @@ public class Process {
 			_parser.print();
 			
 			System.out.println("-------------DOVE SONO ?? -----------------");
-			
-			
-		
-			 
+
 			for (String s : files) {
 				try {	
 					System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
@@ -126,7 +113,8 @@ public class Process {
 							_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,false,listaFeature3,nomeProgetto);
 							//break;
 						
-				} catch (LocalException e) {
+				} 
+				catch (LocalException e) {
 					Utils.print(e);
 				}			
 			}	
@@ -134,15 +122,10 @@ public class Process {
 			//String fileName = "Dataset.csv";
 		    //creafileCSV(fileName);
 			System.out.println("-------------FINE Process -----------------");
-			
-			
+
 			filename="DATASET_OBS.csv";
-			
-			
-			
+
 			creaCSV(filename);
-			
-			
 
 			Info(false);
 		} catch (LocalException e) {
@@ -156,19 +139,14 @@ public class Process {
 			try {
 				Info(true);
 				
-				
-			
 				//Crea ArrayList per inserire i vettori di Feature COMMAND
 				//DOBBIAMO PORTARLO NEL CLASSVISITOR DEVO SOLO CAPIRE COME 
 			    listaFeatureCommand=new ArrayList<FeatureCommand>();
 			    
 			    System.out.println("-------------ArrayList Feature  CREATO -----------------");
 			    
-				
 			    _params = new Parameters(args, this.getClass().getName());
 				_params.print();
-				
-			
 				
 				String path=_params.getProjectPath();
 				String _projectDir;
@@ -182,9 +160,6 @@ public class Process {
 					_projectDir = ".";
 					_projectName = path;
 				}
-				
-				
-				
 				
 				_project = new Project(_params.getProjectPath(),_params.getOutputPath());
 				_project.print();
@@ -202,9 +177,6 @@ public class Process {
 				
 				System.out.println("-------------DOVE SONO ?? -----------------");
 				
-				
-			
-				 
 				for (String s : files) {
 					try {	
 						System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
@@ -218,7 +190,8 @@ public class Process {
 								_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,false,listaFeature3,nomeProgetto);
 								//break;
 							
-					} catch (LocalException e) {
+					} 
+					catch (LocalException e) {
 						Utils.print(e);
 					}			
 				}	
@@ -227,21 +200,17 @@ public class Process {
 			    //creafileCSV(fileName);
 				System.out.println("-------------FINE Process -----------------");
 				
-				
 				filename="DATASET_COM.csv";
-				
-				
-				
+
 				creaCSV(filename);
-				
-				
 
 				Info(false);
-			} catch (LocalException e) {
+			} 
+			catch (LocalException e) {
 				Utils.print(e);
 				System.exit(1);
 			}
-			}
+		}
 		
 		//Estrazione feature delle combinazioni (Observer)
 		else if (bool==true && dptype.equals("obs")) {
@@ -249,10 +218,6 @@ public class Process {
 		    try {
 				Info(true);
 				
-				
-
-				
-					 
 				 listaFeature3 = new ArrayList<Feature3>();
 					 
 			     Lettura lettura = new Lettura();
@@ -489,9 +454,8 @@ _projectName = path;
 	
 	
 	
-	
+	//Metodo per la creazione del Dataset con le feature dei ruoli per OBSERVER e COMMAND
 	public void creaCSV(String fileName) {
-		
 		
 		  FileWriter fileWriter = null;
 	        
@@ -499,8 +463,7 @@ _projectName = path;
 	        
 	         fileWriter = new FileWriter(fileName);
 	        	            
-	         
-	         if (dptype=="obs") {
+	         if (dptype.equals("obs")) {
 	        	 //Write the CSV file header
 	        	 fileWriter.append(FILE_HEADER_OBS.toString());
 	        	 
@@ -551,10 +514,9 @@ _projectName = path;
 		              fileWriter.append(String.valueOf(vettoreFeat.getAfterChangeStateIterateOverList()));	 
 		        	
 		              fileWriter.append(NEW_LINE_SEPARATOR);
-
 		          }
 	         }
-	         else if (dptype=="com") {
+	         else if (dptype.equals("com")) {
 	        	//Write the CSV file header
 	        	 fileWriter.append(FILE_HEADER_COM.toString());
 	        	 
@@ -569,15 +531,15 @@ _projectName = path;
 		        	  fileWriter.append(vettoreFeat.getFQNClass());	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
+		              fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
+		              fileWriter.append(COMMA_DELIMITER);
+		              
 		              fileWriter.append(String.valueOf(vettoreFeat.getClassDeclarationKeyword()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
 		              fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
 		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
+		             
 		              fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
@@ -760,7 +722,6 @@ _projectName = path;
 				bool=false;
 				dptype="com";
 				new Process(args);
-				//Utils.print("Non ancora implementato.");
 			}
 			
 			else if (r.equals("6")) {
@@ -780,15 +741,11 @@ _projectName = path;
 				Utils.print("Non ancora implementato.");
 			}
 		}
+		
 		sc.close();
 		Utils.print("----------------------EXIT---------------------       ");
 		System.exit(0);
 		
-		
-		 //Utils.print("----------------------ESEGUE SECONDO PY--------------------       ");
-
-		 
-
 	}
 	
 	
@@ -1838,11 +1795,6 @@ if(c3.equals("CO") && (c4.equals("CS"))) {  elemento.setControlloDipCSub(true);}
 		return elementoLista;
 		
 	}
-	
-        
-		
-	
-	
 	
 
 }
