@@ -193,7 +193,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			feat.setFQNClass(binding.getName()+".java");
 
-			
 		if (superclass != null) {
 			feat.setHasSuperclass(2);
 			Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
@@ -217,8 +216,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print("  ]TD");
 	}
 	
-	
-
 	// Enum Declaration
 	@Override
 	public boolean visit(EnumDeclaration node) {
@@ -273,7 +270,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public boolean visit(MethodDeclaration node) {
 		
-		
 		String stringa="NO";
 		cicloDopo.push(stringa);
 		IMethodBinding binding = node.resolveBinding();
@@ -314,7 +310,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		/*ChangeState2 = false;
 
-		
 		String stringa="NO";
 		cicloDopo.push(stringa);
 
@@ -322,7 +317,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		Utils.print("    [FD " + node.getClass().getSimpleName() + " " + node.toString() + " ]");
 		
-		
+
 		int u;
 		String c1,appoggio1="";
 		
@@ -332,7 +327,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		//tolgo le quadre al nome della variabile
 		String nomeVariabile1 = nomeQuadre.substring(1,u-1);
-		
 		
 		for (int j=0;j<nomeVariabile1.length();j++) {
 		      
@@ -348,7 +342,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		strutturaVariabile var = new strutturaVariabile(appoggio1,false);
 		listaVariabili.add(var);
-		
 		
 		//////////////////////////////////////////////////////////////////////////////////////
 		String tipoVariabile = node.getType().toString();
@@ -370,10 +363,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	    		//tolgo le quadre al nome della variabile
 	    		String nomeVariabile = nomeQuadre.substring(1,i-1);
 				
-
 	    		//BISOGNA TAGLIARE TUTTI I CARATTERI DELLA STRINGA DOPO L'UGUALE COMPRESO QUEST'ULTIMO
 	    		String c;
-	    		
 	    		
 	    		//isolo il nome della variabile con una concatenazione finchè
 	    		//non incontra il carattere "="
@@ -402,9 +393,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-	
-	
 
 		String dichiarazione = node.toString();
 		boolean verifica = cercaCollezione(dichiarazione);
@@ -421,9 +409,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(FieldDeclaration node) {
 		// Utils.print(" ]FD");
 	}
-	
-	
-	
 	
 	//@Override
 	//public boolean visit(VariableDeclarationFragment node) {	
@@ -471,22 +456,23 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 		if(inStatement==false) {
 
-		IMethodBinding binding = node.resolveMethodBinding();
-		if (binding == null) {
-			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> " + node.toString() + " NOBIND]");
-			return false;
-		}
-		Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
-				+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
-		} else if(inStatement==true){
-		   //POICHE' inStatement E' INIZIALIZZATA A TRUE ALLORA VUOL DIRE CHE SIAMO
-           // ALL'INTERNO DEL FOR STATEMENT PER LA COLLEZIONE
-			
 			IMethodBinding binding = node.resolveMethodBinding();
 			if (binding == null) {
 				Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> " + node.toString() + " NOBIND]");
 				return false;
 			}
+			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
+			+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
+		} 
+		else if(inStatement==true) {
+		   
+			//POICHE' inStatement E' INIZIALIZZATA A TRUE ALLORA VUOL DIRE CHE SIAMO
+			// ALL'INTERNO DEL FOR STATEMENT PER LA COLLEZIONE
+			IMethodBinding binding = node.resolveMethodBinding();
+			if (binding == null) {
+				Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> " + node.toString() + " NOBIND]");
+				return false;
+		}
 			
 			IMethodBinding mbinding2 = node.resolveMethodBinding();
 			Utils.print("METHOD BINDING :"+mbinding2);
@@ -499,7 +485,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	        } // fine if controllo se il modificatore del metodo è astratto
 			} //fine if astrattoTrovato
 			
-				
 			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
 					+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
 		}
@@ -517,14 +502,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 			return true;
 			
 	}
-	
-	
 
 	@Override
 	public void endVisit(MethodInvocation node) {
 		// Utils.print(" ]MI");
 	}
-	
 	
 	//ForStatement - ScanCollectionMethod
 	@Override
@@ -548,7 +530,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 		}
 		
-		
 		//CONTROLLO SE NEL FOR STATEMENT E' 
     	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
         for (String nomeVariabile : nomeVariabiliLista) {
@@ -559,9 +540,6 @@ public class ClassVisitorCommand extends ASTVisitor {
         }
 		return true;
 	}
-	
-	
-	
 	
 	@Override
 	public void endVisit(ForStatement node) {
@@ -602,12 +580,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		ChangeState2 = false;
 
-		
 		//VISITA IN UN FOR STATEMENT MIGLIORATO 
 			
 		Utils.print("    [FOREN " + node.getClass().getSimpleName() + "   " + node.toString());
 		
-
         String ciclo = node.toString();
         
 		String contenutoStack = cicloDopo.pop();
@@ -624,7 +600,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			//feat.setAfterChangeStateIterateOverList(2);
 		}
-		
 		
         for (String nomeVariabile : nomeVariabiliLista) {
         	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
@@ -651,7 +626,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		ChangeState2 = false;
 
-		
 		String stringa="NO";
 		cicloDopo.push(stringa);
 		
@@ -659,14 +633,12 @@ public class ClassVisitorCommand extends ASTVisitor {
         String nomeQuadre ,c ,appoggio="";
         int i;
         
-
         nomeQuadre= node.fragments().toString();
         
         i=nomeQuadre.length();
 		
 		//tolgo le quadre al nome della variabile
 		String nomeVariabile = nomeQuadre.substring(1,i-1);
-		
 		
 		for (int j=0;j<nomeVariabile.length();j++) {
 		      
@@ -683,7 +655,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		strutturaVariabile var = new strutturaVariabile(appoggio,true);
 		listaVariabili.add(var);
     		
-//		strutturaVariabile var = new strutturaVariabile();
+		//strutturaVariabile var = new strutturaVariabile();
 
 		return true;
 	}
@@ -698,7 +670,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public boolean visit(ArrayAccess node) {
 		
 		ChangeState2 = false;
-
 		
 		String stringa="NO";
 		cicloDopo.push(stringa);
@@ -712,15 +683,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 		Utils.print(" ]ArrayACCESS");
 	}
 	
-	
-	
-
 	// Class Instance Creation
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		
 		ChangeState2 = false;
-
 		
 		String stringa="NO";
 		cicloDopo.push(stringa);
@@ -889,10 +856,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public boolean cercaSottostringaClasse(String classe , String sottoStringa) {
 	
 		boolean bool=false;
-		
 
 		int max = classe.length() - sottoStringa.length();
-		
 		
 		 test:
 			    for (int i = 0; i <= max; i++) {

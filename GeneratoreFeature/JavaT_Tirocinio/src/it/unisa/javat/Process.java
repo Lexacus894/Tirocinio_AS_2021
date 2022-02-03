@@ -34,24 +34,20 @@ public class Process {
 	ArrayList<nomiCombinazioni> listaCombinazioni;
 	ArrayList<Feature3> listaFeature3;
 
+	//Delimiter used in CSV file
+	private static final String COMMA_DELIMITER = ";";
+	private static final String NEW_LINE_SEPARATOR = "\n";
 
-	 //Delimiter used in CSV file
-	 private static final String COMMA_DELIMITER = ";";
-
-	 private static final String NEW_LINE_SEPARATOR = "\n";
-
-  
 	//CSV file header (Ruoli Observer)
 	private static final String FILE_HEADER_OBS = "SoftwareName;FQNClass;CollectionVariable;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;" 
-	+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
-
-	//CSV file header (Ruoli Observer)
+			+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
+	
+	//CSV file header (Ruoli Command)
 	private static final String FILE_HEADER_COM = "SoftwareName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
-		 	  		+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces";
+			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces";
 	 
- 	  
-	 //CSV file header 
-	 private static final String FILE_HEADER3 = "Classes;HasSubject;HasObserver;"
+	//CSV file header (Combinazioni Observer)
+	private static final String FILE_HEADER3 = "Classes;HasSubject;HasObserver;"
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
      
 	
@@ -98,11 +94,11 @@ public class Process {
 			_parser.addClasspaths(_project.getLibraryPath());
 			_parser.print();
 			
-			System.out.println("-------------DOVE SONO ?? -----------------");
+			//System.out.println("-------------DOVE SONO ?? -----------------");
 
 			for (String s : files) {
 				try {	
-					System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+					//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
 
 							_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
 							
@@ -128,11 +124,12 @@ public class Process {
 			creaCSV(filename);
 
 			Info(false);
-		} catch (LocalException e) {
+		} 
+		catch (LocalException e) {
 			Utils.print(e);
 			System.exit(1);
 		}
-		}
+	}
 		
 		//Estrazione feature dei ruoli (Command)
 		else if (bool==false && dptype.equals("com")) {
@@ -156,7 +153,8 @@ public class Process {
 				if (pos > -1) {
 					_projectDir = path.substring(0, pos);
 					_projectName = path.substring(pos + 1);
-				} else {
+				} 
+				else {
 					_projectDir = ".";
 					_projectName = path;
 				}
@@ -175,11 +173,11 @@ public class Process {
 				_parser.addClasspaths(_project.getLibraryPath());
 				_parser.print();
 				
-				System.out.println("-------------DOVE SONO ?? -----------------");
+				//System.out.println("-------------DOVE SONO ?? -----------------");
 				
 				for (String s : files) {
 					try {	
-						System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+						//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
 
 								_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
 								
@@ -262,11 +260,12 @@ String _projectName;
 
 int pos = path.lastIndexOf(File.separator);
 if (pos > -1) {
-_projectDir = path.substring(0, pos);
-_projectName = path.substring(pos + 1);
-} else {
-_projectDir = ".";
-_projectName = path;
+	_projectDir = path.substring(0, pos);
+	_projectName = path.substring(pos + 1);
+} 
+else {
+	_projectDir = ".";
+	_projectName = path;
 }
 
 
@@ -293,12 +292,9 @@ _projectName = path;
 					_parser.addClasspaths(_project.getLibraryPath());
 					_parser.print();
 				 
-			
-					
-					 
 					for (String s : files) {
 						try {	
-							System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+							//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
 
 									_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
 									
@@ -310,22 +306,19 @@ _projectName = path;
 									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
 									//break;
 								
-						} catch (LocalException e) {
+						} 
+						catch (LocalException e) {
 							Utils.print(e);
 						}			
 					}	
-
-			
-			
-			
-		} catch (LocalException e) {
-			Utils.print(e);
-		}//fine Catch
+				} 
+		    	catch (LocalException e) {
+		    		Utils.print(e);
+		    	}//fine Catch
 		    
 			filename="Combination_to_test_MIO.csv";
             creaCSV3(filename);
 		    
-		 
 		} //fine else bool=true
 		
 		//Estrazione feature delle combinazioni (Command)
@@ -333,10 +326,6 @@ _projectName = path;
 			
 		    try {
 				Info(true);
-				
-				
-
-				
 					 
 				 listaFeature3 = new ArrayList<Feature3>();
 					 
@@ -357,21 +346,14 @@ _projectName = path;
 				    }
 				   
 			        System.out.println("-------------ArrayList Feature  CREATO -----------------");
-				    
-				   
-			     
 
 				    _params = new Parameters(args, this.getClass().getName());
 					_params.print();
-					
 					
 					for(int i=0;i<listaFeature3.size();i++) {
 				    	Feature3 riga= listaFeature3.get(i);
 				    	Utils.print(riga.toString());
 					}
-					
-					
-					
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -382,22 +364,15 @@ String _projectName;
 
 int pos = path.lastIndexOf(File.separator);
 if (pos > -1) {
-_projectDir = path.substring(0, pos);
-_projectName = path.substring(pos + 1);
-} else {
-_projectDir = ".";
-_projectName = path;
+	_projectDir = path.substring(0, pos);
+	_projectName = path.substring(pos + 1);
+} 
+else {
+	_projectDir = ".";
+	_projectName = path;
 }
 
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					
-					
-					
 
 					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
 					_project.print();
@@ -413,43 +388,34 @@ _projectName = path;
 					_parser.addClasspaths(_project.getLibraryPath());
 					_parser.print();
 				 
-			
-					
-					 
 					for (String s : files) {
 						try {	
-							System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+							//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
 
 									_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
 									
 									String folder = s;
 									String nomeProgetto=_project.getProjectName();
 
-
 									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
 									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
 									//break;
 								
-						} catch (LocalException e) {
+						} 
+						catch (LocalException e) {
 							Utils.print(e);
 						}			
 					}	
-
-			
-			
-			
-		} catch (LocalException e) {
-			Utils.print(e);
-		}//fine Catch
+		    } 
+		    catch (LocalException e) {
+		    	Utils.print(e);
+		    }//fine Catch
 		    
 			filename="Combination_to_test_MIO.csv";
             creaCSV3(filename);
 		    
-		 
 		}
 		
-
-	
 	}	//fineProcess
 	
 	
@@ -457,18 +423,18 @@ _projectName = path;
 	//Metodo per la creazione del Dataset con le feature dei ruoli per OBSERVER e COMMAND
 	public void creaCSV(String fileName) {
 		
-		  FileWriter fileWriter = null;
+		FileWriter fileWriter = null;
 	        
-	        try {
+        	try {
 	        
-	         fileWriter = new FileWriter(fileName);
+        		fileWriter = new FileWriter(fileName);
 	        	            
-	         if (dptype.equals("obs")) {
-	        	 //Write the CSV file header
-	        	 fileWriter.append(FILE_HEADER_OBS.toString());
+	        if (dptype.equals("obs")) {
+	        	//Write the CSV file header
+	        	fileWriter.append(FILE_HEADER_OBS.toString());
 	        	 
-	        	 //Add a new line separator after the header
-		         fileWriter.append(NEW_LINE_SEPARATOR);
+	        	//Add a new line separator after the header
+		        fileWriter.append(NEW_LINE_SEPARATOR);
 		          
 		         for (Feature vettoreFeat : listaFeature) {
 		        	
@@ -555,40 +521,32 @@ _projectName = path;
 		              fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 	         }
-	       
-	        
-
 	          System.out.println("Il file CSV (" + fileName + ") è stato creato con successo!");
 
-
-		} catch(Exception e) {
-			System.out.println("Errore nel CsvFileWriter !!!");
-			e.printStackTrace();
-		} finally {
+		} 
+	        catch(Exception e) {
+	        	System.out.println("Errore nel CsvFileWriter !!!");
+	        	e.printStackTrace();
+	        } 
+	        finally {
 			
-			try {
-				fileWriter.flush();
-				fileWriter.close();
-			
-			} catch (IOException e) {
-				System.out.println("Errore nel flush o nella chiusura !!!");
+	        	try {
+	        		fileWriter.flush();
+	        		fileWriter.close();
+	        	} 
+	        	catch (IOException e) {
+	        		System.out.println("Errore nel flush o nella chiusura !!!");
+	        	}
 			}
-			
-		}
 		
 	}
 	
-	
-	
-	
-	
+
 	public void creaCSV3(String fileName) {
 		
-		
-
-		  FileWriter fileWriter = null;
+		FileWriter fileWriter = null;
 	        
-	        try {
+		try {
 	        
 	         fileWriter = new FileWriter(fileName);
 	        	            
@@ -600,7 +558,6 @@ _projectName = path;
 	          
 	          for (Feature3 vettoreFeat : listaFeature3) {
 	        	 
-	        	  
 	        	  fileWriter.append(vettoreFeat.getClasses());	 
 	              fileWriter.append(COMMA_DELIMITER);
 	        	  
@@ -629,26 +586,26 @@ _projectName = path;
 	              fileWriter.append(COMMA_DELIMITER);
 	              
 	              fileWriter.append(String.valueOf(vettoreFeat.getNoc()));	 
-	             
-	              
-	             	        	
+        	
 	              fileWriter.append(NEW_LINE_SEPARATOR);
 
 	          }
 
 	          System.out.println("Il file CSV ("+ fileName +") è stato creato con successo!");
 
-
-		} catch(Exception e) {
+		} 
+		catch(Exception e) {
 			System.out.println("Errore nel CsvFileWriter !!!");
 			e.printStackTrace();
-		} finally {
+		} 
+		finally {
 			
 			try {
 				fileWriter.flush();
 				fileWriter.close();
 			
-			} catch (IOException e) {
+			} 
+			catch (IOException e) {
 				System.out.println("Errore nel flush o nella chiusura !!!");
 			}
 			
@@ -656,19 +613,15 @@ _projectName = path;
 	
 	}
 
-		
-	
-	
-	
-	
+
 	private void Info(boolean start) throws LocalException {
 		if(start) {
 			String version = Constants.version + "." + VersionBuild.buildnum;
 			Utils.print("*** " + Constants.appName + " ***");
 			Utils.print("*** " + Constants.appAcro + " " +version+ " "+VersionBuild.builddate+" ***");
 			Utils.print("*** " + Constants.authors + " ***");
-		} else { // FINE DEL PROGRAMMA GENERALE
-	
+		} 
+		else { // FINE DEL PROGRAMMA GENERALE
 			Utils.print("*** End " + Constants.appAcro + " ***");
 		}
 	}	
@@ -724,17 +677,22 @@ _projectName = path;
 				new Process(args);
 			}
 			
+			//COMMAND - CLASSIFICAZIONE DEI RUOLI - COMMAND
 			else if (r.equals("6")) {
 				//BatchCommand bc = new BatchCommand();
 				//bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
 				Utils.print("Non ancora implementato.");
 			}
+			
+			//COMMAND - ESTRAZIONE FEATURE DELLE COMBINAZIONI - COMMAND
 			else if (r.equals("7")) {
 				bool=true;
 				dptype="com";
 			    //new Process(args);
 				Utils.print("Non ancora implementato.");
 			}
+			
+			//COMMAND - CLASSIFICAZIONE DELLE ISTANZE - COMMAND
 			else if (r.equals("8")) {
 				//BatchCommand bc2 = new BatchCommand();
 				//bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
@@ -772,11 +730,9 @@ _projectName = path;
 		
 		switch(count) {
 		case 1: {
-			      System.out.println(count);
-			      String nome1 = riga.getClasse1();
-			      
-			     
-		
+			     System.out.println(count);
+			     String nome1 = riga.getClasse1();
+
 			     break;
 	         	}
 		case 2:
