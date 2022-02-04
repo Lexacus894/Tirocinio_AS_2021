@@ -175,7 +175,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (binding.isInterface()) {
 			feat.setClassType(3);
 			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
-		} else
+		} 
+		else {
 			feat.setClassType(1);
 			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 
@@ -191,8 +192,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 			if(Modifier.isAbstract(binding.getModifiers())) {
 				feat.setClassType(2);
 			}
+		}	
 			
-			feat.setFQNClass(binding.getName()+".java");
+		feat.setFQNClass(binding.getName()+".java");
 
 		if (superclass != null) {
 			feat.setHasSuperclass(2);
@@ -293,9 +295,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 		} 
 
-		if(Modifier.isAbstract(binding.getModifiers())) {
+		/*if(Modifier.isAbstract(binding.getModifiers())) {
 			feat.setClassType(2);
-		}
+		}*/
 		
 		return true;
 	}
