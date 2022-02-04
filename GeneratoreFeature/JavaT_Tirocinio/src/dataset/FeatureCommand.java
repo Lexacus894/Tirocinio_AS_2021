@@ -73,11 +73,11 @@ public class FeatureCommand {
 		ExecutesCommand = executesCommand;
 	}
 
-	public int getAddCommandMethod() {
+	public int getAddsCommandMethod() {
 		return AddsCommandMethod;
 	}
 
-	public void setAddCommandMethod(int addCommandMethod) {
+	public void setAddsCommandMethod(int addCommandMethod) {
 		AddsCommandMethod = addCommandMethod;
 	}
 

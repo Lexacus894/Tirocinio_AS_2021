@@ -509,7 +509,7 @@ else {
 		              fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getAddCommandMethod()));	 
+		              fileWriter.append(String.valueOf(vettoreFeat.getAddsCommandMethod()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
 		              fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 

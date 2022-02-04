@@ -426,7 +426,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	// Method Invocation - SCMCallAbsMethod, AddListener, RemoveListener
 	@Override
 	public boolean visit(MethodInvocation node) {
-		String stringa="NO";
+		/*String stringa="NO";
 		cicloDopo.push(stringa);
 		
 		String methodInvoker = null;
@@ -487,12 +487,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
 					+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
-		}
+		}*/
 		
 		String istruzioneChiamata = node.toString();
 		
 		if (hasAddCommandMethod(istruzioneChiamata)) {
-			feat.setAddCommandMethod(2);
+			feat.setAddsCommandMethod(2);
 		}
 		
 		if (executesCommand(istruzioneChiamata)) {
