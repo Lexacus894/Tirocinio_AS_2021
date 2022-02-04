@@ -11,9 +11,10 @@ public class FeatureCommand {
 	private int AddsCommandMethod;
 	private int HasSuperclass;
 	private int ImplementsInterfaces;
+	private int isPartOfExecute;
 
 	public FeatureCommand(String softwareName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
-			int addsCommand, int hasSuperclass, int implementsInterfaces ) {
+			int addsCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute ) {
 		this.SoftwareName = softwareName;
 		this.FQNClass = fqnClass;
 		this.ClassDeclarationKeyword = classDeclaration;
@@ -23,6 +24,7 @@ public class FeatureCommand {
 		this.AddsCommandMethod = addsCommand;
 		this.HasSuperclass = hasSuperclass;
 		this.ImplementsInterfaces = implementsInterfaces;
+		this.isPartOfExecute = isPartOfExecute;
 	}
 
 	public String getSoftwareName() {
@@ -97,13 +99,21 @@ public class FeatureCommand {
 		ImplementsInterfaces = implementsInterfaces;
 	}
 	
+	public int getIsPartOfExecute() {
+		return isPartOfExecute;
+	}
+
+	public void setIsPartOfExecute(int isPartOfExecute) {
+		this.isPartOfExecute = isPartOfExecute;
+	}
+	
 	@Override
 	  public String toString() {
 		  
 		  return " VettoreFeatureCommand [SoftwareName = " + this.SoftwareName + ", FQNClass = " + this.FQNClass
 		  		+ ", ClassDeclarationKeyword = " + this.ClassDeclarationKeyword + ", MethodDeclarationKeyword = " + this.MethodDeclarationKeyword
 		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", AddsCommand = " + this.AddsCommandMethod
-		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces +"]";
+		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces + ", isPartOfExecute = " + this.isPartOfExecute +"]";
 	  
 	  }
 }

@@ -45,6 +45,7 @@ public class Parser {
 	private String[] _classpath = new String[0];
 	private String _classpathSeparator = System.getProperty("path.separator");
 	private String _jreHome;
+	ArrayList<String> lista = new ArrayList<String>();
 
 	public Parser(int javaVersion) {
 		Utils.print("File parsing.");
@@ -301,9 +302,10 @@ public class Parser {
 	
 	//Parser per il Command pattern
 	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommand> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
-
+		
 		Utils.print("Parsing file:" + fileName);
 		try {
+			
 			String str = FileManager.readFileToString(filePath + File.separator + fileName);
 
 			ASTParser parser = ASTParser.newParser(AST.JLS9);
@@ -338,9 +340,30 @@ public class Parser {
 			else {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
+				
+				//Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
+				lista = visitor0.getListaClassiInExecute();
+				for (int i = 0; i < listaFeatureParser.size(); i++) {
+					for (int j = 0; j < lista.size(); j++) {
+						if (listaFeatureParser.get(i).getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
+							listaFeatureParser.get(i).setIsPartOfExecute(2);
+							break;
+						}
+					}
+				}
+				
+				
+				/*System.out.println("CLASSI IN EXECUTE: \n");
+				if (!lista.isEmpty()) {
+					for(int i = 0; i<lista.size();i++) {
+						System.out.println(lista.get(i));
+					}
+				}*/
 			}
-			System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
-
+			//System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
+			
+			
+			
 			//
 		} 
 		

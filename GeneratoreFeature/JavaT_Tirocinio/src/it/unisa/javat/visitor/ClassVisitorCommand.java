@@ -74,6 +74,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	ArrayList<strutturaVariabile> listaVariabili;
 	Stack<String> cicloDopo;
 	
+	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
 	private ArrayList<String> listaClassiListener;
 	
 	
@@ -92,7 +93,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 	    listaClassiListener = new ArrayList<String>();
 	    
-	    feat = new FeatureCommand(folder,nomeProgetto,1,1,1,1,1,1,1);
+	    feat = new FeatureCommand(folder,nomeProgetto,1,1,1,1,1,1,1,1);
 
 	}
 
@@ -283,7 +284,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		String nomeMetodo=binding.toString();
 		
 		if(controllo==false) {
-			if (cercaSottostringaClasse(nomeMetodo,"execute")) {
+			if (cercaSottostringaClasse(nomeMetodo," execute()")) {
 				feat.setMethodDeclarationKeyword(2);
 				controllo=true;
 			} 
@@ -426,70 +427,38 @@ public class ClassVisitorCommand extends ASTVisitor {
 	// Method Invocation - SCMCallAbsMethod, AddListener, RemoveListener
 	@Override
 	public boolean visit(MethodInvocation node) {
-		/*String stringa="NO";
-		cicloDopo.push(stringa);
-		
-		String methodInvoker = null;
-		String classInvoker = null;
-
-		MethodDeclaration mnode = getMethodDeclaration(node);
-		if (mnode != null) {
-			IMethodBinding mbinding = mnode.resolveBinding();
 			
-			if (mbinding != null) {
-				classInvoker = mbinding.getDeclaringClass().getQualifiedName();
-			}
-
-			methodInvoker = mnode.getName().getFullyQualifiedName();
-		} else
-			methodInvoker = "STATIC";
-
-		if (classInvoker == null) {
-			TypeDeclaration tnode = getTypeDeclaration(node);
-			if (tnode != null) {
-				ITypeBinding tbinding = tnode.resolveBinding();
-				if (tbinding != null) {
-					classInvoker = tbinding.getQualifiedName();
-				}
-
-			}
-		}
-		if(inStatement==false) {
-
-			IMethodBinding binding = node.resolveMethodBinding();
-			if (binding == null) {
-				Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> " + node.toString() + " NOBIND]");
-				return false;
-			}
-			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
-			+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
-		} 
-		else if(inStatement==true) {
-		   
-			//POICHE' inStatement E' INIZIALIZZATA A TRUE ALLORA VUOL DIRE CHE SIAMO
-			// ALL'INTERNO DEL FOR STATEMENT PER LA COLLEZIONE
-			IMethodBinding binding = node.resolveMethodBinding();
-			if (binding == null) {
-				Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> " + node.toString() + " NOBIND]");
-				return false;
-		}
-			
-			IMethodBinding mbinding2 = node.resolveMethodBinding();
-			Utils.print("METHOD BINDING :"+mbinding2);
-			if (astrattoTrovato==false) {  // se il modificatore astratto Ã¨ presente Ã¨ inutile rifare i controlli
-			int modificatore = mbinding2.getModifiers(); 
-	        if (Modifier.isAbstract(modificatore)) {
-	        	// il metodo invocato Ã¨ di tipo astratto 
-	        	//feat.setSCMCallAbsMethod(2);
-	        	astrattoTrovato=true;
-	        } // fine if controllo se il modificatore del metodo Ã¨ astratto
-			} //fine if astrattoTrovato
-			
-			Utils.print("      [MI " + node.getClass().getSimpleName() + " " + classInvoker + " " + methodInvoker + " -> "
-					+ binding.getDeclaringClass().getQualifiedName() + " " + node.toString() + " ]");
-		}*/
-		
 		String istruzioneChiamata = node.toString();
+		
+		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
+		MethodDeclaration mnode = getMethodDeclaration(node); 
+		
+		if (mnode != null) {
+			IMethodBinding mbinding = mnode.resolveBinding(); 
+			
+			//mnode.resolverBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
+			String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+			
+			boolean bool = false;
+			if (mbinding != null && mnode.toString().contains(" execute()") && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+				for (int i=0;i<listaClassiInExecute.size();i++) { 
+					if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
+						bool = true;
+						break;
+					}
+				}
+				if (bool == false) { //IF il nome del metodo non è già presente nella lista, aggiungilo
+					listaClassiInExecute.add(nomeClasseDichiarante);
+					
+					/*for(int i = 0; i<arrayListFeature.size();i++) {
+						if (arrayListFeature.get(i).getFQNClass().replaceAll(".java", "").equals(nomeClasseDichiarante)) {
+							System.out.println("LA CLASSE " + arrayListFeature.get(i).getFQNClass() + " E' PARTE DI UN EXECUTE");
+						}
+					}*/
+				}
+				
+			}
+		}
 		
 		if (hasAddCommandMethod(istruzioneChiamata)) {
 			feat.setAddsCommandMethod(2);
@@ -499,7 +468,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setExecutesCommand(2);
 		}
 		
-			return true;
+		return true;
 			
 	}
 
@@ -790,6 +759,16 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 		return (MethodDeclaration) pnode;
 	}
+	
+	//Metodo getMethodInvocation
+	private MethodInvocation getMethodInvocation(ASTNode node) {
+		ASTNode pnode = node;
+		while (pnode != null && pnode.getNodeType() != ASTNode.METHOD_INVOCATION) {
+			pnode = pnode.getParent();
+		}
+
+		return (MethodInvocation) pnode;
+	}
 
 	private TypeDeclaration getTypeDeclaration(ASTNode node) {
 		ASTNode pnode = node;
@@ -876,6 +855,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 			      break test;
 			    }
 		return bool;
+	}
+
+	//getListaClassiInExecute
+	public ArrayList<String> getListaClassiInExecute() {
+		//if (listaClassiInExecute.isEmpty()) {
+		//	return new ArrayList<String>();
+		//}
+		//else {
+			return listaClassiInExecute;
+		//}
+		
 	}
 	
 	/*public boolean cercaCollezione(String dichiarazione) {

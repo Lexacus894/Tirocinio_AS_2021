@@ -44,7 +44,7 @@ public class Process {
 	
 	//CSV file header (Ruoli Command)
 	private static final String FILE_HEADER_COM = "SoftwareName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
-			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces";
+			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
 	 
 	//CSV file header (Combinazioni Observer)
 	private static final String FILE_HEADER3 = "Classes;HasSubject;HasObserver;"
@@ -516,6 +516,9 @@ else {
 		              fileWriter.append(COMMA_DELIMITER);
 		              
 		              fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
+		              fileWriter.append(COMMA_DELIMITER);
+		              
+		              fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
 		              //fileWriter.append(COMMA_DELIMITER);
 		              
 		              fileWriter.append(NEW_LINE_SEPARATOR);
