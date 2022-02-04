@@ -161,7 +161,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]ID");
 	}
 
-	// Type Declaration - ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
+	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
@@ -411,20 +411,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]FD");
 	}
 	
-	//@Override
-	//public boolean visit(VariableDeclarationFragment node) {	
-	//	Utils.print("    [VARDECL " +node.getName().toString());
-	//	return true ;
-	//}
-	
-	//@Override
-	//public void endVisit(VariableDeclarationFragment node) {
-		// Utils.print(" ]FD");
-	//}
-	
-	
-
-	// Method Invocation - SCMCallAbsMethod, AddListener, RemoveListener
+	// Method Invocation - AddsCommandMethod, ExecutesCommand, Ricerca Classi in execute()
 	@Override
 	public boolean visit(MethodInvocation node) {
 			
@@ -437,6 +424,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 			IMethodBinding mbinding = mnode.resolveBinding(); 
 			
 			//mnode.resolverBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
+			
+			//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
 			String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
 			
 			boolean bool = false;
@@ -449,22 +438,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 				}
 				if (bool == false) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 					listaClassiInExecute.add(nomeClasseDichiarante);
-					
-					/*for(int i = 0; i<arrayListFeature.size();i++) {
-						if (arrayListFeature.get(i).getFQNClass().replaceAll(".java", "").equals(nomeClasseDichiarante)) {
-							System.out.println("LA CLASSE " + arrayListFeature.get(i).getFQNClass() + " E' PARTE DI UN EXECUTE");
-						}
-					}*/
 				}
-				
 			}
 		}
 		
-		if (hasAddCommandMethod(istruzioneChiamata)) {
+		//IF l'istruzione contiene ".add" o "new" e "Command"
+		if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains("new")) && istruzioneChiamata.contains("Command")) {
 			feat.setAddsCommandMethod(2);
 		}
 		
-		if (executesCommand(istruzioneChiamata)) {
+		//IF l'istruzione contiene ".execute()"
+		if (istruzioneChiamata.contains(".execute()")) {
 			feat.setExecutesCommand(2);
 		}
 		
@@ -809,29 +793,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			print((ASTNode) iterator.next());
 		}
 	}
-	
-	//Metodo per la ricerca di un metodo che crea/aggiunge un nuovo comando
-	public boolean hasAddCommandMethod(String istruzione) {
 		
-		if ((istruzione.contains(".add") || istruzione.contains("new")) && istruzione.contains("Command")) {
-			return true;	
-		}
-		else {
-			return false;
-		}
-	}
-	
-	//Metodo per la ricerca di un metodo che invoca l'execute() di un comando
-	public boolean executesCommand(String istruzione) {
-		
-		if (istruzione.contains(".execute()")) {
-			return true;	
-		}
-		else {
-			return false;
-		}
-	}
-	
 	public boolean cercaSottostringaClasse(String classe , String sottoStringa) {
 	
 		boolean bool=false;
