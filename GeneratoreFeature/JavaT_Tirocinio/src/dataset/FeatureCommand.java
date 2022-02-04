@@ -8,19 +8,19 @@ public class FeatureCommand {
 	private int MethodDeclarationKeyword;
 	private int ClassType;
 	private int ExecutesCommand;
-	private int AddCommandMethod;
+	private int AddsCommandMethod;
 	private int HasSuperclass;
 	private int ImplementsInterfaces;
 
 	public FeatureCommand(String softwareName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
-			int addCommand, int hasSuperclass, int implementsInterfaces ) {
+			int addsCommand, int hasSuperclass, int implementsInterfaces ) {
 		this.SoftwareName = softwareName;
 		this.FQNClass = fqnClass;
 		this.ClassDeclarationKeyword = classDeclaration;
 		this.MethodDeclarationKeyword = methodDeclaration;
 		this.ClassType = classType;
 		this.ExecutesCommand = executesCommand;
-		this.AddCommandMethod = addCommand;
+		this.AddsCommandMethod = addsCommand;
 		this.HasSuperclass = hasSuperclass;
 		this.ImplementsInterfaces = implementsInterfaces;
 	}
@@ -74,11 +74,11 @@ public class FeatureCommand {
 	}
 
 	public int getAddCommandMethod() {
-		return AddCommandMethod;
+		return AddsCommandMethod;
 	}
 
 	public void setAddCommandMethod(int addCommandMethod) {
-		AddCommandMethod = addCommandMethod;
+		AddsCommandMethod = addCommandMethod;
 	}
 
 	public int getHasSuperclass() {
@@ -102,7 +102,7 @@ public class FeatureCommand {
 		  
 		  return " VettoreFeatureCommand [SoftwareName = " + this.SoftwareName + ", FQNClass = " + this.FQNClass
 		  		+ ", ClassDeclarationKeyword = " + this.ClassDeclarationKeyword + ", MethodDeclarationKeyword = " + this.MethodDeclarationKeyword
-		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", AddCommand = " + this.AddCommandMethod
+		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", AddsCommand = " + this.AddsCommandMethod
 		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces +"]";
 	  
 	  }
