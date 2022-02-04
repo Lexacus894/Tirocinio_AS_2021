@@ -341,30 +341,12 @@ public class Parser {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
 				
-				//Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
+				//Lista delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
 				lista = visitor0.getListaClassiInExecute();
-				for (int i = 0; i < listaFeatureParser.size(); i++) {
-					for (int j = 0; j < lista.size(); j++) {
-						if (listaFeatureParser.get(i).getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
-							listaFeatureParser.get(i).setIsPartOfExecute(2);
-							break;
-						}
-					}
-				}
 				
-				
-				/*System.out.println("CLASSI IN EXECUTE: \n");
-				if (!lista.isEmpty()) {
-					for(int i = 0; i<lista.size();i++) {
-						System.out.println(lista.get(i));
-					}
-				}*/
 			}
 			//System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
 			
-			
-			
-			//
 		} 
 		
 		catch (IOException ioe) {
@@ -372,5 +354,8 @@ public class Parser {
 		}
 		
 	}
-	
+
+	public ArrayList<String> getListaNomiInExecute() {
+		return lista;
+	}
 }

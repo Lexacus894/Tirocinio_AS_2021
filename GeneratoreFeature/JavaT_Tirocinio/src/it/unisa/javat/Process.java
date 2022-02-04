@@ -114,14 +114,9 @@ public class Process {
 					Utils.print(e);
 				}			
 			}	
-
-			//String fileName = "Dataset.csv";
-		    //creafileCSV(fileName);
 			System.out.println("-------------FINE Process -----------------");
 
-			filename="DATASET_OBS.csv";
-
-			creaCSV(filename);
+			creaCSV("DATASET_OBS.csv");
 
 			Info(false);
 		} 
@@ -194,13 +189,9 @@ public class Process {
 					}			
 				}	
 
-				//String fileName = "Dataset.csv";
-			    //creafileCSV(fileName);
 				System.out.println("-------------FINE Process -----------------");
-				
-				filename="DATASET_COM.csv";
 
-				creaCSV(filename);
+				creaCSV("DATASET_COM.csv");
 
 				Info(false);
 			} 
@@ -483,6 +474,8 @@ else {
 		          }
 	         }
 	         else if (dptype.equals("com")) {
+	        	 
+	        	 ArrayList<String> lista = _parser.getListaNomiInExecute();
 	        	//Write the CSV file header
 	        	 fileWriter.append(FILE_HEADER_COM.toString());
 	        	 
@@ -518,6 +511,13 @@ else {
 		              fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
+		              //Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
+		              for (int j = 0; j < lista.size(); j++) {
+							if (vettoreFeat.getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
+								vettoreFeat.setIsPartOfExecute(2);
+								break;
+							}
+		              }
 		              fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
 		              //fileWriter.append(COMMA_DELIMITER);
 		              
