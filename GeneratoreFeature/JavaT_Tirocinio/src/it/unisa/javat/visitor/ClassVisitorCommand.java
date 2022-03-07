@@ -425,7 +425,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (mnode != null) {
 			IMethodBinding mbinding = mnode.resolveBinding(); 
 			
-			//mnode.resolverBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
+			//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
 			
 			//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
 			String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
@@ -438,7 +438,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 						break;
 					}
 				}
-				if (bool == false) { //IF il nome del metodo non è già presente nella lista, aggiungilo
+				if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 					listaClassiInExecute.add(nomeClasseDichiarante);
 				}
 			}
