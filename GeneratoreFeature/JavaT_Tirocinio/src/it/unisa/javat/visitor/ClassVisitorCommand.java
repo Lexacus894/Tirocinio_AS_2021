@@ -428,20 +428,24 @@ public class ClassVisitorCommand extends ASTVisitor {
 			//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
 			
 			//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
-			String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
-			
-			boolean bool = false;
-			if (mbinding != null && mnode.toString().contains(" execute()") && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
-				for (int i=0;i<listaClassiInExecute.size();i++) { 
-					if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
-						bool = true;
-						break;
+			if (node.resolveMethodBinding() != null) {
+				String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+				
+				boolean bool = false;
+				if (mbinding != null && mnode.toString().contains(" execute()") && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+					for (int i=0;i<listaClassiInExecute.size();i++) { 
+						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
+							bool = true;
+							break;
+						}
+					}
+					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
+						listaClassiInExecute.add(nomeClasseDichiarante);
 					}
 				}
-				if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
-					listaClassiInExecute.add(nomeClasseDichiarante);
-				}
 			}
+			
+			
 		}
 		
 		//IF l'istruzione contiene ".add" o "new" e "Command"
@@ -464,13 +468,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 	}
 	
 	//ForStatement - ScanCollectionMethod
-	@Override
+	/*@Override
 	public boolean visit(ForStatement node){
 		//Restituisce la stringa del costrutto For 
 		Utils.print("[FOR " + node.getClass().getSimpleName() + "   " + node.toString());
 		String ciclo = node.toString();
 		
-		String contenutoStack = cicloDopo.pop();
+		String contenutoStack = "";
+		if (cicloDopo.pop() != null) {
+			contenutoStack = cicloDopo.pop();
+		}
+		
 		
 		Utils.print(" CONTENUTO STACK :"+contenutoStack);
 		if(contenutoStack.equals("SI")) {
@@ -500,7 +508,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(ForStatement node) {
 		inStatement=false;
 		Utils.print(" ]FOR");
-	}
+	}*/
 	
 	//FieldAccess - ChangeState
 	@Override
