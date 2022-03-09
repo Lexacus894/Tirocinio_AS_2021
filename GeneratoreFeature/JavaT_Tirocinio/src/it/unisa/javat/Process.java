@@ -682,8 +682,8 @@ else {
 			
 			//COMMAND - CLASSIFICAZIONE DEI RUOLI - COMMAND
 			else if (r.equals("6")) {
-				//BatchCommand bc = new BatchCommand();
-				//bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
+				BatchCommand bc = new BatchCommand();
+				bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTesterCommand.py");
 				Utils.print("Non ancora implementato.");
 			}
 			
