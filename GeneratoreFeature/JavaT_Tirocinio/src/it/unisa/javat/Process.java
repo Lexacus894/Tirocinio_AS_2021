@@ -43,7 +43,7 @@ public class Process {
 			+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
 	
 	//CSV file header (Ruoli Command)
-	private static final String FILE_HEADER_COM = "SoftwareName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
+	private static final String FILE_HEADER_COM = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
 			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
 	 
 	//CSV file header (Combinazioni Observer)
@@ -486,7 +486,10 @@ else {
 		        	
 		        	  fileWriter.append(vettoreFeat.getSoftwareName());	 
 		              fileWriter.append(COMMA_DELIMITER);
-		        	  
+		              
+		              fileWriter.append(vettoreFeat.getFileName());	 
+		              fileWriter.append(COMMA_DELIMITER);
+		            		        	  
 		        	  fileWriter.append(vettoreFeat.getFQNClass());	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
@@ -684,7 +687,6 @@ else {
 			else if (r.equals("6")) {
 				BatchCommand bc = new BatchCommand();
 				bc.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTesterCommand.py");
-				Utils.print("Non ancora implementato.");
 			}
 			
 			//COMMAND - ESTRAZIONE FEATURE DELLE COMBINAZIONI - COMMAND

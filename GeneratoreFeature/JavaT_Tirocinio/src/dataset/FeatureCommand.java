@@ -3,6 +3,7 @@ package dataset;
 public class FeatureCommand {
 	
 	private String SoftwareName;
+	private String FileName;
 	private String FQNClass;
 	private int ClassDeclarationKeyword;
 	private int MethodDeclarationKeyword;
@@ -13,9 +14,10 @@ public class FeatureCommand {
 	private int ImplementsInterfaces;
 	private int isPartOfExecute;
 
-	public FeatureCommand(String softwareName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
+	public FeatureCommand(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
 			int addsCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute ) {
 		this.SoftwareName = softwareName;
+		this.FileName = fileName;
 		this.FQNClass = fqnClass;
 		this.ClassDeclarationKeyword = classDeclaration;
 		this.MethodDeclarationKeyword = methodDeclaration;
@@ -33,6 +35,14 @@ public class FeatureCommand {
 
 	public void setSoftwareName(String softwareName) {
 		SoftwareName = softwareName;
+	}
+	
+	public String getFileName() {
+		return FileName;
+	}
+	
+	public void setFileName(String fileName) {
+		FileName = fileName;
 	}
 
 	public String getFQNClass() {

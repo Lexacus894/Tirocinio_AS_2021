@@ -16,12 +16,12 @@ def get_roles_predictions_list(data, predictions, labels):
     predictionResults = dict()
 
     for row, column in data.iterrows():
-        classNames.append(row[1])
+        classNames.append(row[2])
 
     for pred in predictions:
         class_id = pred['class_ids'][0]
         probability = pred['probabilities'][class_id]
-        if (class_id != 4):
+        if (class_id != 5):
             predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
         i = i + 1
 

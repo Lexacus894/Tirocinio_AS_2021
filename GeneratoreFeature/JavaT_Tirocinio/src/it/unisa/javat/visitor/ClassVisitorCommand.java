@@ -75,8 +75,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 	Stack<String> cicloDopo;
 	
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
-	private ArrayList<String> listaClassiListener;
+	//private ArrayList<String> listaClassiListener;
 	
+	ArrayList<FeatureCommand> arrayListTemp;
+	String folder;
+	String nomeProgetto;
 	
 	//verificare se la chiamata arriva dopo un changeState
 	boolean ChangeState2=false;
@@ -91,10 +94,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 		cicloDopo= new Stack<String>();
 		this.arrayListFeature=arrayListFeatureVisitor;
 		
-	    listaClassiListener = new ArrayList<String>();
+	    //listaClassiListener = new ArrayList<String>();
 	    
-	    feat = new FeatureCommand(folder,nomeProgetto,1,1,1,1,1,1,1,1);
-
+	    this.arrayListTemp = new ArrayList<FeatureCommand>();
+	    this.folder = folder;
+	    this.nomeProgetto = nomeProgetto;
+	    
 	}
 
 	// Compilation Unit
@@ -106,12 +111,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 		for (Comment c : comments) {
 			try {
 				String codeComment = _document.get(c.getStartPosition(), c.getLength());
-				Utils.print("[CO " + codeComment + " ]CO");
+				//Utils.print("[CO " + codeComment + " ]CO");
 			} catch (BadLocationException e) {
 			}
 		}
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
-		Utils.print("[CU " + node.getClass().getSimpleName());
+		//Utils.print("[CU " + node.getClass().getSimpleName());
 		
 		nomeVariabiliLista = new ArrayList<String>();
 		listaVariabili=new ArrayList<strutturaVariabile>();
@@ -125,8 +130,10 @@ public class ClassVisitorCommand extends ASTVisitor {
         	
         	System.out.println("NOME : " + var.getNomeVariabile() + " BOOL: " + var.getlocaleGlobale());
         }
-		Utils.print(" ]CU");
-		arrayListFeature.add(feat);
+		//Utils.print(" ]CU");
+		for(int i=0; i<arrayListTemp.size();i++) {
+			arrayListFeature.add(arrayListTemp.get(i));
+		}
 		
 		_scope.pop();
 	}
@@ -139,7 +146,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			Utils.print("[PD NOBIND]");
 			return false;
 		}
-		Utils.print("  [PD " + node.getClass().getSimpleName() + " " + binding.getName() + " ]");
+		//Utils.print("  [PD " + node.getClass().getSimpleName() + " " + binding.getName() + " ]");
 		
 		return true;
 	}
@@ -152,7 +159,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	// Import Declaration
 	@Override
 	public boolean visit(ImportDeclaration node) {
-		Utils.print("  [ID " + node.getClass().getSimpleName() + " " + node.getName() + " ]");
+		//Utils.print("  [ID " + node.getClass().getSimpleName() + " " + node.getName() + " ]");
 		return true;
 	}
 
@@ -166,23 +173,31 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
 		if (binding == null) {
-			Utils.print("[TD NOBIND]");
+			//Utils.print("[TD NOBIND]");
 			return false;
 		}
 
+	    feat = new FeatureCommand(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
+	    
 		ITypeBinding superclass = binding.getSuperclass();
+		feat.setFQNClass(binding.getName()+".java");
 
 		if (binding.isInterface()) {
 			feat.setClassType(3);
-			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
+			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
+			
+			if(cercaSottostringaClasse(binding.getName(),"Command") || cercaSottostringaClasse(binding.getName(),"Action")) {
+				feat.setClassDeclarationKeyword(2);
+			}
+			else {
+				feat.setClassDeclarationKeyword(1);
+			}
 		} 
 		else {
 			feat.setClassType(1);
-			Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
+			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 
-			String nomeClasse=binding.getQualifiedName();
-			
-			if(cercaSottostringaClasse(nomeClasse,"Command")) {
+			if(cercaSottostringaClasse(binding.getName(),"Command") || cercaSottostringaClasse(binding.getName(),"Action")) {
 				feat.setClassDeclarationKeyword(2);
 			}
 			else {
@@ -194,11 +209,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 		}	
 			
-		feat.setFQNClass(binding.getName()+".java");
+		
 
 		if (superclass != null) {
 			feat.setHasSuperclass(2);
-			Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
+			//Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
 		} 
 		else { 
 			feat.setHasSuperclass(1);
@@ -208,65 +223,16 @@ public class ClassVisitorCommand extends ASTVisitor {
 		ITypeBinding[] interfaces = binding.getInterfaces();
 		for (ITypeBinding sInterface : interfaces) {
 			feat.setImplementsInterfaces(2);
-			Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
+			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
 		}
 
+		arrayListTemp.add(feat);
 		return true;
 	}
 
 	@Override
 	public void endVisit(TypeDeclaration node) {
-		Utils.print("  ]TD");
-	}
-	
-	// Enum Declaration
-	@Override
-	public boolean visit(EnumDeclaration node) {
-		ChangeState2 = false;
-
-		String stringa="NO";
-		cicloDopo.push(stringa);
-		ITypeBinding binding = node.resolveBinding();
-		if (binding == null) {
-			Utils.print("[ED NOBIND]");
-			return false;
-		}
-
-		if (binding.isEnum()) {
-			Utils.print("  [ED" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
-		}
-
-		return true;
-	}
-
-	@Override
-	public void endVisit(EnumDeclaration node) {
-		Utils.print("  ]ED");
-	}
-
-	// Anonymous Class Declaration
-	@Override
-	public boolean visit(AnonymousClassDeclaration node) {
-		ChangeState2 = false;
-
-		String stringa="NO";
-		cicloDopo.push(stringa);
-		ITypeBinding binding = node.resolveBinding();
-		if (binding == null) {
-			Utils.print("[AD NOBIND]");
-			return false;
-		}
-
-		if (binding.isAnonymous()) {
-			Utils.print("  [AD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getBinaryName());
-		}
-
-		return true;
-	}
-
-	@Override
-	public void endVisit(AnonymousClassDeclaration node) {
-		Utils.print("  ]AD");
+		//Utils.print("  ]TD");
 	}
 
 	// Method Declaration - ClassType, MethodDeclarationKeyword
@@ -277,23 +243,32 @@ public class ClassVisitorCommand extends ASTVisitor {
 		cicloDopo.push(stringa);
 		IMethodBinding binding = node.resolveBinding();
 		if (binding == null) {
-			Utils.print("[MD NOBIND]");
+			//Utils.print("[MD NOBIND]");
 			return false;
 		}
 		
-		Utils.print("    [MD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.toString() + " ]");
+		String nomeClasseDichiarante = node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
+		//System.out.println(nomeClasseDichiarante);
+		//Utils.print("    [MD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.toString() + " ]");
 		
 		String nomeMetodo=binding.toString();
 		
-		if(controllo==false) {
-			if (cercaSottostringaClasse(nomeMetodo," execute()")) {
-				feat.setMethodDeclarationKeyword(2);
-				controllo=true;
+		//if(controllo==false) {
+			if (cercaSottostringaClasse(nomeMetodo," execute()") || cercaSottostringaClasse(nomeMetodo," actionPerformed(")) {
+				//Ricerca classe
+				for(int i=0;i<arrayListTemp.size();i++) {
+					String FQN = arrayListTemp.get(i).getFQNClass();
+					if (nomeClasseDichiarante.equals(FQN.substring(0, FQN.length()-5))) {
+						arrayListTemp.get(i).setMethodDeclarationKeyword(2);
+					}
+				}
+				
+				//controllo=true;
 			} 
-			else {
-				feat.setMethodDeclarationKeyword(1);;
-			}
-		} 
+			/*else {
+				feat.setMethodDeclarationKeyword(1);
+			}*/
+		//} 
 
 		/*if(Modifier.isAbstract(binding.getModifiers())) {
 			feat.setClassType(2);
@@ -305,112 +280,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(MethodDeclaration node) {
 		// Utils.print(" ]MD");
-	}
-
-	// Field Declaration - CollectionVariables
-	@Override
-	public boolean visit(FieldDeclaration node) {
-		
-		/*ChangeState2 = false;
-
-		String stringa="NO";
-		cicloDopo.push(stringa);
-
-		String nomeQuadre;
-		
-		Utils.print("    [FD " + node.getClass().getSimpleName() + " " + node.toString() + " ]");
-		
-
-		int u;
-		String c1,appoggio1="";
-		
-		nomeQuadre= node.fragments().toString();
-	
-        u=nomeQuadre.length();
-		
-		//tolgo le quadre al nome della variabile
-		String nomeVariabile1 = nomeQuadre.substring(1,u-1);
-		
-		for (int j=0;j<nomeVariabile1.length();j++) {
-		      
-		    c1=nomeVariabile1.substring(j, j+1);
-		    
-		    if(c1.equals("=")) {
-		    	break;
-		    } else {
-                  appoggio1=appoggio1.concat(c1);
-		    } //fine else (dentro ciclo)
-		    
-    		} // FINE CICLO 
-		
-		strutturaVariabile var = new strutturaVariabile(appoggio1,false);
-		listaVariabili.add(var);
-		
-		//////////////////////////////////////////////////////////////////////////////////////
-		String tipoVariabile = node.getType().toString();
-			
-		//LO SCOPO : PRELEVARE IL NOME DELLA VARIABILE SE ESSA E' DI TIPO COLLEZIONE 
-		// ED AGGIUNGERLA ALL'AarrayList NomeVariabiliLista , UTILIZZATO SUCCESSIVAMENTE NELLE VISITE DEI FOR 
-		// PER VERIFICARE SE C'E' UN ITERAZIONE  SULLA VARIABILE DI TIPO COLLEZIONE 
-		
-		if (cercaSottostringaClasse(tipoVariabile,"ArrayList") || (cercaSottostringaClasse(tipoVariabile,"List"))) {
-    	
-			nomeQuadre= node.fragments().toString();
-			
-			if (cercaSottostringaClasse(nomeQuadre,"new")) {
-	    		//SE IL NOME DELLA VARIABILE HA IL NEW ALLORA BISOGNA CANCELLARE LE QUADRE E TAGLIARE LA STRINGA 
-	    		// FINO AL CARATTARE =
-	    		//ELIMINO LE PARTENTISE QUADRE
-	    		int i = nomeQuadre.length();
-	    		
-	    		//tolgo le quadre al nome della variabile
-	    		String nomeVariabile = nomeQuadre.substring(1,i-1);
-				
-	    		//BISOGNA TAGLIARE TUTTI I CARATTERI DELLA STRINGA DOPO L'UGUALE COMPRESO QUEST'ULTIMO
-	    		String c;
-	    		
-	    		//isolo il nome della variabile con una concatenazione finchÃ¨
-	    		//non incontra il carattere "="
-	    		String appoggio="";
-	    		for (int j=0;j<nomeVariabile.length();j++) {
-      
-    		    c=nomeVariabile.substring(j, j+1);
-    		    
-    		    if(c.equals("=")) {
-    		    	break;
-    		    } else {
-                      appoggio=appoggio.concat(c);
-    		    } //fine else (dentro ciclo)
-    		    
-	    		} // FINE CICLO 
-	    		
-    		    nomeVariabiliLista.add(appoggio);
-    		    
-	    		
-	    		} 
-			else { //inizio else della condizion : se Ã¨ presente la stringa "new" nella dichiarazione delle variabili	
-				int i = nomeQuadre.length();
-	            String nomeVariabile = nomeQuadre.substring(1,i-1);
-		        nomeVariabiliLista.add(nomeVariabile);
-		    } //fine else sottostringa "new"
-		}
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		String dichiarazione = node.toString();
-		boolean verifica = cercaCollezione(dichiarazione);
-		
-		if(verifica) {
-			feat.setCollectionVariables(2);
-		}else feat.setCollectionVariables(1);
-		
-		*/		
-		return true;
-	}
-
-	@Override
-	public void endVisit(FieldDeclaration node) {
-		// Utils.print(" ]FD");
 	}
 	
 	// Method Invocation - AddsCommandMethod, ExecutesCommand, Ricerca Classi in execute()
@@ -426,13 +295,14 @@ public class ClassVisitorCommand extends ASTVisitor {
 			IMethodBinding mbinding = mnode.resolveBinding(); 
 			
 			//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
-			
 			//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
+			
+			//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
 			if (node.resolveMethodBinding() != null) {
 				String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
 				
 				boolean bool = false;
-				if (mbinding != null && mnode.toString().contains(" execute()") && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && (mnode.toString().contains(" execute()") || mnode.toString().contains(" actionPerformed(")) && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
 							bool = true;
@@ -441,21 +311,37 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 						listaClassiInExecute.add(nomeClasseDichiarante);
+						System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
 					}
 				}
+			
+				//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
+				if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains("new")) && ((istruzioneChiamata.contains("Command")) || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
+					//feat.setAddsCommandMethod(2);
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+							arrayListTemp.get(i).setAddsCommandMethod(2);
+						}
+					}
+				}
+				
+				//IF l'istruzione contiene ".execute()"
+				if (istruzioneChiamata.contains(".execute()")) {
+					//feat.setExecutesCommand(2);
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+							arrayListTemp.get(i).setExecutesCommand(2);
+						}
+					}
+				}
+			
 			}
 			
-			
-		}
-		
-		//IF l'istruzione contiene ".add" o "new" e "Command"
-		if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains("new")) && istruzioneChiamata.contains("Command")) {
-			feat.setAddsCommandMethod(2);
-		}
-		
-		//IF l'istruzione contiene ".execute()"
-		if (istruzioneChiamata.contains(".execute()")) {
-			feat.setExecutesCommand(2);
 		}
 		
 		return true;
@@ -465,223 +351,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(MethodInvocation node) {
 		// Utils.print(" ]MI");
-	}
-	
-	//ForStatement - ScanCollectionMethod
-	/*@Override
-	public boolean visit(ForStatement node){
-		//Restituisce la stringa del costrutto For 
-		Utils.print("[FOR " + node.getClass().getSimpleName() + "   " + node.toString());
-		String ciclo = node.toString();
-		
-		String contenutoStack = "";
-		if (cicloDopo.pop() != null) {
-			contenutoStack = cicloDopo.pop();
-		}
-		
-		
-		Utils.print(" CONTENUTO STACK :"+contenutoStack);
-		if(contenutoStack.equals("SI")) {
-			
-			 for (String nomeVariabile : nomeVariabiliLista) {
-		        	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
-		        	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
-		        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-		        		 //feat.setAfterChangeStateIterateOverList(2);
-		        		 break;
-		        	}		
-		}
-		}
-		
-		//CONTROLLO SE NEL FOR STATEMENT E' 
-    	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
-        for (String nomeVariabile : nomeVariabiliLista) {
-        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-        		//feat.setScanCollectionMethod(2);
-        		inStatement=true;
-        	}
-        }
-		return true;
-	}
-	
-	@Override
-	public void endVisit(ForStatement node) {
-		inStatement=false;
-		Utils.print(" ]FOR");
-	}*/
-	
-	//FieldAccess - ChangeState
-	@Override
-	public boolean visit(FieldAccess node) {
-		Utils.print("     [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
-		String nomeAccesso=node.getName().toString();
-		for(strutturaVariabile var: listaVariabili) {
-			String contenuto= var.getNomeVariabile();
-			if(nomeAccesso.equals(contenuto)) {
-				//feat.setChangeState(2);
-				String stringa="SI";
-				cicloDopo.push(stringa);
-				ChangeState2 = true;
-			} else {
-				String stringa="NO";
-				cicloDopo.push(stringa);
-			}
-		}
-		
-		return true;
-	}
-	
-	@Override
-	public void endVisit(FieldAccess node) {
-		Utils.print("    ]fieldACCESS");
-		
-	}
-	
-	//EnhancedForStatement - ScanCollectionMethod, AfterChangeStateIterateOverList
-	@Override
-	public boolean visit(EnhancedForStatement node) {
-		
-		ChangeState2 = false;
-
-		//VISITA IN UN FOR STATEMENT MIGLIORATO 
-			
-		Utils.print("    [FOREN " + node.getClass().getSimpleName() + "   " + node.toString());
-		
-        String ciclo = node.toString();
-        
-		String contenutoStack = cicloDopo.pop();
-	
-		Utils.print(" CONTENUTO STACK :"+contenutoStack);
-		if(contenutoStack.equals("SI")) {
-			
-			 for (String nomeVariabile : nomeVariabiliLista) {
-		        	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
-		        	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
-		        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-		        		 //feat.setAfterChangeStateIterateOverList(2);
-		        	}
-			
-			//feat.setAfterChangeStateIterateOverList(2);
-		}
-		
-        for (String nomeVariabile : nomeVariabiliLista) {
-        	//CONTROLLO SE NEL FOR STATEMENT MIGLIORATO E' 
-        	//UN ITERAZIONE SU DI UNA VARIABILE DI TIPO COLLEZIONE DICHIARATA PRECEDENTEMENTE 
-        	if (cercaSottostringaClasse(ciclo,nomeVariabile)) {
-        		//feat.setScanCollectionMethod(2);
-        		inStatement=true;
-        	}
-        }
-	   
-	}
-		return true;
-	}
-	
-	@Override
-	public void endVisit(EnhancedForStatement node) {
-		inStatement=false;
-		Utils.print("    ]FOREN");
-	}
-	
-	//VariableDeclarationStatement
-	@Override
-	public boolean visit(VariableDeclarationStatement node) {
-		
-		ChangeState2 = false;
-
-		String stringa="NO";
-		cicloDopo.push(stringa);
-		
-		Utils.print("[VAR " + node.getClass().getSimpleName() + "   " + node.toString());
-        String nomeQuadre ,c ,appoggio="";
-        int i;
-        
-        nomeQuadre= node.fragments().toString();
-        
-        i=nomeQuadre.length();
-		
-		//tolgo le quadre al nome della variabile
-		String nomeVariabile = nomeQuadre.substring(1,i-1);
-		
-		for (int j=0;j<nomeVariabile.length();j++) {
-		      
-		    c=nomeVariabile.substring(j, j+1);
-		    
-		    if(c.equals("=")) {
-		    	break;
-		    } else {
-                  appoggio=appoggio.concat(c);
-		    } //fine else (dentro ciclo)
-		    
-    		} // FINE CICLO 
-		
-		strutturaVariabile var = new strutturaVariabile(appoggio,true);
-		listaVariabili.add(var);
-    		
-		//strutturaVariabile var = new strutturaVariabile();
-
-		return true;
-	}
-	
-	@Override
-	public void endVisit(VariableDeclarationStatement node) {
-		Utils.print(" ]VAR");
-	}
-	
-	//Array Access
-	@Override
-	public boolean visit(ArrayAccess node) {
-		
-		ChangeState2 = false;
-		
-		String stringa="NO";
-		cicloDopo.push(stringa);
-		
-		Utils.print("[ArrayACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
-		return true;
-	}
-	
-	@Override
-	public void endVisit(ArrayAccess node) {
-		Utils.print(" ]ArrayACCESS");
-	}
-	
-	// Class Instance Creation
-	@Override
-	public boolean visit(ClassInstanceCreation node) {
-		
-		ChangeState2 = false;
-		
-		String stringa="NO";
-		cicloDopo.push(stringa);
-		
-		IMethodBinding binding = node.resolveConstructorBinding();
-		if (binding == null) {
-			Utils.print("[CIC NOBIND]");
-			return false;
-		}
-		if (binding.isConstructor()) {
-			if (this.isTypeDeclaration(binding.getDeclaringClass(), "javax.swing.JFrame")) {
-
-				Utils.print("    [CIC " + node.getClass().getSimpleName() + " " + binding.getName() + " " + node + "]");
-				ASTNode parent = node.getParent().getParent();
-				if (parent instanceof VariableDeclarationStatement) {
-					VariableDeclarationStatement vnode = (VariableDeclarationStatement) parent;
-					List<?> fragments = vnode.fragments();
-					Utils.print("" + vnode.toString());
-				} else if (parent instanceof Block) {
-					Block bnode = (Block) parent;
-					List<?> fragments = bnode.statements();
-					Utils.print("" + bnode.toString());
-				}
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public void endVisit(ClassInstanceCreation node) {
-		// Utils.print(" ]CIC");
 	}
 
 	/*
