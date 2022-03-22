@@ -54,44 +54,33 @@ import it.unisa.javat.Utils;
 
 public class ClassVisitorCommand extends ASTVisitor {
 	
-	private static final int i = 0;
+	//private static final int i = 0;
 
 	CompilationUnit _compilation;
 	Document _document;
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
+	
 	ArrayList<FeatureCommand> arrayListFeature;
-
-	boolean obs=false , cobs=false; 
-	boolean ccobs=false , cccobs=false; 
-
 	FeatureCommand feat;
-
-    boolean controllo=false;
-	ArrayList<String> nomeVariabiliLista;
-	boolean inStatement=false;
-	boolean astrattoTrovato=false;
-	ArrayList<strutturaVariabile> listaVariabili;
-	Stack<String> cicloDopo;
-	
-	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
-	//private ArrayList<String> listaClassiListener;
-	
 	ArrayList<FeatureCommand> arrayListTemp;
 	String folder;
 	String nomeProgetto;
+	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
 	
-	//verificare se la chiamata arriva dopo un changeState
-	boolean ChangeState2=false;
+	
+	//ArrayList<strutturaVariabile> listaVariabili;
+	//Stack<String> cicloDopo;
+	//private ArrayList<String> listaClassiListener;
 
-
+	
 	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommand> arrayListFeatureVisitor, String folder,String nomeProgetto) {
 		_compilation = compilation;
 		_document = document;
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
 		
-		cicloDopo= new Stack<String>();
+		//cicloDopo= new Stack<String>();
 		this.arrayListFeature=arrayListFeatureVisitor;
 		
 	    //listaClassiListener = new ArrayList<String>();
@@ -112,24 +101,23 @@ public class ClassVisitorCommand extends ASTVisitor {
 			try {
 				String codeComment = _document.get(c.getStartPosition(), c.getLength());
 				//Utils.print("[CO " + codeComment + " ]CO");
-			} catch (BadLocationException e) {
+			} 
+			catch (BadLocationException e) {
 			}
 		}
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
 		//Utils.print("[CU " + node.getClass().getSimpleName());
 		
-		nomeVariabiliLista = new ArrayList<String>();
-		listaVariabili=new ArrayList<strutturaVariabile>();
+		//listaVariabili=new ArrayList<strutturaVariabile>();
 
 		return true;
 	}
 
 	@Override
 	public void endVisit(CompilationUnit node) {
-       for (strutturaVariabile var : listaVariabili) {
-        	
+       /*for (strutturaVariabile var : listaVariabili) {
         	System.out.println("NOME : " + var.getNomeVariabile() + " BOOL: " + var.getlocaleGlobale());
-        }
+        }*/
 		//Utils.print(" ]CU");
 		for(int i=0; i<arrayListTemp.size();i++) {
 			arrayListFeature.add(arrayListTemp.get(i));
@@ -178,39 +166,38 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 
 	    feat = new FeatureCommand(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
-	    
-		ITypeBinding superclass = binding.getSuperclass();
+		
 		feat.setFQNClass(binding.getName()+".java");
-
+		
 		if (binding.isInterface()) {
 			feat.setClassType(3);
 			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
-			
-			if(cercaSottostringaClasse(binding.getName(),"Command") || cercaSottostringaClasse(binding.getName(),"Action")) {
-				feat.setClassDeclarationKeyword(2);
-			}
-			else {
-				feat.setClassDeclarationKeyword(1);
-			}
 		} 
 		else {
 			feat.setClassType(1);
 			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 
-			if(cercaSottostringaClasse(binding.getName(),"Command") || cercaSottostringaClasse(binding.getName(),"Action")) {
+			/*if (binding.getName().contains("Command") || binding.getName().contains("Action")) {
 				feat.setClassDeclarationKeyword(2);
 			}
 			else {
 				feat.setClassDeclarationKeyword(1);
-			}
+			}*/
 
 			if(Modifier.isAbstract(binding.getModifiers())) {
 				feat.setClassType(2);
 			}
 		}	
-			
-		
 
+		if (binding.getName().contains("Command") || binding.getName().contains("Action")) {
+			feat.setClassDeclarationKeyword(2);
+		}
+		else {
+			feat.setClassDeclarationKeyword(1);
+		}
+		
+		
+	    ITypeBinding superclass = binding.getSuperclass();
 		if (superclass != null) {
 			feat.setHasSuperclass(2);
 			//Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
@@ -219,7 +206,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setHasSuperclass(1);
 		}
 
-		feat.setImplementsInterfaces(1);
+		//feat.setImplementsInterfaces(1);
 		ITypeBinding[] interfaces = binding.getInterfaces();
 		for (ITypeBinding sInterface : interfaces) {
 			feat.setImplementsInterfaces(2);
@@ -239,8 +226,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public boolean visit(MethodDeclaration node) {
 		
-		String stringa="NO";
-		cicloDopo.push(stringa);
+		//String stringa="NO";
+		//cicloDopo.push(stringa);
 		IMethodBinding binding = node.resolveBinding();
 		if (binding == null) {
 			//Utils.print("[MD NOBIND]");
@@ -253,26 +240,15 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String nomeMetodo=binding.toString();
 		
-		//if(controllo==false) {
-			if (cercaSottostringaClasse(nomeMetodo," execute()") || cercaSottostringaClasse(nomeMetodo," actionPerformed(")) {
-				//Ricerca classe
-				for(int i=0;i<arrayListTemp.size();i++) {
-					String FQN = arrayListTemp.get(i).getFQNClass();
-					if (nomeClasseDichiarante.equals(FQN.substring(0, FQN.length()-5))) {
-						arrayListTemp.get(i).setMethodDeclarationKeyword(2);
-					}
+		if (nomeMetodo.contains(" execute()") || nomeMetodo.contains(" actionPerformed(")) {
+			//Ricerca classe
+			for(int i=0;i<arrayListTemp.size();i++) {
+				String FQN = arrayListTemp.get(i).getFQNClass();
+				if (nomeClasseDichiarante.equals(FQN.substring(0, FQN.length()-5))) {
+					arrayListTemp.get(i).setMethodDeclarationKeyword(2);
 				}
-				
-				//controllo=true;
-			} 
-			/*else {
-				feat.setMethodDeclarationKeyword(1);
-			}*/
-		//} 
-
-		/*if(Modifier.isAbstract(binding.getModifiers())) {
-			feat.setClassType(2);
-		}*/
+			}
+		}
 		
 		return true;
 	}
@@ -341,9 +317,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 						}
 					}
 				}
-			
+				
 			}
-			
 		}
 		
 		return true;
@@ -474,69 +449,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 			print((ASTNode) iterator.next());
 		}
 	}
-		
-	public boolean cercaSottostringaClasse(String classe , String sottoStringa) {
-	
-		boolean bool=false;
-
-		int max = classe.length() - sottoStringa.length();
-		
-		 test:
-			    for (int i = 0; i <= max; i++) {
-			      int n = sottoStringa.length();
-			      int j = i;
-			      int k = 0;
-			      while (n-- != 0) {
-			        if (classe.charAt(j++) != sottoStringa.charAt(k++)) {
-			          continue test;
-			        }
-			      }
-
-			      // a questo punto è stata effettuata una ricerca
-			      // sarà possibile produrre un output			
-			      bool = true;
-			      break test;
-			    }
-		return bool;
-	}
 
 	//getListaClassiInExecute
 	public ArrayList<String> getListaClassiInExecute() {
-		//if (listaClassiInExecute.isEmpty()) {
-		//	return new ArrayList<String>();
-		//}
-		//else {
 			return listaClassiInExecute;
-		//}
-		
 	}
-	
-	/*public boolean cercaCollezione(String dichiarazione) {
-	
-	boolean bool=false;
-	String sottoStringa="List";
-	
-	int max = dichiarazione.length() - sottoStringa.length();
-	
-	
-	 test:
-		    for (int i = 0; i <= max; i++) {
-		      int n = sottoStringa.length();
-		      int j = i;
-		      int k = 0;
-		      while (n-- != 0) {
-		        if (dichiarazione.charAt(j++) != sottoStringa.charAt(k++)) {
-		          continue test;
-		        }
-		      }
-
-		      // a questo punto è stata effettuata una ricerca
-		      // sarà possibile produrre un output			
-		      bool = true;
-		      break test;
-		    }
-	
-	return bool;
-}*/
 	
 }
