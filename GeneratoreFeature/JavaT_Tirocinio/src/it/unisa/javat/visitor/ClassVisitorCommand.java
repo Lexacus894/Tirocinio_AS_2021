@@ -300,16 +300,18 @@ public class ClassVisitorCommand extends ASTVisitor {
 			//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
 			if (node.resolveMethodBinding() != null) {
 				String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{"));
 				
 				boolean bool = false;
-				if (mbinding != null && (mnode.toString().contains(" execute()") || mnode.toString().contains(" actionPerformed(")) && !mnode.toString().contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && (primariga.contains(" execute()") || primariga.contains(" actionPerformed(")) && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+					System.out.println(mnode.toString());
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
 							bool = true;
 							break;
 						}
 					}
-					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
+					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 						listaClassiInExecute.add(nomeClasseDichiarante);
 						System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
 								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
