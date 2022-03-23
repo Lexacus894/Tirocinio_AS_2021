@@ -4,10 +4,8 @@ import sys
 import csv
 import os
 
-COMBINATIONS_ROLES_PREFIX=[['S','O'],
-                           ['CS','O'],
-                           ['CS','O','CO'],
-                           ['S','O','CS','CO']
+COMBINATIONS_ROLES_PREFIX=[['CI','CC','I','R','C']
+
                            ]
 
 def get_roles_predictions_list(data, predictions, labels):
@@ -16,12 +14,12 @@ def get_roles_predictions_list(data, predictions, labels):
     predictionResults = dict()
 
     for row, column in data.iterrows():
-        classNames.append(row[1])
+        classNames.append(row[2])
 
     for pred in predictions:
         class_id = pred['class_ids'][0]
         probability = pred['probabilities'][class_id]
-        if (class_id != 4):
+        if (class_id != 5):
             predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
         i = i + 1
 
@@ -44,10 +42,9 @@ def get_instances_predictions_list(data, predictions, labels):
     return predictionResults
 
 def roles_permutation(predictions_list):
-    triplets_list = list(itertools.permutations(predictions_list, 3))
     pairs_list = list(itertools.permutations(predictions_list, 2))
-    quadruplets_list=get_quadruplets_list(predictions_list,pairs_list)
-    return (quadruplets_list, triplets_list, pairs_list)
+    #print(pairs_list)
+    return (pairs_list)
 
 def get_quadruplets_list(predictions_list,pairs_list):
     abs_permutation_list = []
@@ -55,13 +52,13 @@ def get_quadruplets_list(predictions_list,pairs_list):
     for item in pairs_list:
         roleOne = predictions_list[item[0]][0]
         roleTwo = predictions_list[item[1]][0]
-        if (roleOne == 'Subject' and roleTwo == 'Observer')or(roleOne == 'Observer' and roleTwo == 'Subject') :
+        if (roleOne == 'CommandInterface' and roleTwo == 'ConcreteCommand') or (roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface') :
             abs_permutation_list.append(item)
         elif roleOne == 'Subject' and roleTwo == 'Subject':
             abs_permutation_list.append(item)
         elif roleOne == 'Observer' and roleTwo == 'Observer':
             abs_permutation_list.append(item)
-        elif(roleOne == 'ConcreteSubject' and roleTwo == 'ConcreteObserver')or(roleOne == 'ConcreteObserver' and roleTwo == 'ConcreteSubject') :
+        elif (roleOne == 'ConcreteSubject' and roleTwo == 'ConcreteObserver') or (roleOne == 'ConcreteObserver' and roleTwo == 'ConcreteSubject') :
             con_permutation_list.append(item)
         elif roleOne == 'ConcreteSubject' and roleTwo == 'ConcreteSubject':
             con_permutation_list.append(item)
@@ -81,28 +78,46 @@ def get_quadruplets_list(predictions_list,pairs_list):
     return quadruplets_list
 
 def filter_pairs_list(prediction_list, pairs_list):
-    abs_abs_pairs = []
-    con_abs_pairs = []
+    pairs = []
+    pairs_roles = []
     for item in pairs_list:
         roleOne = prediction_list[item[0]][0]
         roleTwo = prediction_list[item[1]][0]
 
-        if (roleOne == 'Subject' and roleTwo == 'Observer')\
-                or(roleOne == 'Observer' and roleTwo == 'Subject'):
-            abs_abs_pairs.append(item)
-        elif roleOne == 'Subject' and roleTwo == 'Subject':
-            abs_abs_pairs.append(item)
-        elif roleOne == 'Observer' and roleTwo == 'Observer':
-            abs_abs_pairs.append(item)
-        elif roleOne == 'ConcreteSubject' and roleTwo == 'Observer':
-            con_abs_pairs.append(item)
-        elif roleOne == 'ConcreteSubject' and roleTwo == 'Subject':
-            con_abs_pairs.append(item)
-        elif roleOne == 'ConcreteObserver' and roleTwo == 'Subject':
-            con_abs_pairs.append(item)
-        elif roleOne == 'ConcreteObserver' and roleTwo == 'Observer':
-            con_abs_pairs.append(item)
-    return (abs_abs_pairs, con_abs_pairs)
+        if (roleOne == 'CommandInterface' and roleTwo == 'ConcreteCommand'):
+            pairs.append(item)
+            pairs_roles.append('CI')
+            pairs_roles.append('CC')
+        elif (roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface'):
+            pairs.append(item)
+            pairs_roles.append('CC')
+            pairs_roles.append('CI')
+        elif (roleOne == 'Receiver' and roleTwo == 'ConcreteCommand'):
+            pairs.append(item)
+            pairs_roles.append('R')
+            pairs_roles.append('CC')
+        elif (roleOne == 'ConcreteCommand' and roleTwo == 'Receiver'):
+            pairs.append(item)
+            pairs_roles.append('CC')
+            pairs_roles.append('R')
+        elif (roleOne == 'Invoker' and roleTwo == 'ConcreteCommand'):
+            pairs.append(item)
+            pairs_roles.append('I')
+            pairs_roles.append('CC')
+        elif (roleOne == 'ConcreteCommand' and roleTwo == 'Invoker'):
+            pairs.append(item)
+            pairs_roles.append('CC')
+            pairs_roles.append('I')
+        elif (roleOne == 'Invoker' and roleTwo == 'Client'):
+            pairs.append(item)
+            pairs_roles.append('I')
+            pairs_roles.append('C')
+        elif (roleOne == 'Client' and roleTwo == 'Invoker'):
+            pairs.append(item)
+            pairs_roles.append('C')
+            pairs_roles.append('I')
+
+    return (pairs, pairs_roles)
 
 def filter_triplets_list(prediction_list, triplets_list):
     filtered_triplets_list=[]
@@ -137,23 +152,19 @@ def get_logger(format,name):
     logger=logging.getLogger(name=name)
     return logger
 
-def log_combinations_on_file(path,header,combinations):
+def log_combinations_on_file(path,header,combinations,roles):
     with open(path, "w") as fp:
         writer = csv.writer(fp, delimiter=";", dialect="excel", lineterminator="\n")
         writer.writerow(header)
-        combinations_index=0
-        for classes_set in combinations:
-            for combination in classes_set:
-                row = ''
-                roles_index = 0
-                for cl in combination:
-                    if roles_index < len(combination)-1:
-                        row = row + COMBINATIONS_ROLES_PREFIX[combinations_index][roles_index] + '-' + cl + ','
+        for i,classes_set in enumerate(combinations):
+            row = ''
+            for j,combination in enumerate(classes_set):
+                if ((2*i+1) < len(roles)):
+                    if j==1:
+                        row = row + combination + ' - ' + roles[2*i+1]
                     else:
-                        row = row + COMBINATIONS_ROLES_PREFIX[combinations_index][roles_index] + '-' + cl
-                    roles_index += 1
-                writer.writerow([row])
-            combinations_index+=1
+                        row = row + combination + ' - ' + roles[2*i] + ', '
+            writer.writerow([row])
 
 def log_predictions_on_file(root_directory,path,header,predictions):
     if not os.path.exists(root_directory):

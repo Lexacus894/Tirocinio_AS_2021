@@ -140,18 +140,22 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/tester/classifiers" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/datasets" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\datasets" />
       <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\tester\classifiers" />
+      <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\tester\utils" />
+      <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\tester2\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\tester" />
+      <recent name="C:\Users\alex8\Documents\GitHub\Tirocinio_AS_2021\GeneratoreFeature\JavaT_Tirocinio\OBSClassifier\tester\utils" />
       <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\tester" />
       <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\utils" />
       <recent name="C:\Users\utente\PycharmProjects\OBS Classifier\classifiers" />
-      <recent name="C:\Users\utente\PycharmProjects\OBS Classifier" />
     </key>
   </component>
   <component name="RunManager" selected="Python.ObserverClassifierTester">
@@ -355,9 +359,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/iris_data.py" />
