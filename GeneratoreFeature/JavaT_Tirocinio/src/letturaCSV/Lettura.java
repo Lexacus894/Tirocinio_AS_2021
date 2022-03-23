@@ -106,24 +106,21 @@ public ArrayList<nomiCombinazioni> listaCombinazioni = new  ArrayList<nomiCombin
 	} //FINE FUNZIONE GENERALE
 	
 	
-	public  ArrayList<nomiCombinazioni> procedura() throws IOException, InterruptedException{
-		String csvFile = "./OBSClassifier/tester/predictions/combinations_to_test.csv";
+	public  ArrayList<nomiCombinazioni> procedura(String fileName) throws IOException, InterruptedException {
+		String dir = "./OBSClassifier/tester/predictions/";
 	    String line = "";
 
-	    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+	    try (BufferedReader br = new BufferedReader(new FileReader(dir + fileName))) {
 	    	
 	    	line = br.readLine();	
 	    
-
 	        while ((line = br.readLine()) != null) {
 	        	
 	        	int vir=0;
 	           
-	        	nomiCombinazioni rigaNomi=controlloVirgole(line,vir);
+	        	nomiCombinazioni rigaNomi = controlloVirgole(line,vir);
+	        	System.out.println("ECCOMI ECCOMI ECCOMI " + rigaNomi);
 	        	listaCombinazioni.add(rigaNomi);
-	        
-	        //System.out.println(line);	
-	        //System.out.println("\n");	
 	      
 	        }
 

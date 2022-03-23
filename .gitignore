@@ -21,3 +21,8 @@ Path/
 10Nutch/
 11PMD/
 GeneratoreFeature/JavaT_Tirocinio/predictions/TestSoftware.csv
+GeneratoreFeature/JavaT_Tirocinio/Combination_to_test_MIO.csv
+GeneratoreFeature/JavaT_Tirocinio/datasets/datasetprova.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/datasets/com_roles_dataset.csv
+GeneratoreFeature/JavaT_Tirocinio/datasets/datasetprova.csv
+GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/datasets/datasetprova.csv

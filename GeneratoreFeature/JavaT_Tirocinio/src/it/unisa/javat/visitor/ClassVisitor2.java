@@ -120,16 +120,11 @@ public class ClassVisitor2 extends ASTVisitor {
 				return false;
 			}
 			
-			
 			nomeClasseAnalizzata= binding.getName();
-			
-			
 			
 			ITypeBinding superclass = binding.getSuperclass();
 			
-		     
-		      
-			Utils.print(" (VISITOR2) [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getName());
+			//Utils.print(" (VISITOR2) [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getName());
 
 		     for(int i=0;i<listaFeature3.size();i++) {
 		    	

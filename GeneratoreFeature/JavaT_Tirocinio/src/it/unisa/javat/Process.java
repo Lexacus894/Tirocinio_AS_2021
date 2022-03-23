@@ -210,7 +210,7 @@ public class Process {
 				 listaFeature3 = new ArrayList<Feature3>();
 					 
 			     Lettura lettura = new Lettura();
-			     listaCombinazioni= lettura.procedura();
+			     listaCombinazioni= lettura.procedura("combinations_to_test_Observer.csv");
 			     
 			     for (nomiCombinazioni nomi : listaCombinazioni) {
 			    	 Feature3 elemento= analisi(nomi);
@@ -259,15 +259,7 @@ else {
 	_projectName = path;
 }
 
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					
-					
-					
 
 					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
 					_project.print();
@@ -312,104 +304,110 @@ else {
 		    
 		} //fine else bool=true
 		
-		//Estrazione feature delle combinazioni (Command)
-		else if(bool==true && dptype.equals("com")) {
-			
-		    try {
-				Info(true);
-					 
-				 listaFeature3 = new ArrayList<Feature3>();
-					 
-			     Lettura lettura = new Lettura();
-			     listaCombinazioni= lettura.procedura();
-			     
-			     for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	 Feature3 elemento= analisi(nomi);
-			    	 listaFeature3.add(elemento);
-			    	 System.out.println(nomi.toString());
-			     }
-			     listaFeature=new ArrayList<Feature>();
+		
+		
+	}	//fineProcess
+	
+	//Estrazione feature delle combinazioni (Command)
+			public void estrazioneFeatureCommand(String[] args) {
+				
+			    try {
+			    	Info(true);
+						 
+					listaFeature3 = new ArrayList<Feature3>();
+						 
+				    Lettura lettura = new Lettura();
+				    try {
+				    	 listaCombinazioni= lettura.procedura("combinations_to_test_Command.csv");
+				    }
+				    catch (Exception e) {
+				    	
+				    }
+				     
+				    for (nomiCombinazioni nomi : listaCombinazioni) {
+				    	Feature3 elemento = analisi(nomi);
+				    	listaFeature3.add(elemento);
+				    	//System.out.println(nomi.toString());
+				    }
 				    
 				    listaFeature=new ArrayList<Feature>();
 
 				    for (nomiCombinazioni nomi : listaCombinazioni) {
-				    	Utils.print(nomi.toString());
-				    }
-				   
-			        System.out.println("-------------ArrayList Feature  CREATO -----------------");
+						   //Utils.print(nomi.toString());
+					}
+					   
+				    System.out.println("-------------ArrayList Feature  CREATO -----------------");
 
-				    _params = new Parameters(args, this.getClass().getName());
+					_params = new Parameters(args, this.getClass().getName());
 					_params.print();
-					
+						
 					for(int i=0;i<listaFeature3.size();i++) {
-				    	Feature3 riga= listaFeature3.get(i);
-				    	Utils.print(riga.toString());
+					    	Feature3 riga= listaFeature3.get(i);
+					    	//Utils.print(riga.toString());
+					
 					}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-String path=_params.getProjectPath();
-String _projectDir;
-String _projectName;
+	String path=_params.getProjectPath();
+	String _projectDir;
+	String _projectName;
 
-int pos = path.lastIndexOf(File.separator);
-if (pos > -1) {
-	_projectDir = path.substring(0, pos);
-	_projectName = path.substring(pos + 1);
-} 
-else {
-	_projectDir = ".";
-	_projectName = path;
-}
+	int pos = path.lastIndexOf(File.separator);
+	if (pos > -1) {
+		_projectDir = path.substring(0, pos);
+		_projectName = path.substring(pos + 1);
+	} 
+	else {
+		_projectDir = ".";
+		_projectName = path;
+	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
-					_project.print();
-								
-					List<String> files = _project.getSourceFiles();
-					for(String s: files) {
-						Utils.print("Source file:"+s);
-					}
-
-					_parser = new Parser(_params.getJavaVersion());
-					_parser.addClasspath(_project.getSourcePath());
-					_parser.addClasspaths(_project.getBinaryPath());
-					_parser.addClasspaths(_project.getLibraryPath());
-					_parser.print();
-				 
-					for (String s : files) {
-						try {	
-							//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
-
-									_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
+						_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+						_project.print();
 									
-									String folder = s;
-									String nomeProgetto=_project.getProjectName();
+						List<String> files = _project.getSourceFiles();
+						for(String s: files) {
+							Utils.print("Source file:"+s);
+						}
 
-									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-									_parser.parse(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeature,folder,true,listaFeature3,nomeProgetto);
-									//break;
-								
-						} 
-						catch (LocalException e) {
-							Utils.print(e);
-						}			
-					}	
-		    } 
-		    catch (LocalException e) {
-		    	Utils.print(e);
-		    }//fine Catch
-		    
-			filename="Combination_to_test_MIO.csv";
-            creaCSV3(filename);
-		    
-		}
-		
-	}	//fineProcess
-	
-	
+						_parser = new Parser(_params.getJavaVersion());
+						_parser.addClasspath(_project.getSourcePath());
+						_parser.addClasspaths(_project.getBinaryPath());
+						_parser.addClasspaths(_project.getLibraryPath());
+						_parser.print();
+					 
+						for (String s : files) {
+							try {	
+								//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+
+										_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
+										
+										String folder = s;
+										String nomeProgetto=_project.getProjectName();
+
+										//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
+										_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,true,listaFeature3,nomeProgetto);		
+										//break;
+									
+							} 
+							catch (LocalException e) {
+								Utils.print(e);
+							}			
+						}	
+			    } 
+			    catch (LocalException e) {
+			    	Utils.print(e);
+			    }//fine Catch
+			    
+				filename="Combination_to_test_MIO.csv";
+	            creaCSV3(filename);
+			    
+	            return;
+			}
 	
 	//Metodo per la creazione del Dataset con le feature dei ruoli per OBSERVER e COMMAND
 	public void creaCSV(String fileName) {
@@ -635,6 +633,7 @@ else {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Scanner sc = new Scanner(System.in);
 		String r="";
+		Process proc = new Process(args);
 		
 		while(!r.equals("9")) {
 			Utils.print("Inserire numero corrispondente alla fase da eseguire\n"
@@ -694,7 +693,7 @@ else {
 				bool=true;
 				dptype="com";
 			    //new Process(args);
-				Utils.print("Non ancora implementato.");
+				proc.estrazioneFeatureCommand(args);
 			}
 			
 			//COMMAND - CLASSIFICAZIONE DELLE ISTANZE - COMMAND

@@ -35,6 +35,7 @@ import it.unisa.javat.LocalException;
 import it.unisa.javat.visitor.ClassVisitor;
 import it.unisa.javat.visitor.ClassVisitor2;
 import it.unisa.javat.visitor.ClassVisitorCommand;
+import it.unisa.javat.visitor.ClassVisitorCommandInstances;
 import it.unisa.javat.FileManager;
 import it.unisa.javat.JarFilenameFilter;
 import it.unisa.javat.Utils;
@@ -332,10 +333,9 @@ public class Parser {
 
 			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
 			
-			if(visitor==true) {
-				//DA IMPLEMENTARE
-				//ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
-				//compilation.accept(visitor2);
+			if (visitor == true) {
+				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document, rewriter, listafeature3);
+				compilation.accept(visitor2);
 			} 
 			else {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
@@ -343,7 +343,6 @@ public class Parser {
 				
 				//Lista delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
 				lista = visitor0.getListaClassiInExecute();
-				
 			}
 			//System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
 			

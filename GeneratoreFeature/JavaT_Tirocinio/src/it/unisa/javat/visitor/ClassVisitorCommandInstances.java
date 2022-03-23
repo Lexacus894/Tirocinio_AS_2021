@@ -90,9 +90,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		@Override
 		public boolean visit(CompilationUnit node) {
 
-			Utils.print("Ritorno qui");
+			//Utils.print("Ritorno qui");
 			_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
-			Utils.print("(VISITOR2)[CU " + node.getClass().getSimpleName());
+			//Utils.print("(VISITOR2)[CU " + node.getClass().getSimpleName());
 			
 
 			return true;
@@ -101,7 +101,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		@Override
 		public void endVisit(CompilationUnit node) {
 	     
-			Utils.print(" ]CU(VISITOR2)");
+			//Utils.print(" ]CU(VISITOR2)");
 			
 			_scope.pop();
    
@@ -114,50 +114,43 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		public boolean visit(TypeDeclaration node) {
 			ITypeBinding binding = node.resolveBinding();
 			if (binding == null) {
-				Utils.print("[TD NOBIND]");
+				//Utils.print("[TD NOBIND]");
 				return false;
 			}
 			
-			
 			nomeClasseAnalizzata= binding.getName();
 			
-			
-			
 			ITypeBinding superclass = binding.getSuperclass();
-			
-		     
-		      
-			Utils.print(" (VISITOR2) [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getName());
+			 
+			//Utils.print(" (VISITOR2) [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getName());
 
 		     for(int i=0;i<listaFeature3.size();i++) {
 		    	
-		    	 
 		    	Feature3 riga= listaFeature3.get(i);
 
 		    	String concreteSubject = riga.getNomeConcreteSubject();
-		 
-
 		    	
 		    	if(concreteSubject.equals(nomeClasseAnalizzata)) {
 		    	
 		    	if(riga.getControlloSubRel()==true) {
-		   	    	 Utils.print("SONO ENTRATO BUONO .............................................................");
+		   	    	 //Utils.print("SONO ENTRATO BUONO .............................................................");
 
 		    	     String Subject= riga.getNomeSubject();
 		    	     if (superclass!=null ) {
 				        	String nomeSuperclasse = superclass.getName();
 				        	if(nomeSuperclasse.equals(Subject)) {
 
-				        		
 				        		riga.setSubjectsRelationship(1);
 				        		
 				        		listaFeature3.remove(i);   		
 				        		listaFeature3.add(i, riga);
 				        		
 				        	}
-			        	} else{     ITypeBinding[] interfaces = binding.getInterfaces();
-			    	                	for (ITypeBinding sInterface : interfaces) {
-			    			              String interfaccia=  sInterface.getName();
+			        	} 
+		    	     else {     
+		    	    	 ITypeBinding[] interfaces = binding.getInterfaces();
+			    	     for (ITypeBinding sInterface : interfaces) {
+			    			    String interfaccia=  sInterface.getName();
 			    			              if (interfaccia.equals(Subject)) {
 			    			            	
 			    			            	riga.setSubjectsRelationship(2);
@@ -198,7 +191,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					        		listaFeature3.add(i, riga);
 					        		
 					        	}
-				        	} else{    Utils.print("SONO ENTRATO BUONO .............................................................");
+				        	} else{ 
 
 
 				        		           ITypeBinding[] interfaces = binding.getInterfaces();
@@ -229,7 +222,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		@Override
 		public void endVisit(TypeDeclaration node) {
-			Utils.print("  ]TD (VISITOR2)");
+			//Utils.print("  ]TD (VISITOR2)");
 		}
 		
 		// Field Declaration
@@ -386,7 +379,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 			
 				
-			Utils.print("    (VISITOR2)[FD " + node.getClass().getSimpleName() + " " + node.getType().toString() + " ]");
+			//Utils.print("    (VISITOR2)[FD " + node.getClass().getSimpleName() + " " + node.getType().toString() + " ]");
 				
 			return true;
 		}
@@ -394,7 +387,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		@Override
 		public void endVisit(FieldDeclaration node) {
-			 Utils.print(" ]FD (VISITOR2)");
+			 //Utils.print(" ]FD (VISITOR2)");
 		}
 		
 		
@@ -459,7 +452,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		@Override
 		public boolean visit(FieldAccess node) {
-			Utils.print(" (VISITOR2) [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
+			//Utils.print(" (VISITOR2) [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
 			
 
 			for(int i=0;i<listaFeature3.size();i++) {
@@ -490,7 +483,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		@Override
 		public void endVisit(FieldAccess node) {
-			Utils.print("    ]fieldACCESS (VISITOR2)");
+			//Utils.print("    ]fieldACCESS (VISITOR2)");
 			
 		}
 		
