@@ -42,7 +42,7 @@ public class nomiCombinazioni {
 	
 	@Override
 	public String toString() {
-		return "nomiCombinazioni [classe1=" + classe1 + ", classe2=" + classe2 + ", classe3=" + classe3 + ", classe4="
+		return "nomiCombinazioni [classe1 = " + classe1 + ", classe2 = " + classe2 + ", classe3 = " + classe3 + ", classe4 = "
 				+ classe4 + "]";
 	}
 	

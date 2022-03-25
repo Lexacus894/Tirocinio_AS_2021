@@ -31,6 +31,7 @@ import org.eclipse.text.edits.TextEdit;
 import dataset.Feature;
 import dataset.Feature3;
 import dataset.FeatureCommand;
+import dataset.FeatureCommandInstances;
 import it.unisa.javat.LocalException;
 import it.unisa.javat.visitor.ClassVisitor;
 import it.unisa.javat.visitor.ClassVisitor2;
@@ -302,7 +303,7 @@ public class Parser {
 	}
 	
 	//Parser per il Command pattern
-	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommand> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
+	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommand> listaFeatureParser, String folder ,boolean visitor, ArrayList<FeatureCommandInstances> listaFeatureCommandInstances,String nomeProgetto) throws LocalException {
 		
 		Utils.print("Parsing file:" + fileName);
 		try {
@@ -334,7 +335,7 @@ public class Parser {
 			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
 			
 			if (visitor == true) {
-				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document, rewriter, listafeature3);
+				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document, rewriter, listaFeatureCommandInstances);
 				compilation.accept(visitor2);
 			} 
 			else {

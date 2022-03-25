@@ -1,6 +1,7 @@
 package it.unisa.javat;
 
 import letturaCSV.Lettura;
+import letturaCSV.Lettura2;
 import letturaCSV.nomiCombinazioni;
 import letturaCSV.provaLettura;
 
@@ -20,6 +21,7 @@ import java.util.Scanner;
 import dataset.Feature;
 import dataset.Feature3;
 import dataset.FeatureCommand;
+import dataset.FeatureCommandInstances;
 
 public class Process {
 
@@ -33,22 +35,26 @@ public class Process {
 	static String dptype="";
 	ArrayList<nomiCombinazioni> listaCombinazioni;
 	ArrayList<Feature3> listaFeature3;
+	ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
 
 	//Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ";";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 
 	//CSV file header (Ruoli Observer)
-	private static final String FILE_HEADER_OBS = "SoftwareName;FQNClass;CollectionVariable;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;" 
+	private static final String FILE_HEADER_OBSERVER_ROLES = "SoftwareName;FQNClass;CollectionVariable;AddListenerMethod;RemoveListenerMethod;ClassDeclarationKeyword;" 
 			+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
 	
 	//CSV file header (Ruoli Command)
-	private static final String FILE_HEADER_COM = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
+	private static final String FILE_HEADER_COMMAND_ROLES = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
 			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
 	 
 	//CSV file header (Combinazioni Observer)
-	private static final String FILE_HEADER3 = "Classes;HasSubject;HasObserver;"
+	private static final String FILE_HEADER_OBSERVER_INSTANCES = "Classes;HasSubject;HasObserver;"
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
+	
+	//CSV file header (Combinazioni Command)
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;CommandRelationship;ExecuteRelationship;IsPartOfExecute;AddNewRelationship";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -180,7 +186,7 @@ public class Process {
 								String nomeProgetto=_project.getProjectName();
 
 								//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-								_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,false,listaFeature3,nomeProgetto);
+								_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,false,listaFeatureCommandInstances,nomeProgetto);
 								//break;
 							
 					} 
@@ -304,110 +310,100 @@ else {
 		    
 		} //fine else bool=true
 		
+		//Estrazione feature delle combinazioni (Command)
+		else if (bool==true && dptype.equals("com")) {
+			
+		    try {
+		    	Info(true);
+				
+		    	listaFeatureCommand=new ArrayList<FeatureCommand>();
+				listaFeatureCommandInstances = new ArrayList<FeatureCommandInstances>();
+					 
+			    Lettura2 lettura = new Lettura2();
+			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
+			 
+			    for (nomiCombinazioni nomi : listaCombinazioni) {
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),1,1,1,1);
+			    	listaFeatureCommandInstances.add(elemento);
+			    	//System.out.println(nomi.toString());
+			    }
+			      
+			    System.out.println("-------------ArrayList Feature  CREATO -----------------");
+
+				_params = new Parameters(args, this.getClass().getName());
+				_params.print();
+					
+				for(int i=0;i<listaFeatureCommand.size();i++) {
+				    	FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
+				    	//Utils.print(riga.toString());
+				
+				}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+String path=_params.getProjectPath();
+String _projectDir;
+String _projectName;
+
+int pos = path.lastIndexOf(File.separator);
+if (pos > -1) {
+	_projectDir = path.substring(0, pos);
+	_projectName = path.substring(pos + 1);
+} 
+else {
+	_projectDir = ".";
+	_projectName = path;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+					_project.print();
+								
+					List<String> files = _project.getSourceFiles();
+					for(String s: files) {
+						Utils.print("Source file:"+s);
+					}
+
+					_parser = new Parser(_params.getJavaVersion());
+					_parser.addClasspath(_project.getSourcePath());
+					_parser.addClasspaths(_project.getBinaryPath());
+					_parser.addClasspaths(_project.getLibraryPath());
+					_parser.print();
+				 
+					for (String s : files) {
+						try {	
+							//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
+
+									_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
+									
+									String folder = s;
+									String nomeProgetto=_project.getProjectName();
+
+									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
+									_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,true,listaFeatureCommandInstances,nomeProgetto);		
+									//break;
+								
+						} 
+						catch (LocalException e) {
+							Utils.print(e);
+						}			
+					}	
+		    } 
+		    catch (LocalException e) {
+		    	Utils.print(e);
+		    }//fine Catch
+		    
+			filename="Combination_mockup_Command.csv";
+            creaCSV3(filename);
+		    
+		}
 		
 		
 	}	//fineProcess
 	
-	//Estrazione feature delle combinazioni (Command)
-			public void estrazioneFeatureCommand(String[] args) {
-				
-			    try {
-			    	Info(true);
-						 
-					listaFeature3 = new ArrayList<Feature3>();
-						 
-				    Lettura lettura = new Lettura();
-				    try {
-				    	 listaCombinazioni= lettura.procedura("combinations_to_test_Command.csv");
-				    }
-				    catch (Exception e) {
-				    	
-				    }
-				     
-				    for (nomiCombinazioni nomi : listaCombinazioni) {
-				    	Feature3 elemento = analisi(nomi);
-				    	listaFeature3.add(elemento);
-				    	//System.out.println(nomi.toString());
-				    }
-				    
-				    listaFeature=new ArrayList<Feature>();
-
-				    for (nomiCombinazioni nomi : listaCombinazioni) {
-						   //Utils.print(nomi.toString());
-					}
-					   
-				    System.out.println("-------------ArrayList Feature  CREATO -----------------");
-
-					_params = new Parameters(args, this.getClass().getName());
-					_params.print();
-						
-					for(int i=0;i<listaFeature3.size();i++) {
-					    	Feature3 riga= listaFeature3.get(i);
-					    	//Utils.print(riga.toString());
-					
-					}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	String path=_params.getProjectPath();
-	String _projectDir;
-	String _projectName;
-
-	int pos = path.lastIndexOf(File.separator);
-	if (pos > -1) {
-		_projectDir = path.substring(0, pos);
-		_projectName = path.substring(pos + 1);
-	} 
-	else {
-		_projectDir = ".";
-		_projectName = path;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-						_project = new Project(_params.getProjectPath(),_params.getOutputPath());
-						_project.print();
-									
-						List<String> files = _project.getSourceFiles();
-						for(String s: files) {
-							Utils.print("Source file:"+s);
-						}
-
-						_parser = new Parser(_params.getJavaVersion());
-						_parser.addClasspath(_project.getSourcePath());
-						_parser.addClasspaths(_project.getBinaryPath());
-						_parser.addClasspaths(_project.getLibraryPath());
-						_parser.print();
-					 
-						for (String s : files) {
-							try {	
-								//System.out.println("-------------E POI IL PARSER RITORNA AL PROCESS-----------------");
-
-										_parser.compile(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s);
-										
-										String folder = s;
-										String nomeProgetto=_project.getProjectName();
-
-										//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-										_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,true,listaFeature3,nomeProgetto);		
-										//break;
-									
-							} 
-							catch (LocalException e) {
-								Utils.print(e);
-							}			
-						}	
-			    } 
-			    catch (LocalException e) {
-			    	Utils.print(e);
-			    }//fine Catch
-			    
-				filename="Combination_to_test_MIO.csv";
-	            creaCSV3(filename);
-			    
-	            return;
-			}
+	
 	
 	//Metodo per la creazione del Dataset con le feature dei ruoli per OBSERVER e COMMAND
 	public void creaCSV(String fileName) {
@@ -420,7 +416,7 @@ else {
 	        	            
 	        if (dptype.equals("obs")) {
 	        	//Write the CSV file header
-	        	fileWriter.append(FILE_HEADER_OBS.toString());
+	        	fileWriter.append(FILE_HEADER_OBSERVER_ROLES.toString());
 	        	 
 	        	//Add a new line separator after the header
 		        fileWriter.append(NEW_LINE_SEPARATOR);
@@ -475,7 +471,7 @@ else {
 	        	 
 	        	 ArrayList<String> lista = _parser.getListaNomiInExecute();
 	        	//Write the CSV file header
-	        	 fileWriter.append(FILE_HEADER_COM.toString());
+	        	 fileWriter.append(FILE_HEADER_COMMAND_ROLES.toString());
 	        	 
 	        	 //Add a new line separator after the header
 		         fileWriter.append(NEW_LINE_SEPARATOR);
@@ -551,51 +547,73 @@ else {
 		FileWriter fileWriter = null;
 	        
 		try {
-	        
-	         fileWriter = new FileWriter(fileName);
-	        	            
-	         //Write the CSV file header
-	         fileWriter.append(FILE_HEADER3.toString());
-	       
-	         //Add a new line separator after the header
-	          fileWriter.append(NEW_LINE_SEPARATOR);
-	          
-	          for (Feature3 vettoreFeat : listaFeature3) {
-	        	 
-	        	  fileWriter.append(vettoreFeat.getClasses());	 
-	              fileWriter.append(COMMA_DELIMITER);
-	        	  
-	        	  fileWriter.append(String.valueOf(vettoreFeat.getHasSubject()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	        	 
-	              fileWriter.append(String.valueOf(vettoreFeat.getHasObserver()));	 
-	        	  fileWriter.append(COMMA_DELIMITER);
+			if (dptype.contains("obs")) {
+				fileWriter = new FileWriter(fileName);
+	            
+		         //Write the CSV file header
+		         fileWriter.append(FILE_HEADER_OBSERVER_INSTANCES.toString());
+		       
+		         //Add a new line separator after the header
+		         fileWriter.append(NEW_LINE_SEPARATOR);
+		          
+		         for (Feature3 vettoreFeat : listaFeature3) {
+		        	 
+		        	 fileWriter.append(vettoreFeat.getClasses());	 
+		             fileWriter.append(COMMA_DELIMITER);
+		        	  
+		        	 fileWriter.append(String.valueOf(vettoreFeat.getHasSubject()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		        	 
+		             fileWriter.append(String.valueOf(vettoreFeat.getHasObserver()));	 
+		        	 fileWriter.append(COMMA_DELIMITER);
+		        	
+		        	 fileWriter.append(String.valueOf(vettoreFeat.getSubjectsRelationship()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getSubObsDepedencies()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getCSubObsDependencies()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getObserversRelationship()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getCallListeners()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getCObsAccessSubject()));	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getNoc()));	 
 	        	
-	        	  fileWriter.append(String.valueOf(vettoreFeat.getSubjectsRelationship()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getSubObsDepedencies()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getCSubObsDependencies()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getObserversRelationship()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getCallListeners()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getCObsAccessSubject()));	 
-	              fileWriter.append(COMMA_DELIMITER);
-	              
-	              fileWriter.append(String.valueOf(vettoreFeat.getNoc()));	 
-        	
-	              fileWriter.append(NEW_LINE_SEPARATOR);
-
-	          }
-
-	          System.out.println("Il file CSV ("+ fileName +") è stato creato con successo!");
+		             fileWriter.append(NEW_LINE_SEPARATOR);
+		          }
+			}
+			else if (dptype.equals("com")) {
+				fileWriter = new FileWriter(fileName);
+	            
+		         //Write the CSV file header
+		         fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());
+		       
+		         //Add a new line separator after the header
+		         fileWriter.append(NEW_LINE_SEPARATOR);
+		          
+		         for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
+		        	 
+		        	 fileWriter.append(vettoreFeat.getClass1());	 
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(vettoreFeat.getClass2());
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
+	        	
+		             fileWriter.append(NEW_LINE_SEPARATOR);
+		         }
+			}
+	         
+			System.out.println("Il file CSV ("+ fileName +") è stato creato con successo!");
 
 		} 
 		catch(Exception e) {
@@ -603,23 +621,19 @@ else {
 			e.printStackTrace();
 		} 
 		finally {
-			
 			try {
 				fileWriter.flush();
 				fileWriter.close();
-			
 			} 
 			catch (IOException e) {
 				System.out.println("Errore nel flush o nella chiusura !!!");
 			}
-			
 		}
-	
 	}
 
 
 	private void Info(boolean start) throws LocalException {
-		if(start) {
+		if (start) {
 			String version = Constants.version + "." + VersionBuild.buildnum;
 			Utils.print("*** " + Constants.appName + " ***");
 			Utils.print("*** " + Constants.appAcro + " " +version+ " "+VersionBuild.builddate+" ***");
@@ -692,8 +706,7 @@ else {
 			else if (r.equals("7")) {
 				bool=true;
 				dptype="com";
-			    //new Process(args);
-				proc.estrazioneFeatureCommand(args);
+			    new Process(args);
 			}
 			
 			//COMMAND - CLASSIFICAZIONE DELLE ISTANZE - COMMAND
@@ -710,7 +723,13 @@ else {
 		
 	}
 	
-	
+	public Feature3 analisi2(nomiCombinazioni riga) {
+		
+		Feature3 elemento = new Feature3("",1,"",1,"",3,4,4,3,5,1,0,"","",false,false,false,false);
+		String classe1 = riga.getClasse1();
+		String classe2 = riga.getClasse2();
+		return elemento;
+	}
 	
 	public Feature3 analisi(nomiCombinazioni riga) {
 		

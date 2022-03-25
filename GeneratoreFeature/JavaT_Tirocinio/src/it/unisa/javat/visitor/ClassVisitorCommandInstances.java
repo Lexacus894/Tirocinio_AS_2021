@@ -50,6 +50,7 @@ import org.eclipse.jface.text.Document;
 
 import dataset.Feature;
 import dataset.Feature3;
+import dataset.FeatureCommandInstances;
 import dataset.strutturaVariabile;
 import it.unisa.javat.Utils;
 
@@ -61,9 +62,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	Document _document;
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
-    ArrayList<Feature3> listaFeature3;
+    ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
 
-    String nomeClasseAnalizzata;
+    String classeAnalizzata;
     ArrayList<String> elementiDichiaratiSubject = new ArrayList<String>();
     
 	
@@ -75,12 +76,12 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	boolean SubDip1;
 
 
-	public ClassVisitorCommandInstances(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<Feature3> listaFeature) {
+	public ClassVisitorCommandInstances(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandInstances> listaFeature) {
 		_compilation = compilation;
 		_document = document;
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
-		listaFeature3=listaFeature;
+		listaFeatureCommandInstances = listaFeature;
 
 	} // fine Costruttore
 	
@@ -118,106 +119,110 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				return false;
 			}
 			
-			nomeClasseAnalizzata= binding.getName();
-			
+			String classeAnalizzata = binding.getName();
 			ITypeBinding superclass = binding.getSuperclass();
-			 
-			//Utils.print(" (VISITOR2) [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getName());
-
-		     for(int i=0;i<listaFeature3.size();i++) {
+			
+		    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 		    	
-		    	Feature3 riga= listaFeature3.get(i);
+		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 
-		    	String concreteSubject = riga.getNomeConcreteSubject();
+		    	String classe1 = riga.getClass1();
 		    	
-		    	if(concreteSubject.equals(nomeClasseAnalizzata)) {
+		    	if (classeAnalizzata.equals(classe1) && classeAnalizzata.contains(" - CC")) {
 		    	
-		    	if(riga.getControlloSubRel()==true) {
-		   	    	 //Utils.print("SONO ENTRATO BUONO .............................................................");
-
-		    	     String Subject= riga.getNomeSubject();
-		    	     if (superclass!=null ) {
-				        	String nomeSuperclasse = superclass.getName();
-				        	if(nomeSuperclasse.equals(Subject)) {
-
-				        		riga.setSubjectsRelationship(1);
-				        		
-				        		listaFeature3.remove(i);   		
-				        		listaFeature3.add(i, riga);
-				        		
-				        	}
-			        	} 
-		    	     else {     
-		    	    	 ITypeBinding[] interfaces = binding.getInterfaces();
-			    	     for (ITypeBinding sInterface : interfaces) {
-			    			    String interfaccia=  sInterface.getName();
-			    			              if (interfaccia.equals(Subject)) {
-			    			            	
-			    			            	riga.setSubjectsRelationship(2);
-			  				        		
-			  				        		listaFeature3.remove(i);   		
-			  				        		listaFeature3.add(i, riga);
-			    			              
-			    			              }// FINE IF INTERFACCIA
-			    			              
-			    		                   }//FINE FOR INTERFACCIA
-			        		
-			        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
-		    	} // FINE controllo se bisogna settare il campo SubjectRelationship
-		    	}
-		    	
-
-		    	
-		    	String concreteObserver = riga.getNomeConcreteObserver();
-		    	
-
-		    	if(concreteObserver.equals(nomeClasseAnalizzata)) {
-
-		    	if(riga.getControlloObsRel()==true) {
-
-			    	     String Observer= riga.getNomeObserver();
-
-			    	     if (superclass!=null ) {
-
-					        	String nomeSuperclasse = superclass.getName();
-
-					        	if(nomeSuperclasse.equals(Observer)) {
-
-
-					        		
-					        		riga.setObserversRelationship(1);
-					        		
-					        		listaFeature3.remove(i);   		
-					        		listaFeature3.add(i, riga);
-					        		
-					        	}
-				        	} else{ 
-
-
-				        		           ITypeBinding[] interfaces = binding.getInterfaces();
-				    	                	for (ITypeBinding sInterface : interfaces) {
-				    			              String interfaccia=  sInterface.getName();
-				    			              if (interfaccia.equals(Observer)) {
-				    			            	
-				    			            	riga.setObserversRelationship(2);
-				  				        		
-				  				        		listaFeature3.remove(i);   		
-				  				        		listaFeature3.add(i, riga);
-				    			              
-				    			              }// FINE IF INTERFACCIA
-				    			              
-				    		                   }//FINE FOR INTERFACCIA
-				        		
-				        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
-			    	} // FINE controllo se bisogna settare il campo ObserverRelationship
-		    	}
-		     } //FINE for 
-		     
-
-		      
+		    		if (superclass != null) {
+		    			System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", Superclasse: " + superclass.getName());
+		    			if (superclass.getName().equals(classeAnalizzata.substring(0,classeAnalizzata.indexOf(" ")))) {
+		    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
+		    			}
+		    		}
+		    	}	
+		    }		
+		          
 		return true ;
 		      
 		}
+		    	
+		    	/*if (riga.getControlloSubRel()==true) {
+    			//Utils.print("SONO ENTRATO BUONO .............................................................");
+
+    			String Subject = riga.getNomeSubject();
+    			if (superclass!=null ) {
+    				String nomeSuperclasse = superclass.getName();
+		        	if(nomeSuperclasse.equals(Subject)) {
+
+		        		riga.setSubjectsRelationship(1);
+		        		
+		        		listaFeatureCommandInstances.remove(i);   		
+		        		listaFeatureCommandInstances.add(i, riga);
+		        		
+		        	}
+	        	} 
+    	     else {     
+    	    	 ITypeBinding[] interfaces = binding.getInterfaces();
+	    	     for (ITypeBinding sInterface : interfaces) {
+	    			    String interfaccia=  sInterface.getName();
+	    			              if (interfaccia.equals(Subject)) {
+	    			            	
+	    			            	riga.setSubjectsRelationship(2);
+	  				        		
+	  				        		listaFeatureCommandInstances.remove(i);   		
+	  				        		listaFeatureCommandInstances.add(i, riga);
+	    			              
+	    			              }// FINE IF INTERFACCIA
+	    			              
+	    		                   }//FINE FOR INTERFACCIA
+	        		
+	        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
+    	} // FINE controllo se bisogna settare il campo SubjectRelationship
+    	}
+    	
+
+    	
+    	String concreteObserver = riga.getNomeConcreteObserver();
+    	
+
+    	if(concreteObserver.equals(nomeClasseAnalizzata)) {
+
+    	if(riga.getControlloObsRel()==true) {
+
+	    	     String Observer= riga.getNomeObserver();
+
+	    	     if (superclass!=null ) {
+
+			        	String nomeSuperclasse = superclass.getName();
+
+			        	if(nomeSuperclasse.equals(Observer)) {
+
+
+			        		
+			        		riga.setObserversRelationship(1);
+			        		
+			        		listaFeatureCommandInstances.remove(i);   		
+			        		listaFeatureCommandInstances.add(i, riga);
+			        		
+			        	}
+		        	} else{ 
+
+
+		        		           ITypeBinding[] interfaces = binding.getInterfaces();
+		    	                	for (ITypeBinding sInterface : interfaces) {
+		    			              String interfaccia=  sInterface.getName();
+		    			              if (interfaccia.equals(Observer)) {
+		    			            	
+		    			            	riga.setObserversRelationship(2);
+		  				        		
+		  				        		listaFeatureCommandInstances.remove(i);   		
+		  				        		listaFeatureCommandInstances.add(i, riga);
+		    			              
+		    			              }// FINE IF INTERFACCIA
+		    			              
+		    		                   }//FINE FOR INTERFACCIA
+		        		
+		        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
+	    	} // FINE controllo se bisogna settare il campo ObserverRelationship
+    	}
+     } //FINE for*/
 		
 		
 		@Override
@@ -230,8 +235,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		public boolean visit(FieldDeclaration node) {
 
 			
-			for(int i=0;i<listaFeature3.size();i++) {
-		     Feature3 riga= listaFeature3.get(i);
+			/*for(int i=0;i<listaFeatureCommandInstances.size();i++) {
+		     FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 		     
 		     if(nomeClasseAnalizzata.equals(riga.getNomeConcreteObserver())) {
 
@@ -256,8 +261,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			
 /////////////////////////	 SET CAMPO SubObsDependencies ///////////////////////////////////////
 			
-			for(int i=0 ; i<listaFeature3.size();i++) {
-			     Feature3 riga= listaFeature3.get(i);
+			for(int i=0 ; i<listaFeatureCommandInstances.size();i++) {
+			     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
 			     
 			     
 			     if(riga.getControlloDipSub()==true) {
@@ -274,15 +279,15 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								    riga.setSubObsDepedencies(3);
 
 
-					        		listaFeature3.remove(i);   		
-					        		listaFeature3.add(i, riga);
+					        		listaFeatureCommandInstances.remove(i);   		
+					        		listaFeatureCommandInstances.add(i, riga);
 								 
 							 }else {
 								 
 							    riga.setSubObsDepedencies(1);
 				        		
-				        		listaFeature3.remove(i);   		
-				        		listaFeature3.add(i, riga);
+				        		listaFeatureCommandInstances.remove(i);   		
+				        		listaFeatureCommandInstances.add(i, riga);
 							 }
 							 
 						 } //fine if Verifica
@@ -291,16 +296,16 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								 
 								    riga.setSubObsDepedencies(3);
 
-					        		listaFeature3.remove(i);   		
-					        		listaFeature3.add(i, riga);
+					        		listaFeatureCommandInstances.remove(i);   		
+					        		listaFeatureCommandInstances.add(i, riga);
 								 
 							 }else {
 								 
 							    
 							    riga.setSubObsDepedencies(2);
 				        		
-				        		listaFeature3.remove(i);   		
-				        		listaFeature3.add(i, riga);
+				        		listaFeatureCommandInstances.remove(i);   		
+				        		listaFeatureCommandInstances.add(i, riga);
 							 }
 							 
 						 } //fine if Verifica2
@@ -315,8 +320,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			
 /////////////////////////	 SET CAMPO ConcreteSubObsDependencies        ///////////////////////////////////////////////////////////
 			
-			for(int i=0 ; i<listaFeature3.size();i++) {
-			     Feature3 riga= listaFeature3.get(i);
+			for(int i=0 ; i<listaFeatureCommandInstances.size();i++) {
+			     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
 			     
 			     
 			     if(riga.getControlloDipCSub()==true) {
@@ -332,8 +337,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								 
 								    riga.setCSubObsDependencies(3);
 
-					        		listaFeature3.remove(i);   		
-					        		listaFeature3.add(i, riga);
+					        		listaFeatureCommandInstances.remove(i);   		
+					        		listaFeatureCommandInstances.add(i, riga);
 
 								 
 							 }else {
@@ -341,8 +346,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 							    riga.setCSubObsDependencies(1);
 
 				        		
-				        		listaFeature3.remove(i);   		
-				        		listaFeature3.add(i, riga);
+				        		listaFeatureCommandInstances.remove(i);   		
+				        		listaFeatureCommandInstances.add(i, riga);
 							 }
 							 
 						 } //fine if Verifica
@@ -351,8 +356,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								 
 								    riga.setCSubObsDependencies(3);
 
-					        		listaFeature3.remove(i);   		
-					        		listaFeature3.add(i, riga);
+					        		listaFeatureCommandInstances.remove(i);   		
+					        		listaFeatureCommandInstances.add(i, riga);
 
 								 
 							 }else {
@@ -361,8 +366,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								    riga.setCSubObsDependencies(2);
 
 				        		
-				        		listaFeature3.remove(i);   		
-				        		listaFeature3.add(i, riga);
+				        		listaFeatureCommandInstances.remove(i);   		
+				        		listaFeatureCommandInstances.add(i, riga);
 							 }
 							 
 						 } //fine if Verifica2
@@ -371,7 +376,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    	 }
 			    	 
 			     }
-
 			}
 			
 			
@@ -380,7 +384,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			
 				
 			//Utils.print("    (VISITOR2)[FD " + node.getClass().getSimpleName() + " " + node.getType().toString() + " ]");
-				
+		*/		
 			return true;
 		}
 		
@@ -455,10 +459,10 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			//Utils.print(" (VISITOR2) [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
 			
 
-			for(int i=0;i<listaFeature3.size();i++) {
-		     Feature3 riga= listaFeature3.get(i);
+			/*for(int i=0;i<listaFeatureCommandInstances.size();i++) {
+		     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
 		     
-		     if(nomeClasseAnalizzata.equals(riga.getNomeConcreteObserver())) {
+		     if(classeAnalizzata.equals(riga.getNomeConcreteObserver())) {
 		     
 		      
 		    	 for(int y=0;y<elementiDichiaratiSubject.size();y++) {
@@ -468,8 +472,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    		  
 		    		  riga.setCObsAccessSubject(2);
 		        		
-		              listaFeature3.remove(i);   		
-		        	  listaFeature3.add(i, riga);
+		              listaFeatureCommandInstances.remove(i);   		
+		        	  listaFeatureCommandInstances.add(i, riga);
 		        	  
 		        	 
 		    	  }
@@ -477,7 +481,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    	  }
 		     }
 		     }
-			
+		*/	
 			return true;
 		}
 		
