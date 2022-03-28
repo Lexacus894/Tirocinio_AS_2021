@@ -35,3 +35,4 @@ GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/combinations_
 GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/predictions/roles_predictions_command.csv
 GeneratoreFeature/JavaT_Tirocinio/datasets/com_roles_dataset.csv
 GeneratoreFeature/JavaT_Tirocinio/OBSClassifier/tester/datasets/com_roles_dataset.csv
+*.csv
