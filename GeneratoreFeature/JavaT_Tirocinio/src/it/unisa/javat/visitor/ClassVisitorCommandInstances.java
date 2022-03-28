@@ -128,11 +128,14 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 		    	String classe1 = riga.getClass1();
 		    	
-		    	if (classeAnalizzata.equals(classe1) && classeAnalizzata.contains(" - CC")) {
-		    	
+		    	//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-10));
+		    	if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-10))) {
+		    		String classe2 = riga.getClass2();
+		    		
 		    		if (superclass != null) {
-		    			System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", Superclasse: " + superclass.getName());
-		    			if (superclass.getName().equals(classeAnalizzata.substring(0,classeAnalizzata.indexOf(" ")))) {
+		    			System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + superclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-10));
+		    			if (superclass.getName().equals(classe2.substring(0,classe2.length()-10))) {
+		    				System.out.println(" OK");
 		    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
 		    			}
 		    		}

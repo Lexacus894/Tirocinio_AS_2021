@@ -94,28 +94,28 @@ def filter_pairs_list(prediction_list, pairs_list):
             pairs_roles.append('CI')
         elif (roleOne == 'Receiver' and roleTwo == 'ConcreteCommand'):
             pairs.append(item)
-            pairs_roles.append('R')
+            pairs_roles.append('RE')
             pairs_roles.append('CC')
         elif (roleOne == 'ConcreteCommand' and roleTwo == 'Receiver'):
             pairs.append(item)
             pairs_roles.append('CC')
-            pairs_roles.append('R')
+            pairs_roles.append('RE')
         elif (roleOne == 'Invoker' and roleTwo == 'ConcreteCommand'):
             pairs.append(item)
-            pairs_roles.append('I')
+            pairs_roles.append('IN')
             pairs_roles.append('CC')
         elif (roleOne == 'ConcreteCommand' and roleTwo == 'Invoker'):
             pairs.append(item)
             pairs_roles.append('CC')
-            pairs_roles.append('I')
+            pairs_roles.append('IN')
         elif (roleOne == 'Invoker' and roleTwo == 'Client'):
             pairs.append(item)
-            pairs_roles.append('I')
-            pairs_roles.append('C')
+            pairs_roles.append('IN')
+            pairs_roles.append('CL')
         elif (roleOne == 'Client' and roleTwo == 'Invoker'):
             pairs.append(item)
-            pairs_roles.append('C')
-            pairs_roles.append('I')
+            pairs_roles.append('CL')
+            pairs_roles.append('IN')
 
     return (pairs, pairs_roles)
 
