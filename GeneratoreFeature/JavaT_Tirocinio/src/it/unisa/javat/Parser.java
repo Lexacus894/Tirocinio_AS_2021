@@ -30,7 +30,7 @@ import org.eclipse.text.edits.TextEdit;
 
 import dataset.Feature;
 import dataset.Feature3;
-import dataset.FeatureCommand;
+import dataset.FeatureCommandRoles;
 import dataset.FeatureCommandInstances;
 import it.unisa.javat.LocalException;
 import it.unisa.javat.visitor.ClassVisitor;
@@ -303,7 +303,7 @@ public class Parser {
 	}
 	
 	//Parser per il Command pattern
-	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommand> listaFeatureParser, String folder ,boolean visitor, ArrayList<FeatureCommandInstances> listaFeatureCommandInstances,String nomeProgetto) throws LocalException {
+	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommandRoles> listaFeatureParser, String folder ,boolean visitor, ArrayList<FeatureCommandInstances> listaFeatureCommandInstances,String nomeProgetto) throws LocalException {
 		
 		Utils.print("Parsing file:" + fileName);
 		try {

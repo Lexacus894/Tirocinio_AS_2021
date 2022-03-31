@@ -48,7 +48,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 
 import dataset.Feature;
-import dataset.FeatureCommand;
+import dataset.FeatureCommandRoles;
 import dataset.strutturaVariabile;
 import it.unisa.javat.Utils;
 
@@ -61,9 +61,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
 	
-	ArrayList<FeatureCommand> arrayListFeature;
-	FeatureCommand feat;
-	ArrayList<FeatureCommand> arrayListTemp;
+	ArrayList<FeatureCommandRoles> arrayListFeature;
+	FeatureCommandRoles feat;
+	ArrayList<FeatureCommandRoles> arrayListTemp;
 	String folder;
 	String nomeProgetto;
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
@@ -74,7 +74,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	//private ArrayList<String> listaClassiListener;
 
 	
-	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommand> arrayListFeatureVisitor, String folder,String nomeProgetto) {
+	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandRoles> arrayListFeatureVisitor, String folder,String nomeProgetto) {
 		_compilation = compilation;
 		_document = document;
 		_rewriter = rewriter;
@@ -85,7 +85,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 	    //listaClassiListener = new ArrayList<String>();
 	    
-	    this.arrayListTemp = new ArrayList<FeatureCommand>();
+	    this.arrayListTemp = new ArrayList<FeatureCommandRoles>();
 	    this.folder = folder;
 	    this.nomeProgetto = nomeProgetto;
 	    
@@ -107,7 +107,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
 		//Utils.print("[CU " + node.getClass().getSimpleName());
-		
 		//listaVariabili=new ArrayList<strutturaVariabile>();
 
 		return true;
@@ -165,8 +164,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			return false;
 		}
 
-	    feat = new FeatureCommand(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
-		
+	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
 		feat.setFQNClass(binding.getName()+".java");
 		
 		if (binding.isInterface()) {
@@ -195,7 +193,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		else {
 			feat.setClassDeclarationKeyword(1);
 		}
-		
 		
 	    ITypeBinding superclass = binding.getSuperclass();
 		if (superclass != null) {
@@ -295,14 +292,28 @@ public class ClassVisitorCommand extends ASTVisitor {
 				}
 			
 				//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
-				if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains("new")) && ((istruzioneChiamata.contains("Command")) || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
-					//feat.setAddsCommandMethod(2);
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);
+				if (istruzioneChiamata.contains(".add")) {
+					if ((istruzioneChiamata.contains("Command") || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
+						//feat.setAddsCommandMethod(2);
+						//Ricerca classe
+						for(int i=0;i<arrayListTemp.size();i++) {
+							String FQN = arrayListTemp.get(i).getFQNClass();
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+								arrayListTemp.get(i).setAddsCommandMethod(2);
+							}
 						}
+					}
+				}
+				else if (istruzioneChiamata.contains("=")) {
+					String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
+					if ((substring.contains("Command") || substring.contains("Action")) && !substring.contains("ActionListener")) {
+						//Ricerca classe
+						for(int i=0;i<arrayListTemp.size();i++) {
+							String FQN = arrayListTemp.get(i).getFQNClass();
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+								arrayListTemp.get(i).setAddsCommandMethod(2);
+							}
+						}	
 					}
 				}
 				

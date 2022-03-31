@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 import dataset.Feature;
 import dataset.Feature3;
-import dataset.FeatureCommand;
+import dataset.FeatureCommandRoles;
 import dataset.FeatureCommandInstances;
 
 public class Process {
@@ -29,7 +29,7 @@ public class Process {
 	private Project _project;
 	private Parser _parser;	
 	ArrayList<Feature> listaFeature;
-	ArrayList<FeatureCommand> listaFeatureCommand;
+	ArrayList<FeatureCommandRoles> listaFeatureCommandRoles;
 	private String filename;
 	static boolean bool=false;
 	static String dptype="";
@@ -139,7 +139,7 @@ public class Process {
 				
 				//Crea ArrayList per inserire i vettori di Feature COMMAND
 				//DOBBIAMO PORTARLO NEL CLASSVISITOR DEVO SOLO CAPIRE COME 
-			    listaFeatureCommand=new ArrayList<FeatureCommand>();
+			    listaFeatureCommandRoles = new ArrayList<FeatureCommandRoles>();
 			    
 			    System.out.println("-------------ArrayList Feature  CREATO -----------------");
 			    
@@ -186,7 +186,7 @@ public class Process {
 								String nomeProgetto=_project.getProjectName();
 
 								//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-								_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,false,listaFeatureCommandInstances,nomeProgetto);
+								_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommandRoles,folder,false,listaFeatureCommandInstances,nomeProgetto);
 								//break;
 							
 					} 
@@ -316,7 +316,7 @@ else {
 		    try {
 		    	Info(true);
 				
-		    	listaFeatureCommand=new ArrayList<FeatureCommand>();
+		    	listaFeatureCommandRoles = new ArrayList<FeatureCommandRoles>();
 				listaFeatureCommandInstances = new ArrayList<FeatureCommandInstances>();
 					 
 			    Lettura2 lettura = new Lettura2();
@@ -333,7 +333,7 @@ else {
 				_params = new Parameters(args, this.getClass().getName());
 				_params.print();
 					
-				for(int i=0;i<listaFeatureCommand.size();i++) {
+				for(int i=0;i<listaFeatureCommandRoles.size();i++) {
 				    	FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
 				    	//Utils.print(riga.toString());
 				
@@ -382,7 +382,7 @@ else {
 									String nomeProgetto=_project.getProjectName();
 
 									//INSERISCO L'ARRAYLIST DI FEATURE NEI PARAMETRI DELLA FUNZIONE PARSE DELL'OGGETTO PARSER
-									_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommand,folder,true,listaFeatureCommandInstances,nomeProgetto);		
+									_parser.parseCommand(_project.getProjectPath(), _project.getProjectName(), _project.getSourcePath(), s, _params.getOutputPath(),listaFeatureCommandRoles,folder,true,listaFeatureCommandInstances,nomeProgetto);		
 									//break;
 								
 						} 
@@ -476,7 +476,7 @@ else {
 	        	 //Add a new line separator after the header
 		         fileWriter.append(NEW_LINE_SEPARATOR);
 		          
-		         for (FeatureCommand vettoreFeat : listaFeatureCommand) {
+		         for (FeatureCommandRoles vettoreFeat : listaFeatureCommandRoles) {
 		        	
 		        	  fileWriter.append(vettoreFeat.getSoftwareName());	 
 		              fileWriter.append(COMMA_DELIMITER);

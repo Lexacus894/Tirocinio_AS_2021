@@ -1,6 +1,6 @@
 package dataset;
 
-public class FeatureCommand {
+public class FeatureCommandRoles {
 	
 	private String SoftwareName;
 	private String FileName;
@@ -14,8 +14,8 @@ public class FeatureCommand {
 	private int ImplementsInterfaces;
 	private int isPartOfExecute;
 
-	public FeatureCommand(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
-			int addsCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute ) {
+	public FeatureCommandRoles(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
+			int addsCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute) {
 		this.SoftwareName = softwareName;
 		this.FileName = fileName;
 		this.FQNClass = fqnClass;
@@ -123,7 +123,8 @@ public class FeatureCommand {
 		  return " VettoreFeatureCommand [SoftwareName = " + this.SoftwareName + ", FQNClass = " + this.FQNClass
 		  		+ ", ClassDeclarationKeyword = " + this.ClassDeclarationKeyword + ", MethodDeclarationKeyword = " + this.MethodDeclarationKeyword
 		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", AddsCommand = " + this.AddsCommandMethod
-		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces + ", isPartOfExecute = " + this.isPartOfExecute +"]";
+		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces + ", isPartOfExecute = " + this.isPartOfExecute + 
+		  		", hasMain = "  +"]";
 	  
 	  }
 }
