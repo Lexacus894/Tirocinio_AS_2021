@@ -22,10 +22,10 @@ public class Project {
 			throw new LocalException("Unable to detect current working directory.");
 		}		
 		
-		if (path == null)
-			throw new LocalException("Project path is missed.");
-		if (!FileManager.directoryExists(path))
-			throw new LocalException("Project path is not valid.");
+		//if (path == null)
+		//	throw new LocalException("Project path is missed.");
+		//if (!FileManager.directoryExists(path))
+		//	throw new LocalException("Project path is not valid.");
 
 		if (outputPath == null)
 			throw new LocalException("Output path is missed.");

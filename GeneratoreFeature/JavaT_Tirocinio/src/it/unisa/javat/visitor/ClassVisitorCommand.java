@@ -165,25 +165,18 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 
 	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
-		feat.setFQNClass(binding.getName()+".java");
+		feat.setFQNClass(binding.getName());
 		
 		if (binding.isInterface()) {
 			feat.setClassType(3);
 			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 		} 
 		else {
-			feat.setClassType(1);
-			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
-
-			/*if (binding.getName().contains("Command") || binding.getName().contains("Action")) {
-				feat.setClassDeclarationKeyword(2);
-			}
-			else {
-				feat.setClassDeclarationKeyword(1);
-			}*/
-
 			if(Modifier.isAbstract(binding.getModifiers())) {
 				feat.setClassType(2);
+			}
+			else {
+				feat.setClassType(1);
 			}
 		}	
 
@@ -195,7 +188,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 		
 	    ITypeBinding superclass = binding.getSuperclass();
-		if (superclass != null) {
+		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
 			feat.setHasSuperclass(2);
 			//Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
 		} 
@@ -235,13 +228,13 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//System.out.println(nomeClasseDichiarante);
 		//Utils.print("    [MD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.toString() + " ]");
 		
-		String nomeMetodo=binding.toString();
+		String nomeMetodo = binding.toString();
 		
-		if (nomeMetodo.contains(" execute()") || nomeMetodo.contains(" actionPerformed(")) {
+		if (nomeMetodo.contains("exec") || nomeMetodo.contains("actionPerformed")) {
 			//Ricerca classe
 			for(int i=0;i<arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
-				if (nomeClasseDichiarante.equals(FQN.substring(0, FQN.length()-5))) {
+				if (nomeClasseDichiarante.equals(FQN)) {
 					arrayListTemp.get(i).setMethodDeclarationKeyword(2);
 				}
 			}
@@ -276,7 +269,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{"));
 				
 				boolean bool = false;
-				if (mbinding != null && (primariga.contains(" execute()") || primariga.contains(" actionPerformed(")) && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && (primariga.contains("execute") || primariga.contains(" actionPerformed(")) && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
 					System.out.println(mnode.toString());
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
@@ -298,7 +291,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 						//Ricerca classe
 						for(int i=0;i<arrayListTemp.size();i++) {
 							String FQN = arrayListTemp.get(i).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
 								arrayListTemp.get(i).setAddsCommandMethod(2);
 							}
 						}
@@ -310,7 +303,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 						//Ricerca classe
 						for(int i=0;i<arrayListTemp.size();i++) {
 							String FQN = arrayListTemp.get(i).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
 								arrayListTemp.get(i).setAddsCommandMethod(2);
 							}
 						}	
@@ -318,12 +311,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 				}
 				
 				//IF l'istruzione contiene ".execute()"
-				if (istruzioneChiamata.contains(".execute()")) {
+				if (istruzioneChiamata.contains(".execute(")) {
 					//feat.setExecutesCommand(2);
 					//Ricerca classe
 					for(int i=0;i<arrayListTemp.size();i++) {
 						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN.substring(0, FQN.length()-5))) {
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
 							arrayListTemp.get(i).setExecutesCommand(2);
 						}
 					}

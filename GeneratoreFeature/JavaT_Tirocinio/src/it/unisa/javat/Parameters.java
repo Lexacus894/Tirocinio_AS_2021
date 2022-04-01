@@ -26,9 +26,9 @@ public class Parameters {
 
 		parser.matchAllArgs(args);	
 
-		if(_path.value == null) {
-			throw new LocalException("Project source path parameter is required.");
-		}
+		//if(_path.value == null) {
+		//	throw new LocalException("Project source path parameter is required.");
+		//}
 		if(_outpath.value == null) {
 			throw new LocalException("Output path parameter is required.");
 		}		

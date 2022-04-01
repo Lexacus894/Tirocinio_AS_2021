@@ -5,8 +5,7 @@ import letturaCSV.Lettura2;
 import letturaCSV.nomiCombinazioni;
 import letturaCSV.provaLettura;
 
-
-
+import java.awt.FileDialog;
 import java.io.BufferedReader;
 
 import java.io.File;
@@ -17,6 +16,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import dataset.Feature;
 import dataset.Feature3;
@@ -133,12 +137,11 @@ public class Process {
 	}
 		
 		//Estrazione feature dei ruoli (Command)
-		else if (bool==false && dptype.equals("com")) {
+		else if (bool == false && dptype.equals("com")) {
 			try {
 				Info(true);
 				
 				//Crea ArrayList per inserire i vettori di Feature COMMAND
-				//DOBBIAMO PORTARLO NEL CLASSVISITOR DEVO SOLO CAPIRE COME 
 			    listaFeatureCommandRoles = new ArrayList<FeatureCommandRoles>();
 			    
 			    System.out.println("-------------ArrayList Feature  CREATO -----------------");
@@ -146,7 +149,22 @@ public class Process {
 			    _params = new Parameters(args, this.getClass().getName());
 				_params.print();
 				
-				String path=_params.getProjectPath();
+				//SELEZIONE CARTELLA
+				try {
+			        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			    }
+				catch(Exception e) {
+			        e.printStackTrace();
+			    }
+				JFrame jf = new JFrame("Dialog"); // added
+		        jf.setAlwaysOnTop( true );
+				JFileChooser f = new JFileChooser(System.getProperty("user.home") + "\\Desktop");
+		        f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+		        f.showOpenDialog(jf);
+
+		        String path = f.getSelectedFile().getPath();
+		        //System.out.println(path);
+		        
 				String _projectDir;
 				String _projectName;
 				
@@ -160,7 +178,7 @@ public class Process {
 					_projectName = path;
 				}
 				
-				_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+				_project = new Project(path,_params.getOutputPath());
 				_project.print();
 							
 				List<String> files = _project.getSourceFiles();
