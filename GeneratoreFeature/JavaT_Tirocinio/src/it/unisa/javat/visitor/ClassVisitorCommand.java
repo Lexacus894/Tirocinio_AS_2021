@@ -230,9 +230,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String nomeMetodo = binding.toString();
 		
-		if (nomeMetodo.contains("exec") || nomeMetodo.contains("actionPerformed")) {
+		if (nomeMetodo.contains("exec") || nomeMetodo.contains("actionPerformed") || nomeMetodo.contains("run(")) {
 			//Ricerca classe
-			for(int i=0;i<arrayListTemp.size();i++) {
+			for(int i = 0;i < arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
 				if (nomeClasseDichiarante.equals(FQN)) {
 					arrayListTemp.get(i).setMethodDeclarationKeyword(2);
@@ -269,8 +269,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{"));
 				
 				boolean bool = false;
-				if (mbinding != null && (primariga.contains("execute") || primariga.contains(" actionPerformed(")) && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
-					System.out.println(mnode.toString());
+				if (mbinding != null && (primariga.contains("exec") || primariga.contains("actionPerformed")) || primariga.contains("run(") && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+					//System.out.println(mnode.toString());
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
 							bool = true;
@@ -279,49 +279,50 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 						listaClassiInExecute.add(nomeClasseDichiarante);
-						System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
-								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
+						//System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+						//		+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
 					}
 				}
+				
+			}
 			
-				//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
-				if (istruzioneChiamata.contains(".add")) {
-					if ((istruzioneChiamata.contains("Command") || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
-						//feat.setAddsCommandMethod(2);
-						//Ricerca classe
-						for(int i=0;i<arrayListTemp.size();i++) {
-							String FQN = arrayListTemp.get(i).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-								arrayListTemp.get(i).setAddsCommandMethod(2);
-							}
-						}
+		}
+		
+		//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
+		if (istruzioneChiamata.contains(".add")) {
+			if ((istruzioneChiamata.contains("Command") || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
+				//feat.setAddsCommandMethod(2);
+				//Ricerca classe
+				for(int i=0;i<arrayListTemp.size();i++) {
+					String FQN = arrayListTemp.get(i).getFQNClass();
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+						arrayListTemp.get(i).setAddsCommandMethod(2);
 					}
 				}
-				else if (istruzioneChiamata.contains("=")) {
-					String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
-					if ((substring.contains("Command") || substring.contains("Action")) && !substring.contains("ActionListener")) {
-						//Ricerca classe
-						for(int i=0;i<arrayListTemp.size();i++) {
-							String FQN = arrayListTemp.get(i).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-								arrayListTemp.get(i).setAddsCommandMethod(2);
-							}
-						}	
+			}
+		}
+		else if (istruzioneChiamata.contains("=")) {
+			String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
+			if ((substring.contains("Command") || substring.contains("Action")) && !substring.contains("ActionListener")) {
+				//Ricerca classe
+				for(int i=0;i<arrayListTemp.size();i++) {
+					String FQN = arrayListTemp.get(i).getFQNClass();
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+						arrayListTemp.get(i).setAddsCommandMethod(2);
 					}
+				}	
+			}
+		}
+		
+		//IF l'istruzione contiene ".execute()"
+		if (istruzioneChiamata.contains(".execute(")) {
+			//feat.setExecutesCommand(2);
+			//Ricerca classe
+			for(int i=0;i<arrayListTemp.size();i++) {
+				String FQN = arrayListTemp.get(i).getFQNClass();
+				if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+					arrayListTemp.get(i).setExecutesCommand(2);
 				}
-				
-				//IF l'istruzione contiene ".execute()"
-				if (istruzioneChiamata.contains(".execute(")) {
-					//feat.setExecutesCommand(2);
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setExecutesCommand(2);
-						}
-					}
-				}
-				
 			}
 		}
 		
