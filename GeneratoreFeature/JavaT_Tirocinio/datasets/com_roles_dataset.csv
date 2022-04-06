@@ -3,7 +3,7 @@ SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarati
 6JHotDraw;CH\ifa\draw\util\CommandChoice.java;CommandChoice.java;1;2;1;2;2;2;2;1;2
 6JHotDraw;CH\ifa\draw\util\CommandMenu.java;CommandMenu.java;1;2;2;2;2;2;2;1;2
 6JHotDraw;CH\ifa\draw\util\CommandButton.java;CommandButton.java;1;2;2;2;1;2;2;1;2
-6JHotDraw;CH\ifa\draw\util\Command.java;Command.java;2;2;2;1;1;2;1;2;0
+6JHotDraw;CH\ifa\draw\util\Command.java;Command.java;2;2;2;1;1;1;1;2;0
 6JHotDraw;CH\ifa\draw\figures\GroupCommand.java;GroupCommand.java;1;2;2;1;1;2;1;1;1
 6JHotDraw;CH\ifa\draw\figures\InsertImageCommand.java;InsertImageCommand.java;1;2;2;1;1;2;1;1;1
 6JHotDraw;CH\ifa\draw\figures\UngroupCommand.java;UngroupCommand.java;1;2;2;1;1;2;1;1;1
