@@ -286,44 +286,44 @@ public class ClassVisitorCommand extends ASTVisitor {
 				
 			}
 			
-		}
-		
-		//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
-		if (istruzioneChiamata.contains(".add")) {
-			if ((istruzioneChiamata.contains("Command") || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
-				//feat.setAddsCommandMethod(2);
+			//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
+			if (istruzioneChiamata.contains(".add")) {
+				if ((istruzioneChiamata.contains("Command") || istruzioneChiamata.contains("Action")) && !istruzioneChiamata.contains("ActionListener")) {
+					//feat.setAddsCommandMethod(2);
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(i).setAddsCommandMethod(2);
+						}
+					}
+				}
+			}
+			else if (istruzioneChiamata.contains("=")) {
+				String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
+				if ((substring.contains("Command") || substring.contains("Action")) && !substring.contains("ActionListener")) {
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(i).setAddsCommandMethod(2);
+						}
+					}	
+				}
+			}
+			
+			//IF l'istruzione contiene ".execute()"
+			if (istruzioneChiamata.contains(".execute(")) {
+				//feat.setExecutesCommand(2);
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
 					String FQN = arrayListTemp.get(i).getFQNClass();
 					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-						arrayListTemp.get(i).setAddsCommandMethod(2);
+						arrayListTemp.get(i).setExecutesCommand(2);
 					}
 				}
 			}
-		}
-		else if (istruzioneChiamata.contains("=")) {
-			String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
-			if ((substring.contains("Command") || substring.contains("Action")) && !substring.contains("ActionListener")) {
-				//Ricerca classe
-				for(int i=0;i<arrayListTemp.size();i++) {
-					String FQN = arrayListTemp.get(i).getFQNClass();
-					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-						arrayListTemp.get(i).setAddsCommandMethod(2);
-					}
-				}	
-			}
-		}
-		
-		//IF l'istruzione contiene ".execute()"
-		if (istruzioneChiamata.contains(".execute(")) {
-			//feat.setExecutesCommand(2);
-			//Ricerca classe
-			for(int i=0;i<arrayListTemp.size();i++) {
-				String FQN = arrayListTemp.get(i).getFQNClass();
-				if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-					arrayListTemp.get(i).setExecutesCommand(2);
-				}
-			}
+			
 		}
 		
 		return true;
