@@ -215,7 +215,7 @@ public class Process {
 
 				System.out.println("-------------FINE Process -----------------");
 
-				creaCSV("DATASET_COM.csv");
+				creaCSV("DATASET_COM_" + _project.getProjectName() + ".csv");
 
 				Info(false);
 			} 

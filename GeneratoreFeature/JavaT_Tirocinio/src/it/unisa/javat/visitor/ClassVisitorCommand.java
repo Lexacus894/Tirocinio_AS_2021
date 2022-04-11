@@ -143,18 +143,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]PD");
 	}
 
-	// Import Declaration
-	@Override
-	public boolean visit(ImportDeclaration node) {
-		//Utils.print("  [ID " + node.getClass().getSimpleName() + " " + node.getName() + " ]");
-		return true;
-	}
-
-	@Override
-	public void endVisit(ImportDeclaration node) {
-		// Utils.print(" ]ID");
-	}
-
 	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
 	@Override
 	public boolean visit(TypeDeclaration node) {
@@ -211,6 +199,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(TypeDeclaration node) {
 		//Utils.print("  ]TD");
 	}
+	
+	// Import Declaration
+		@Override
+		public boolean visit(ImportDeclaration node) {
+			return true;
+		}
+
+		@Override
+		public void endVisit(ImportDeclaration node) {
+			// Utils.print(" ]ID");
+		}
 
 	// Method Declaration - ClassType, MethodDeclarationKeyword
 	@Override
@@ -288,7 +287,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 			
 			//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
-			if (istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put")) {
+			/*if (istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put")) {
 				if ((istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
 					//feat.setAddsCommandMethod(2);
 					//Ricerca classe
@@ -300,7 +299,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 				}
 			}
-			else if (istruzioneChiamata.contains("=")) {
+			/*else if (istruzioneChiamata.contains("=")) {
 				String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
 				//System.out.println("PROVA PROVA PROVA PROVA PROVA PROVA" + substring);
 				if ((substring.contains("command") || substring.contains("action")) && !substring.contains("actionListener")) {
@@ -312,10 +311,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 						}
 					}	
 				}
-			}
+			}*/
 			
 			//IF l'istruzione contiene ".execute("
-			if (istruzioneChiamata.contains(".execute(")) {
+			if (istruzioneChiamata.contains(".execute")) {
 				//feat.setExecutesCommand(2);
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
@@ -325,6 +324,19 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 				}
 			}
+			
+			//Prova
+			if (istruzioneChiamata.contains("new")) {
+				if (istruzioneChiamata.substring(istruzioneChiamata.indexOf("new")).contains("command")) {
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(i).setAddsCommandMethod(2);
+						}
+					}
+				}
+			}	
 			
 		}
 		
@@ -352,7 +364,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 					for(int i=0;i<arrayListTemp.size();i++) {
 						String FQN = arrayListTemp.get(i).getFQNClass();
 						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);;
+							arrayListTemp.get(i).setAddsCommandMethod(2);
 						}
 					}
 				}
