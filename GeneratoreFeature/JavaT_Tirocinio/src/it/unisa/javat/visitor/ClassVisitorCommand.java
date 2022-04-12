@@ -151,7 +151,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 			//Utils.print("[TD NOBIND]");
 			return false;
 		}
-		Prova.add(node.getStartPosition());
 	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
 		feat.setFQNClass(binding.getName());
 		
@@ -229,7 +228,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String nomeMetodo = binding.toString().toLowerCase();
 		
-		if (nomeMetodo.contains("execute") || nomeMetodo.contains("actionperformed")/* || nomeMetodo.contains("run(")*/) {
+		if (nomeMetodo.contains("execute")/* || nomeMetodo.contains("run(")*/) {
 			//Ricerca classe
 			for(int i = 0;i < arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
@@ -269,7 +268,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
 				
 				boolean bool = false;
-				if (mbinding != null && (primariga.contains("execute(") || primariga.contains("actionperformed")) || primariga.contains("run(") && !primariga.contains("abstract")) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && (primariga.contains("execute(") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
 					//System.out.println(mnode.toString());
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
@@ -314,7 +313,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}*/
 			
 			//IF l'istruzione contiene ".execute("
-			if (istruzioneChiamata.contains(".execute")) {
+			if (istruzioneChiamata.contains(".execute") && !istruzioneChiamata.contains(".executeQuery")) {
 				//feat.setExecutesCommand(2);
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
