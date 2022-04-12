@@ -9,13 +9,13 @@ public class FeatureCommandRoles {
 	private int MethodDeclarationKeyword;
 	private int ClassType;
 	private int ExecutesCommand;
-	private int AddsCommandMethod;
+	private int InstantiatesCommand;
 	private int HasSuperclass;
 	private int ImplementsInterfaces;
 	private int isPartOfExecute;
 
 	public FeatureCommandRoles(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
-			int addsCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute) {
+			int instantiatesCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute) {
 		this.SoftwareName = softwareName;
 		this.FileName = fileName;
 		this.FQNClass = fqnClass;
@@ -23,7 +23,7 @@ public class FeatureCommandRoles {
 		this.MethodDeclarationKeyword = methodDeclaration;
 		this.ClassType = classType;
 		this.ExecutesCommand = executesCommand;
-		this.AddsCommandMethod = addsCommand;
+		this.InstantiatesCommand = instantiatesCommand;
 		this.HasSuperclass = hasSuperclass;
 		this.ImplementsInterfaces = implementsInterfaces;
 		this.isPartOfExecute = isPartOfExecute;
@@ -85,12 +85,12 @@ public class FeatureCommandRoles {
 		ExecutesCommand = executesCommand;
 	}
 
-	public int getAddsCommandMethod() {
-		return AddsCommandMethod;
+	public int getInstantiatesCommand() {
+		return InstantiatesCommand;
 	}
 
-	public void setAddsCommandMethod(int addCommandMethod) {
-		AddsCommandMethod = addCommandMethod;
+	public void setInstantiatesCommand(int instantiatesCommand) {
+		InstantiatesCommand = instantiatesCommand;
 	}
 
 	public int getHasSuperclass() {
@@ -122,7 +122,7 @@ public class FeatureCommandRoles {
 		  
 		  return " VettoreFeatureCommand [SoftwareName = " + this.SoftwareName + ", FQNClass = " + this.FQNClass
 		  		+ ", ClassDeclarationKeyword = " + this.ClassDeclarationKeyword + ", MethodDeclarationKeyword = " + this.MethodDeclarationKeyword
-		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", AddsCommand = " + this.AddsCommandMethod
+		  		+ ", ClassType = " + this.ClassType + ", ExecutesCommand = " + this.ExecutesCommand + ", InstantiatesCommand = " + this.InstantiatesCommand
 		  		+ ", HasSuperclass = "+ this.HasSuperclass + ", ImplementsInterfaces = " + this.ImplementsInterfaces + ", isPartOfExecute = " + this.isPartOfExecute + 
 		  		", hasMain = "  +"]";
 	  

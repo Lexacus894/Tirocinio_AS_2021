@@ -51,7 +51,7 @@ public class Process {
 	
 	//CSV file header (Ruoli Command)
 	private static final String FILE_HEADER_COMMAND_ROLES = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
-			+ "AddCommandMethod;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
+			+ "InstantiatesCommand;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
 	 
 	//CSV file header (Combinazioni Observer)
 	private static final String FILE_HEADER_OBSERVER_INSTANCES = "Classes;HasSubject;HasObserver;"
@@ -517,7 +517,7 @@ else {
 		              fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getAddsCommandMethod()));	 
+		              fileWriter.append(String.valueOf(vettoreFeat.getInstantiatesCommand()));	 
 		              fileWriter.append(COMMA_DELIMITER);
 		              
 		              fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 

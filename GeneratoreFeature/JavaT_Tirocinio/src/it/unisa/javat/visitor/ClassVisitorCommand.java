@@ -68,10 +68,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	String nomeProgetto;
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
 	
-	ArrayList<Integer> Prova = new ArrayList<Integer>();
-	//ArrayList<strutturaVariabile> listaVariabili;
-	//Stack<String> cicloDopo;
-	//private ArrayList<String> listaClassiListener;
+	ArrayList<String> importedCommands = new ArrayList<String>();
 
 	
 	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandRoles> arrayListFeatureVisitor, String folder,String nomeProgetto) {
@@ -202,6 +199,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 	// Import Declaration
 		@Override
 		public boolean visit(ImportDeclaration node) {
+			if (node.toString().toLowerCase().contains("command")) {
+				String command = node.toString().replaceAll(".+\\.", "");
+				System.out.println("Questa classe importa " + command.substring(0,command.length()-2));
+				importedCommands.add(command.substring(0,command.length()-2));
+			}
 			return true;
 		}
 
@@ -326,12 +328,17 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			//Prova
 			if (istruzioneChiamata.contains("new")) {
-				if (istruzioneChiamata.substring(istruzioneChiamata.indexOf("new")).contains("command")) {
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);
+				ArrayList<String> importedCommandsTemp = importedCommands;
+				for(int i=0;i<importedCommandsTemp.size();i++) {
+					if (istruzioneChiamata.substring(istruzioneChiamata.indexOf("new")).contains(importedCommandsTemp.get(i).toLowerCase())) {
+						System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
+						importedCommandsTemp.remove(i);
+						//Ricerca classe
+						for(int j=0;j<arrayListTemp.size();j++) {
+							String FQN = arrayListTemp.get(j).getFQNClass();
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+								arrayListTemp.get(j).setInstantiatesCommand(2);
+							}
 						}
 					}
 				}
@@ -355,6 +362,21 @@ public class ClassVisitorCommand extends ASTVisitor {
 		String istruzione = node.getRightHandSide().toString().toLowerCase();
 		//System.out.println("PROVA PROVA PROVA" + istruzione);
 		if (istruzione.contains("new")) {
+			for(int i=0;i<importedCommands.size();i++) {
+				if (istruzione.substring(istruzione.indexOf("new")).contains(importedCommands.get(i).toLowerCase())) {
+					System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommands.get(i) + " che ha importato, in un'assegnazione. PROVA PROVA PROVA");
+					importedCommands.remove(i);
+					//Ricerca classe
+					for(int j=0;j<arrayListTemp.size();j++) {
+						String FQN = arrayListTemp.get(j).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(j).setInstantiatesCommand(2);
+						}
+					}
+				}
+			}
+		}
+		/*if (istruzione.contains("new")) {
 			if (istruzione.substring(istruzione.indexOf("new")).contains("command")) {
 				System.out.println("PROVA PROVA PROVA " + istruzione);
 				
@@ -370,7 +392,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 			
 			
-		}
+		}*/
 		return true;
 	}
 
