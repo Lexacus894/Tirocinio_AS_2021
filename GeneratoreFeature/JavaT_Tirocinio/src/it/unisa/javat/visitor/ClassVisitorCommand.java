@@ -171,10 +171,15 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setClassDeclarationKeyword(1);
 		}
 		
+		//Controllo superclasse e nome superclasse
 	    ITypeBinding superclass = binding.getSuperclass();
 		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
-			feat.setHasSuperclass(2);
-			//Utils.print("   [EXT" + printModifiers(superclass.getModifiers()) + " " + superclass.getQualifiedName() + " ]");
+			if (superclass.getName().toLowerCase().contains("command")) {
+				feat.setHasSuperclass(3);
+			}
+			else {
+				feat.setHasSuperclass(2);
+			}
 		} 
 		else { 
 			feat.setHasSuperclass(1);
@@ -183,7 +188,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//feat.setImplementsInterfaces(1);
 		ITypeBinding[] interfaces = binding.getInterfaces();
 		for (ITypeBinding sInterface : interfaces) {
-			feat.setImplementsInterfaces(2);
+			if (sInterface.getName().toLowerCase().contains("command")) {
+				feat.setImplementsInterfaces(3);
+			}
+			else {
+				feat.setImplementsInterfaces(2);
+			}
 			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
 		}
 
@@ -199,7 +209,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 	// Import Declaration
 		@Override
 		public boolean visit(ImportDeclaration node) {
-			if (node.toString().toLowerCase().contains("command")) {
+			String classeImportata = node.toString().replaceAll(".+\\.", "").toLowerCase();
+			if ((classeImportata.contains("command") || classeImportata.contains("action")) && !classeImportata.contains("actionlistener")) {
 				String command = node.toString().replaceAll(".+\\.", "");
 				System.out.println("Questa classe importa " + command.substring(0,command.length()-2));
 				importedCommands.add(command.substring(0,command.length()-2));
@@ -230,7 +241,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String nomeMetodo = binding.toString().toLowerCase();
 		
-		if (nomeMetodo.contains("execute")/* || nomeMetodo.contains("run(")*/) {
+		if ((nomeMetodo.contains("execute") || nomeMetodo.contains("actionperformed")) && !nomeMetodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
 			//Ricerca classe
 			for(int i = 0;i < arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
@@ -270,7 +281,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
 				
 				boolean bool = false;
-				if (mbinding != null && (primariga.contains("execute(") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
 					//System.out.println(mnode.toString());
 					for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
@@ -363,7 +374,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//System.out.println("PROVA PROVA PROVA" + istruzione);
 		if (istruzione.contains("new")) {
 			for(int i=0;i<importedCommands.size();i++) {
-				if (istruzione.substring(istruzione.indexOf("new")).contains(importedCommands.get(i).toLowerCase())) {
+				if (istruzione/*.substring(istruzione.indexOf("new"))*/.contains(importedCommands.get(i).toLowerCase())) {
 					System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommands.get(i) + " che ha importato, in un'assegnazione. PROVA PROVA PROVA");
 					importedCommands.remove(i);
 					//Ricerca classe
