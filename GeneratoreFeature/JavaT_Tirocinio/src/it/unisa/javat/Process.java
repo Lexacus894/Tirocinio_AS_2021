@@ -51,7 +51,7 @@ public class Process {
 	
 	//CSV file header (Ruoli Command)
 	private static final String FILE_HEADER_COMMAND_ROLES = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
-			+ "InstantiatesCommand;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
+			+ "InstantiatesCommand;HasSuperclass;ImplementsInterfaces;IsPartOfExecute;Role";
 	 
 	//CSV file header (Combinazioni Observer)
 	private static final String FILE_HEADER_OBSERVER_INSTANCES = "Classes;HasSubject;HasObserver;"
@@ -535,6 +535,15 @@ else {
 		              }
 		              fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
 		              //fileWriter.append(COMMA_DELIMITER);
+		              
+		              if (vettoreFeat.getFQNClass().contains(" - Client")) {
+		            	  fileWriter.append(COMMA_DELIMITER);
+		            	  fileWriter.append("4");
+		              }
+		              else if (vettoreFeat.getFQNClass().contains(" - Invoker")) {
+		            	  fileWriter.append(COMMA_DELIMITER);
+		            	  fileWriter.append("2");
+		              }
 		              
 		              fileWriter.append(NEW_LINE_SEPARATOR);
 		         }

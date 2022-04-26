@@ -115,8 +115,22 @@ public class ClassVisitorCommand extends ASTVisitor {
         	System.out.println("NOME : " + var.getNomeVariabile() + " BOOL: " + var.getlocaleGlobale());
         }*/
 		//Utils.print(" ]CU");
+		ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
 		for(int i=0; i<arrayListTemp.size();i++) {
-			arrayListFeature.add(arrayListTemp.get(i));
+			FeatureCommandRoles currentfeat = arrayListTemp.get(i);
+			if (arrayListTemp.get(i).getInstantiatesCommand()==2 && arrayListTemp.get(i).getExecutesCommand()==2) {
+				FeatureCommandRoles tempfeat = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Client",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
+				FeatureCommandRoles tempfeat2 = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Invoker",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
+				arrayListScissione.add(tempfeat);
+				arrayListScissione.add(tempfeat2);
+				arrayListTemp.remove(i);
+			}
+			else {
+				arrayListFeature.add(arrayListTemp.get(i));
+			}
+		}
+		for(int i=0; i<arrayListScissione.size();i++) {
+			arrayListFeature.add(arrayListScissione.get(i));
 		}
 		
 		_scope.pop();
@@ -329,26 +343,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 			if (istruzioneChiamata.contains(".execute") && !istruzioneChiamata.contains(".executeQuery")) {
 				//feat.setExecutesCommand(2);
 				//Ricerca classe
-				ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
 				for(int i=0;i<arrayListTemp.size();i++) {
-					FeatureCommandRoles currentfeat = arrayListTemp.get(i);
-					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(currentfeat.getFQNClass())) {
-						//Scissione in più ruoli
-						if (arrayListTemp.get(i).getInstantiatesCommand()==2) {
-							//arrayListTemp.get(i).setExecutesCommand(2);
-							FeatureCommandRoles tempfeat = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Client",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-							FeatureCommandRoles tempfeat2 = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Invoker",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-							arrayListScissione.add(tempfeat);
-							arrayListScissione.add(tempfeat2);
-							arrayListTemp.remove(i);
-						}
-						else {
-							arrayListTemp.get(i).setExecutesCommand(2);
-						}
+					String FQN = arrayListTemp.get(i).getFQNClass();
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+						arrayListTemp.get(i).setExecutesCommand(2);
 					}
-				}
-				for(int i=0;i<arrayListScissione.size();i++) {
-					arrayListTemp.add(arrayListScissione.get(i));
 				}
 			}
 			
@@ -360,26 +359,11 @@ public class ClassVisitorCommand extends ASTVisitor {
 						System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
 						importedCommandsTemp.remove(i);
 						//Ricerca classe
-						ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
 						for(int j=0;j<arrayListTemp.size();j++) {
-							FeatureCommandRoles currentfeat = arrayListTemp.get(j);
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(currentfeat.getFQNClass())) {
-								//Scissione in più ruoli
-								if (arrayListTemp.get(j).getExecutesCommand()==2) {
-									//arrayListTemp.get(i).setExecutesCommand(2);
-									FeatureCommandRoles tempfeat = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Client",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,2,currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-									FeatureCommandRoles tempfeat2 = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Invoker",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,2,currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-									arrayListScissione.add(tempfeat);
-									arrayListScissione.add(tempfeat2);
-									arrayListTemp.remove(j);
-								}
-								else {
-									arrayListTemp.get(j).setInstantiatesCommand(2);
-								}
+							String FQN = arrayListTemp.get(j).getFQNClass();
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+								arrayListTemp.get(j).setInstantiatesCommand(2);
 							}
-						}
-						for(int j=0;j<arrayListScissione.size();j++) {
-							arrayListTemp.add(arrayListScissione.get(j));
 						}
 					}
 				}
