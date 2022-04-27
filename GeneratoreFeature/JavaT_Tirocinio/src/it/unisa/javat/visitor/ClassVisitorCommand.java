@@ -355,8 +355,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 			if (istruzioneChiamata.contains("new")) {
 				ArrayList<String> importedCommandsTemp = importedCommands;
 				for(int i=0;i<importedCommandsTemp.size();i++) {
-					if (istruzioneChiamata.substring(istruzioneChiamata.indexOf("new")).contains(importedCommandsTemp.get(i).toLowerCase())) {
+					if (istruzioneChiamata.contains("new " + importedCommandsTemp.get(i).toLowerCase())) {
 						System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
+						System.out.println("ISTRUZIONE CHIAMATA: " + istruzioneChiamata);
 						importedCommandsTemp.remove(i);
 						//Ricerca classe
 						for(int j=0;j<arrayListTemp.size();j++) {
