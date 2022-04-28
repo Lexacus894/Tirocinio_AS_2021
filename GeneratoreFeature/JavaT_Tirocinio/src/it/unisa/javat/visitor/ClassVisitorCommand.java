@@ -177,8 +177,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 				feat.setClassType(1);
 			}
 		}	
-
-		if (binding.getName().toLowerCase().contains("command") || binding.getName().toLowerCase().contains("action")) {
+		if (binding.getName().toLowerCase().equals("command")) {
+			feat.setClassDeclarationKeyword(3);
+		}
+		else if (binding.getName().toLowerCase().contains("command") || binding.getName().toLowerCase().contains("action")) {
 			feat.setClassDeclarationKeyword(2);
 		}
 		else {
@@ -389,7 +391,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//System.out.println("PROVA PROVA PROVA" + istruzione);
 		if (istruzione.contains("new")) {
 			for(int i=0;i<importedCommands.size();i++) {
-				if (istruzione/*.substring(istruzione.indexOf("new"))*/.contains(importedCommands.get(i).toLowerCase())) {
+				if (istruzione/*.substring(istruzione.indexOf("new"))*/.contains("new" + importedCommands.get(i).toLowerCase())) {
 					System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommands.get(i) + " che ha importato, in un'assegnazione. PROVA PROVA PROVA");
 					importedCommands.remove(i);
 					//Ricerca classe
