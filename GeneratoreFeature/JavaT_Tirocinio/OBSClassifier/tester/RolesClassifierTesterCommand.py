@@ -5,7 +5,7 @@ from classifiers import InstancesClassifierTesterCommand
 
 ROLES_DATASET_PATH        = 'datasets/com_roles_dataset.csv'
 ROLES_FEATURE_COLUMNS     = ['ClassType','ClassDeclarationKeyword',
-                             'MethodsDeclarationKeyword','ExecutesCommand', 'AddCommandMethod', 'HasSuperclass',
+                             'MethodsDeclarationKeyword','ExecutesCommand', 'InstantiatesCommand', 'HasSuperclass',
                              'ImplementsInterfaces','IsPartOfExecute','Role']
 ROLES_LABELS              = ['CommandInterface', 'ConcreteCommand', 'Invoker', 'Receiver', 'Client','None']
 
