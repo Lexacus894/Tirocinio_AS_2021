@@ -165,18 +165,19 @@ public class ClassVisitorCommand extends ASTVisitor {
 	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
 		feat.setFQNClass(binding.getName());
 		
+		//ClassType
 		if (binding.isInterface()) {
 			feat.setClassType(3);
 			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 		} 
-		else {
-			if(Modifier.isAbstract(binding.getModifiers())) {
+		else if(Modifier.isAbstract(binding.getModifiers())) {
 				feat.setClassType(2);
 			}
-			else {
+		else {
 				feat.setClassType(1);
-			}
-		}	
+		}
+		
+		//ClassDeclarationKeyword
 		if (binding.getName().toLowerCase().equals("command")) {
 			feat.setClassDeclarationKeyword(3);
 		}
@@ -307,8 +308,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 						listaClassiInExecute.add(nomeClasseDichiarante);
-						//System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
-						//		+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
+						System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
 					}
 				}
 				
