@@ -188,7 +188,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			feat.setClassDeclarationKeyword(1);
 		}
 		
-		//Controllo superclasse e nome superclasse
+		//HasSuperclass - Controllo superclasse e nome superclasse
 	    ITypeBinding superclass = binding.getSuperclass();
 		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
 			if (superclass.getName().toLowerCase().contains("command")) {
@@ -196,13 +196,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 			else {
 				feat.setHasSuperclass(2);
-			}
+			}	
 		} 
-		else { 
-			feat.setHasSuperclass(1);
-		}
 
-		//feat.setImplementsInterfaces(1);
+		//ImplementsInterfaces(1);
 		ITypeBinding[] interfaces = binding.getInterfaces();
 		for (ITypeBinding sInterface : interfaces) {
 			if (sInterface.getName().toLowerCase().contains("command")) {
@@ -354,8 +351,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 				}
 			}
 			
-			//IF l'istruzione crea un new command importato in precedenza - InstantiatesCommand
-			if (istruzioneChiamata.contains("new")) {
+			//Vecchia implementazione di InstantiatesCommand per MethodInvocation
+			/*if (istruzioneChiamata.contains("new")) {
 				ArrayList<String> importedCommandsTemp = importedCommands;
 				for(int i=0;i<importedCommandsTemp.size();i++) {
 					if (istruzioneChiamata.contains("new " + importedCommandsTemp.get(i).toLowerCase())) {
@@ -371,7 +368,25 @@ public class ClassVisitorCommand extends ASTVisitor {
 						}
 					}
 				}
-			}	
+			}*/
+			
+			//InstantiatesCommand
+			if (istruzioneChiamata.contains("new")) {
+				String ist = istruzioneChiamata.substring(istruzioneChiamata.indexOf("new"));
+				if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
+					//System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
+					System.out.println("ISTRUZIONE CHIAMATA: " + istruzioneChiamata);
+					//Ricerca classe
+					for(int j=0;j<arrayListTemp.size();j++) {
+						String FQN = arrayListTemp.get(j).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(j).setInstantiatesCommand(2);
+						}
+					}
+				}
+			}
+			
+			
 			
 		}
 		
@@ -384,15 +399,15 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]MI");
 	}
 	
-	//Field Declaration
+	//Field Declaration - InstantiatesCommand
 	@Override
 	public boolean visit(Assignment node) {
 		MethodDeclaration mnode = getMethodDeclaration(node);
 		String istruzione = node.getRightHandSide().toString().toLowerCase();
 		//System.out.println("PROVA PROVA PROVA" + istruzione);
 		if (istruzione.contains("new")) {
-			for(int i=0;i<importedCommands.size();i++) {
-				if (istruzione/*.substring(istruzione.indexOf("new"))*/.contains("new" + importedCommands.get(i).toLowerCase())) {
+			/*for(int i=0;i<importedCommands.size();i++) {
+				if (istruzione.contains("new" + importedCommands.get(i).toLowerCase())) {
 					System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommands.get(i) + " che ha importato, in un'assegnazione. PROVA PROVA PROVA");
 					importedCommands.remove(i);
 					//Ricerca classe
@@ -403,25 +418,20 @@ public class ClassVisitorCommand extends ASTVisitor {
 						}
 					}
 				}
-			}
-		}
-		/*if (istruzione.contains("new")) {
-			if (istruzione.substring(istruzione.indexOf("new")).contains("command")) {
-				System.out.println("PROVA PROVA PROVA " + istruzione);
-				
-				if (mnode != null) {
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);
-						}
+			}*/
+			String ist = istruzione.substring(istruzione.indexOf("new"));
+			if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
+				//System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
+				System.out.println("ISTRUZIONE CHIAMATA: " + istruzione);
+				//Ricerca classe
+				for(int j=0;j<arrayListTemp.size();j++) {
+					String FQN = arrayListTemp.get(j).getFQNClass();
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+						arrayListTemp.get(j).setInstantiatesCommand(2);
 					}
 				}
 			}
-			
-			
-		}*/
+		}
 		return true;
 	}
 
