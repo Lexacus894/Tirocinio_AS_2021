@@ -19,8 +19,10 @@ def get_roles_predictions_list(data, predictions, labels):
     for pred in predictions:
         class_id = pred['class_ids'][0]
         probability = pred['probabilities'][class_id]
+
         if (class_id != 5):
             predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
+            #print(classNames[i] + " ha probabilità CI " + (str(pred['probabilities'][0] * 100)) + " e ha probabilità IN " + (str(pred['probabilities'][2] * 100)))
         i = i + 1
 
     return predictionResults
@@ -88,34 +90,34 @@ def filter_pairs_list(prediction_list, pairs_list):
             pairs.append(item)
             pairs_roles.append('CI')
             pairs_roles.append('CC')
-        elif (roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface'):
-            pairs.append(item)
-            pairs_roles.append('CC')
-            pairs_roles.append('CI')
+        #elif (roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface'):
+        #    pairs.append(item)
+        #    pairs_roles.append('CC')
+        #    pairs_roles.append('CI')
         elif (roleOne == 'Receiver' and roleTwo == 'ConcreteCommand'):
             pairs.append(item)
             pairs_roles.append('RE')
             pairs_roles.append('CC')
-        elif (roleOne == 'ConcreteCommand' and roleTwo == 'Receiver'):
-            pairs.append(item)
-            pairs_roles.append('CC')
-            pairs_roles.append('RE')
+        #elif (roleOne == 'ConcreteCommand' and roleTwo == 'Receiver'):
+        #    pairs.append(item)
+        #    pairs_roles.append('CC')
+        #    pairs_roles.append('RE')
         elif (roleOne == 'Invoker' and roleTwo == 'ConcreteCommand'):
             pairs.append(item)
             pairs_roles.append('IN')
             pairs_roles.append('CC')
-        elif (roleOne == 'ConcreteCommand' and roleTwo == 'Invoker'):
-            pairs.append(item)
-            pairs_roles.append('CC')
-            pairs_roles.append('IN')
+        #elif (roleOne == 'ConcreteCommand' and roleTwo == 'Invoker'):
+        #    pairs.append(item)
+        #    pairs_roles.append('CC')
+        #    pairs_roles.append('IN')
         elif (roleOne == 'Invoker' and roleTwo == 'Client'):
             pairs.append(item)
             pairs_roles.append('IN')
             pairs_roles.append('CL')
-        elif (roleOne == 'Client' and roleTwo == 'Invoker'):
-            pairs.append(item)
-            pairs_roles.append('CL')
-            pairs_roles.append('IN')
+        #elif (roleOne == 'Client' and roleTwo == 'Invoker'):
+        #    pairs.append(item)
+        #    pairs_roles.append('CL')
+        #    pairs_roles.append('IN')
 
     return (pairs, pairs_roles)
 

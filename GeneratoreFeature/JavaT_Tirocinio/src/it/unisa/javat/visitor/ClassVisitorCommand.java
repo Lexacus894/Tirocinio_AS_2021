@@ -117,7 +117,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//Utils.print(" ]CU");
 		ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
 		for(int i=0; i<arrayListTemp.size();i++) {
-			FeatureCommandRoles currentfeat = arrayListTemp.get(i);
+			/*FeatureCommandRoles currentfeat = arrayListTemp.get(i);
 			if (arrayListTemp.get(i).getInstantiatesCommand()==2 && arrayListTemp.get(i).getExecutesCommand()==2) {
 				FeatureCommandRoles tempfeat = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Client",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
 				FeatureCommandRoles tempfeat2 = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Invoker",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
@@ -125,9 +125,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 				arrayListScissione.add(tempfeat2);
 				arrayListTemp.remove(i);
 			}
-			else {
+			else {*/
 				arrayListFeature.add(arrayListTemp.get(i));
-			}
+			//}
 		}
 		for(int i=0; i<arrayListScissione.size();i++) {
 			arrayListFeature.add(arrayListScissione.get(i));
