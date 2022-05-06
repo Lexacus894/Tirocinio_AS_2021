@@ -19,7 +19,7 @@ public class Parameters {
 		
 		parser.setSynopsisString("java "+name+" -path <string> <options>");
 		
-		parser.addOption("-path %s #Java project source path", _path);
+		//parser.addOption("-path %s #Java project source path", _path);
 		parser.addOption("-out %s #Output path", _outpath);		
 		parser.addOption("-java %d {[1,9]} #Java compiler version", _java);
 		parser.addOption("-debug %v #enables display of debugging info", _debug);
@@ -42,6 +42,10 @@ public class Parameters {
 	
 	public boolean isDebug() {
 		return _debug.value;
+	}
+	
+	public void setProjectPath(String path) {
+		this._path.value = path;
 	}
 	
 	public String getProjectPath() {

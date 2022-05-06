@@ -77,7 +77,22 @@ public class Process {
 		    _params = new Parameters(args, this.getClass().getName());
 			_params.print();
 			
-			String path=_params.getProjectPath();
+			//SELEZIONE CARTELLA
+			try {
+		        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		    }
+			catch(Exception e) {
+		        e.printStackTrace();
+		    }
+			JFrame jf = new JFrame("Dialog"); // added
+	        jf.setAlwaysOnTop( true );
+			JFileChooser f = new JFileChooser(System.getProperty("user.home") + "\\Desktop");
+	        f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+	        f.showOpenDialog(jf);
+
+	        String path = f.getSelectedFile().getPath();
+	        //System.out.println(path);
+	        
 			String _projectDir;
 			String _projectName;
 			
@@ -90,7 +105,7 @@ public class Process {
 				_projectName = path;
 			}
 			
-			_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+			_project = new Project(path,_params.getOutputPath());
 			_project.print();
 						
 			List<String> files = _project.getSourceFiles();
@@ -126,7 +141,7 @@ public class Process {
 			}	
 			System.out.println("-------------FINE Process -----------------");
 
-			creaCSV("DATASET_OBS.csv");
+			creaCSV("DATASET_OBS_" + _project.getProjectName() + ".csv");
 
 			Info(false);
 		} 
@@ -263,13 +278,23 @@ public class Process {
 				    	Utils.print(riga.toString());
 					}
 					
-					
-					
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+					//SELEZIONE CARTELLA
+					try {
+				        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				    }
+					catch(Exception e) {
+				        e.printStackTrace();
+				    }
+					JFrame jf = new JFrame("Dialog"); // added
+			        jf.setAlwaysOnTop( true );
+					JFileChooser f = new JFileChooser();
+			        f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+			        f.showOpenDialog(jf);
 
-String path=_params.getProjectPath();
+			        String path = f.getSelectedFile().getPath();
+			        //System.out.println(path);
 String _projectDir;
 String _projectName;
 
@@ -285,7 +310,7 @@ else {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+					_project = new Project(path,_params.getOutputPath());
 					_project.print();
 								
 					List<String> files = _project.getSourceFiles();
@@ -359,8 +384,21 @@ else {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+				//SELEZIONE CARTELLA
+				try {
+			        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			    }
+				catch(Exception e) {
+			        e.printStackTrace();
+			    }
+				JFrame jf = new JFrame("Dialog"); // added
+		        jf.setAlwaysOnTop( true );
+				JFileChooser f = new JFileChooser();
+		        f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+		        f.showOpenDialog(jf);
 
-String path=_params.getProjectPath();
+		        String path = f.getSelectedFile().getPath();
+		        //System.out.println(path);
 String _projectDir;
 String _projectName;
 
@@ -376,7 +414,7 @@ else {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					_project = new Project(_params.getProjectPath(),_params.getOutputPath());
+					_project = new Project(path,_params.getOutputPath());
 					_project.print();
 								
 					List<String> files = _project.getSourceFiles();
@@ -413,8 +451,7 @@ else {
 		    	Utils.print(e);
 		    }//fine Catch
 		    
-			filename="Combination_mockup_Command.csv";
-            creaCSV3(filename);
+            creaCSV3("Combination_mockup_Command.csv");
 		    
 		}
 		
@@ -538,7 +575,7 @@ else {
 		              fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 	         }
-	          System.out.println("Il file CSV (" + fileName + ") è stato creato con successo!");
+	          System.out.println("Il file CSV (" + fileName + ") contentente le feature dei ruoli è stato creato con successo!");
 
 		} 
 	        catch(Exception e) {
@@ -630,7 +667,7 @@ else {
 		         }
 			}
 	         
-			System.out.println("Il file CSV ("+ fileName +") è stato creato con successo!");
+			System.out.println("Il file CSV ("+ fileName +") contenente le predizioni delle istanze è stato creato con successo!");
 
 		} 
 		catch(Exception e) {

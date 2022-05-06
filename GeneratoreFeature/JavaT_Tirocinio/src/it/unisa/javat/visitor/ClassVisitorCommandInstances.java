@@ -128,16 +128,27 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 		    	String classe1 = riga.getClass1();
 		    	
-		    	//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-10));
-		    	if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-10))) {
+		    	System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.indexOf(" ")));
+		    	if (classeAnalizzata.equals(classe1.substring(0,classe1.indexOf(" ")))) {
 		    		String classe2 = riga.getClass2();
 		    		
+		    		//Confronto estensione
 		    		if (superclass != null) {
-		    			System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + superclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-10));
-		    			if (superclass.getName().equals(classe2.substring(0,classe2.length()-10))) {
-		    				System.out.println(" OK");
+		    			System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + superclass.getName() + ", classe2: " + classe2.substring(0,classe2.indexOf(" ")));
+		    			if (superclass.getName().equals(classe2.substring(0,classe2.indexOf(" ")))) {
+		    				System.out.println("OK ESTENSIONE");
 		    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
 		    			}
+		    		}
+		    		
+		    		//Confronto implementazione
+		    		ITypeBinding[] interfaces = binding.getInterfaces();
+		    		for (ITypeBinding sInterface : interfaces) {
+		    			if (sInterface.getName().equals(classe2.substring(0,classe2.indexOf(" ")))) {
+		    				System.out.println("OK IMPLEMENTAZIONE");
+		    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
+		    			}
+		    			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
 		    		}
 		    	}	
 		    }		
