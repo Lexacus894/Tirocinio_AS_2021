@@ -2,7 +2,7 @@ import os
 from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
 
-INSTANCES_FEATURE_COLUMNS = ['HasSubject','HasObserver','SubjectsRelationship','SubObsDependencies',
+INSTANCES_FEATURE_COLUMNS = ['HasConcreteCommand','HasCommandInterface','SubjectsRelationship','SubObsDependencies',
                              'CSubObsDependencies','ObserversRelationship','CallListeners','CObsAccessSubject',
                              'NoC','IsCommand']
 INSTANCES_LABELS          = ['Not Command','Command']
@@ -21,7 +21,7 @@ INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
 
 
 INSTANCES_COMBINATIONS_HEADER    = ['Classes'] + INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEATURE_COLUMNS)-1]
-INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_Command.csv'
+INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
 INSTANCES_MOKUP_PATH             = PREDICTIONS_ROOT_DIRECTORY +'/combinations_mokup.csv'
 INSTANCES_PREDICTIONS_FILE_PATH  = PREDICTIONS_ROOT_DIRECTORY +'/instances_predictions_Command.csv'
 INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']

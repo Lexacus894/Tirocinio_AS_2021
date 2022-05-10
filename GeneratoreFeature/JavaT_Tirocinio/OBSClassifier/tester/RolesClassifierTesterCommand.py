@@ -35,11 +35,17 @@ def main():
     roles_predictions_list=p_utils.get_roles_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
     p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
-    classes_pairs_pred = p_utils.roles_permutation(roles_predictions_list)
+    classes_pairs_pred, classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_permutation(roles_predictions_list)
+
     classes_pairs_act,classes_pairs_roles = p_utils.filter_pairs_list(roles_predictions_list, classes_pairs_pred)
+    classes_triplets_act, classes_triplets_roles = p_utils.filter_triplets_list(roles_predictions_list, classes_triplets_pred)
+    classes_quadruplets_act, classes_quadruplets_roles = p_utils.filter_quadruplets_list(roles_predictions_list,classes_quadruplets_pred)
+    classes_quintuplets_act, classes_quintuplets_roles = p_utils.filter_quintuplets_list(roles_predictions_list,classes_quintuplets_pred)
 
+    #combinations = [classes_pairs_act, classes_triplets_act]
+    #roles = [classes_pairs_roles, classes_triplets_roles]
 
-    p_utils.log_combinations_on_file(InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_FILE_PATH, InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_pairs_roles)
+    p_utils.log_combinations_on_file(InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_FILE_PATH, InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
 
     print('The combinations to test as observer instances are in '+InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_FILE_PATH)
     print('Please, assign values to features columns before proceeding.')
