@@ -249,7 +249,7 @@ public class Process {
 				 listaFeature3 = new ArrayList<Feature3>();
 					 
 			     Lettura lettura = new Lettura();
-			     listaCombinazioni= lettura.procedura("combinations_to_test_Observer.csv");
+			     listaCombinazioni= lettura.procedura("combinations_to_test_observer.csv");
 			     
 			     for (nomiCombinazioni nomi : listaCombinazioni) {
 			    	 Feature3 elemento= analisi(nomi);

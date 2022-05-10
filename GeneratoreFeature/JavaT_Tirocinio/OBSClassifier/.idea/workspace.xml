@@ -271,10 +271,10 @@
     </configuration>
     <list>
       <item itemvalue="Python.Classifier" />
-      <item itemvalue="Python.iris_data" />
-      <item itemvalue="Python.data_two" />
-      <item itemvalue="Python.ObserverClassifierTester" />
       <item itemvalue="Python.DatasetUtilities" />
+      <item itemvalue="Python.ObserverClassifierTester" />
+      <item itemvalue="Python.data_two" />
+      <item itemvalue="Python.iris_data" />
     </list>
     <recent_temporary>
       <list>
