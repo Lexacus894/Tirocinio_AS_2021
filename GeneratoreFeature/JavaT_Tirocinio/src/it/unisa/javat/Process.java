@@ -366,7 +366,7 @@ else {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -671,6 +671,9 @@ else {
 		             fileWriter.append(COMMA_DELIMITER);
 		              
 		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(String.valueOf(vettoreFeat.getExecuteRelationship()));
 	        	
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }

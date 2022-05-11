@@ -144,9 +144,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    	}
 		    	
 		    	if (!classe1.equals("") && classe1 != null) {
-		    		System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " " + riga);
+		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " " + riga);
 			    	if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-5))) {
-			    		System.out.println("PROVA PROVA PROVA - ENTRATO - classe1:" + classe1);
+			    		//System.out.println("PROVA PROVA PROVA - ENTRATO - classe1:" + classe1);
 			    		String classe2 = "";
 			    		
 			    		if (riga.getClass1().contains(" - CI")) {
@@ -169,7 +169,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		//Confronto estensione
 			    		while (tempsuperclass != null && !tempsuperclass.getName().equals("Object")) {
 			    			if (!classe2.equals("") && classe2 != null) {
-			    				System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + tempsuperclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-5));
+			    				//System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + tempsuperclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-5));
 				    			if (tempsuperclass.getName().equals(classe2.substring(0,classe2.length()-5))) {
 				    				System.out.println("OK ESTENSIONE");
 				    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
@@ -197,88 +197,121 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		return true ;
 		      
 		}
-		    	
-		    	/*if (riga.getControlloSubRel()==true) {
-    			//Utils.print("SONO ENTRATO BUONO .............................................................");
-
-    			String Subject = riga.getNomeSubject();
-    			if (superclass!=null ) {
-    				String nomeSuperclasse = superclass.getName();
-		        	if(nomeSuperclasse.equals(Subject)) {
-
-		        		riga.setSubjectsRelationship(1);
-		        		
-		        		listaFeatureCommandInstances.remove(i);   		
-		        		listaFeatureCommandInstances.add(i, riga);
-		        		
-		        	}
-	        	} 
-    	     else {     
-    	    	 ITypeBinding[] interfaces = binding.getInterfaces();
-	    	     for (ITypeBinding sInterface : interfaces) {
-	    			    String interfaccia=  sInterface.getName();
-	    			              if (interfaccia.equals(Subject)) {
-	    			            	
-	    			            	riga.setSubjectsRelationship(2);
-	  				        		
-	  				        		listaFeatureCommandInstances.remove(i);   		
-	  				        		listaFeatureCommandInstances.add(i, riga);
-	    			              
-	    			              }// FINE IF INTERFACCIA
-	    			              
-	    		                   }//FINE FOR INTERFACCIA
-	        		
-	        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
-    	} // FINE controllo se bisogna settare il campo SubjectRelationship
-    	}
-    	
-
-    	
-    	String concreteObserver = riga.getNomeConcreteObserver();
-    	
-
-    	if(concreteObserver.equals(nomeClasseAnalizzata)) {
-
-    	if(riga.getControlloObsRel()==true) {
-
-	    	     String Observer= riga.getNomeObserver();
-
-	    	     if (superclass!=null ) {
-
-			        	String nomeSuperclasse = superclass.getName();
-
-			        	if(nomeSuperclasse.equals(Observer)) {
-
-
-			        		
-			        		riga.setObserversRelationship(1);
-			        		
-			        		listaFeatureCommandInstances.remove(i);   		
-			        		listaFeatureCommandInstances.add(i, riga);
-			        		
-			        	}
-		        	} else{ 
-
-
-		        		           ITypeBinding[] interfaces = binding.getInterfaces();
-		    	                	for (ITypeBinding sInterface : interfaces) {
-		    			              String interfaccia=  sInterface.getName();
-		    			              if (interfaccia.equals(Observer)) {
-		    			            	
-		    			            	riga.setObserversRelationship(2);
-		  				        		
-		  				        		listaFeatureCommandInstances.remove(i);   		
-		  				        		listaFeatureCommandInstances.add(i, riga);
-		    			              
-		    			              }// FINE IF INTERFACCIA
-		    			              
-		    		                   }//FINE FOR INTERFACCIA
-		        		
-		        	} // FINE ELSE (SE E' EXTEND O IMPLEMENT)
-	    	} // FINE controllo se bisogna settare il campo ObserverRelationship
-    	}
-     } //FINE for*/
 		
+		// Method Invocation - ExecuteRelationship
+		@Override
+		public boolean visit(MethodInvocation node) {
+			
+			String classeAnalizzata = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
+			MethodDeclaration mnode = getMethodDeclaration(node);
+			
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+		    	
+		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+		    	String classe1 = "";
+		    	
+		    	if (riga.getClass1().contains(" - CC")) {
+		    		classe1 = riga.getClass1();
+		    	}
+		    	else if (riga.getClass2().contains(" - CC")) {
+		    		classe1 = riga.getClass2();
+		    	}
+		    	else if (riga.getClass3().contains(" - CC")) {
+		    		classe1 = riga.getClass3();
+		    	}
+		    	else if (riga.getClass4().contains(" - CC")) {
+		    		classe1 = riga.getClass4();
+		    	}
+		    	else if (riga.getClass5().contains(" - CC")) {
+		    		classe1 = riga.getClass5();
+		    	}
+		    	
+		    	if (!classe1.equals("") && classe1 != null) {
+		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
+			    	//if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-5))) {
+			    		
+			    		String classe2 = "";
+			    		
+			    		if (riga.getClass1().contains(" - RE")) {
+				    		classe2 = riga.getClass1();
+				    	}
+				    	else if (riga.getClass2().contains(" - RE")) {
+				    		classe2 = riga.getClass2();
+				    	}
+				    	else if (riga.getClass3().contains(" - RE")) {
+				    		classe2 = riga.getClass3();
+				    	}
+				    	else if (riga.getClass4().contains(" - RE")) {
+				    		classe2 = riga.getClass4();
+				    	}
+				    	else if (riga.getClass5().contains(" - RE")) {
+				    		classe2 = riga.getClass5();
+				    	}
+			    		
+			    		System.out.println("PROVA PROVA PROVA EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
+			    		
+			    		if (classe2.equals(classeAnalizzata + " - RE")) {
+			    			System.out.println("PROVA PROVA PROVA EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
+			    			listaFeatureCommandInstances.get(i).setExecuteRelationship(2);
+			    		}
+			    	//}
+		    	}
+			}	
+				
+			String istruzioneChiamata = node.toString().toLowerCase();
+			
+			//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
+			//MethodDeclaration mnode = getMethodDeclaration(node);
+			//Assignment anode = getAssignment(node);
+			
+			/*if (mnode != null) {
+				IMethodBinding mbinding = mnode.resolveBinding(); 
+				
+				//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
+				//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
+				
+				//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
+				if (node.resolveMethodBinding() != null) {
+					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+					String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
+					
+					boolean bool = false;
+					if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
+						//System.out.println(mnode.toString());
+						for (int i=0;i<listaClassiInExecute.size();i++) { 
+							if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
+								bool = true;
+								break;
+							}
+						}
+						if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
+							listaClassiInExecute.add(nomeClasseDichiarante);
+							System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+									+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
+						}
+					}
+					
+				}
+				
+				
+/*
+					//Ricerca classe
+					for(int i=0;i<arrayListTemp.size();i++) {
+						String FQN = arrayListTemp.get(i).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+							arrayListTemp.get(i).setExecutesCommand(2);
+						}
+					}
+*/
+			return true;
+			
+			}
+
+
+		@Override
+		public void endVisit(MethodInvocation node) {
+			// Utils.print(" ]MI");
+		}
 		
 		@Override
 		public void endVisit(TypeDeclaration node) {
@@ -288,158 +321,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		// Field Declaration
 		@Override
 		public boolean visit(FieldDeclaration node) {
-
-			
-			/*for(int i=0;i<listaFeatureCommandInstances.size();i++) {
-		     FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-		     
-		     if(nomeClasseAnalizzata.equals(riga.getNomeConcreteObserver())) {
-
-			 String Subject= riga.getNomeSubject();
-			 if(Subject.equals(null)) { 
-				 //non fai nulla 
-			 } else { 
-				 //vuol dire che il subject Ã¨ presente nelle dichiarazioni quindi lo salviamo nell'array
-				 // per andare poi a verificare se la classe accedde ad esso
-				boolean verifica =cercaSottostringa(node.getType().toString(),Subject);
-				  if(verifica==true) { //la variabile dichiarate Ã¨ del tipo Subject
-					  //elementiDichiaratiSubject.add();
-					 String nomeField=trovaNomeField(node.toString());
-					 elementiDichiaratiSubject.add(nomeField);			 
-				  }
-					 
-		     }//fine else  
-		     }	// fine controllo NomeClasseAnalizzata
-			} //fine for
-			
-			
-			
-/////////////////////////	 SET CAMPO SubObsDependencies ///////////////////////////////////////
-			
-			for(int i=0 ; i<listaFeatureCommandInstances.size();i++) {
-			     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
-			     
-			     
-			     if(riga.getControlloDipSub()==true) {
-			    	 
-			    	 String Subject = riga.getNomeSubject();
-			    	 if(nomeClasseAnalizzata.equals(Subject)) {
-			    		 String Observer = riga.getNomeObserver();
-			    		 String ConcreteObserver = riga.getNomeConcreteObserver();
-						 boolean verifica =cercaSottostringa(node.getType().toString(),Observer);
-						 boolean verifica2 =cercaSottostringa(node.getType().toString(),ConcreteObserver);
-						 if(verifica==true) {
-							 if(SubDip1==true) {
-								 
-								    riga.setSubObsDepedencies(3);
-
-
-					        		listaFeatureCommandInstances.remove(i);   		
-					        		listaFeatureCommandInstances.add(i, riga);
-								 
-							 }else {
-								 
-							    riga.setSubObsDepedencies(1);
-				        		
-				        		listaFeatureCommandInstances.remove(i);   		
-				        		listaFeatureCommandInstances.add(i, riga);
-							 }
-							 
-						 } //fine if Verifica
-						 if(verifica2==true) {
-							 if(SubDip1==true) {
-								 
-								    riga.setSubObsDepedencies(3);
-
-					        		listaFeatureCommandInstances.remove(i);   		
-					        		listaFeatureCommandInstances.add(i, riga);
-								 
-							 }else {
-								 
-							    
-							    riga.setSubObsDepedencies(2);
-				        		
-				        		listaFeatureCommandInstances.remove(i);   		
-				        		listaFeatureCommandInstances.add(i, riga);
-							 }
-							 
-						 } //fine if Verifica2
-						 
-
-			    	 }
-			    	 
-			     }
-
-			}
-			
-			
-/////////////////////////	 SET CAMPO ConcreteSubObsDependencies        ///////////////////////////////////////////////////////////
-			
-			for(int i=0 ; i<listaFeatureCommandInstances.size();i++) {
-			     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
-			     
-			     
-			     if(riga.getControlloDipCSub()==true) {
-			    	 
-			    	 String ConcreteSubject = riga.getNomeConcreteSubject();
-			    	 if(nomeClasseAnalizzata.equals(ConcreteSubject)) {
-			    		 String Observer = riga.getNomeObserver();
-			    		 String ConcreteObserver = riga.getNomeConcreteObserver();
-						 boolean verifica =cercaSottostringa(node.getType().toString(),Observer);
-						 boolean verifica2 =cercaSottostringa(node.getType().toString(),ConcreteObserver);
-						 if(verifica==true) {
-							 if(SubDip1==true) {
-								 
-								    riga.setCSubObsDependencies(3);
-
-					        		listaFeatureCommandInstances.remove(i);   		
-					        		listaFeatureCommandInstances.add(i, riga);
-
-								 
-							 }else {
-								 
-							    riga.setCSubObsDependencies(1);
-
-				        		
-				        		listaFeatureCommandInstances.remove(i);   		
-				        		listaFeatureCommandInstances.add(i, riga);
-							 }
-							 
-						 } //fine if Verifica
-						 if(verifica2==true) {
-							 if(SubDip1==true) {
-								 
-								    riga.setCSubObsDependencies(3);
-
-					        		listaFeatureCommandInstances.remove(i);   		
-					        		listaFeatureCommandInstances.add(i, riga);
-
-								 
-							 }else {
-								 
-							    
-								    riga.setCSubObsDependencies(2);
-
-				        		
-				        		listaFeatureCommandInstances.remove(i);   		
-				        		listaFeatureCommandInstances.add(i, riga);
-							 }
-							 
-						 } //fine if Verifica2
-						 
-
-			    	 }
-			    	 
-			     }
-			}
-			
-			
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-			
-				
-			//Utils.print("    (VISITOR2)[FD " + node.getClass().getSimpleName() + " " + node.getType().toString() + " ]");
-		*/		
+	
 			return true;
 		}
 		
@@ -449,94 +331,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			 //Utils.print(" ]FD (VISITOR2)");
 		}
 		
-		
-		
-		
-		
-		public boolean cercaSottostringa(String classe , String sottoStringa) {
-			
-			boolean bool=false;
-			
-
-			int max = classe.length() - sottoStringa.length();
-			
-			
-			 test:
-				    for (int i = 0; i <= max; i++) {
-				      int n = sottoStringa.length();
-				      int j = i;
-				      int k = 0;
-				      while (n-- != 0) {
-				        if (classe.charAt(j++) != sottoStringa.charAt(k++)) {
-				          continue test;
-				        }
-				      }
-
-				      // a questo punto Ã¨ stata effettuata una ricerca
-				      // sarÃ  possibile produrre un output			
-				      bool = true;
-				      break test;
-				    }
-			return bool;
-		}
-		
-		
-		
-		public String trovaNomeField (String fieldDeclaration) {
-		     
-			//node.fieldDeclaration senza Virgola
-			  String nomeField= fieldDeclaration.substring(0,(fieldDeclaration.length()-1));
-			 
-			  int  max = nomeField.length();
-			  ArrayList<String> caratteri = new ArrayList<String>();
-			  while((nomeField.equals(" "))==false && (max>0)) {
-				  String carattere = nomeField.substring(max-1, max);
-				  caratteri.add(carattere);
-				  max--;
-				  }
-			  
-			 String appoggio="";
-			 
-			 for(int i=caratteri.size()-1;i>=0;i--) {
-				 
-				 String c = caratteri.get(i);
-				 appoggio=appoggio.concat(c);
-				 
-			 }
-			
-			
-			return appoggio;
-		}
-		
-		
 		@Override
 		public boolean visit(FieldAccess node) {
-			//Utils.print(" (VISITOR2) [fieldACCESS " + node.getClass().getSimpleName() + "   " + node.toString());
 			
-
-			/*for(int i=0;i<listaFeatureCommandInstances.size();i++) {
-		     FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
-		     
-		     if(classeAnalizzata.equals(riga.getNomeConcreteObserver())) {
-		     
-		      
-		    	 for(int y=0;y<elementiDichiaratiSubject.size();y++) {
-		    	  String elemento =  elementiDichiaratiSubject.get(y);
-		    	  boolean verifica = cercaSottostringa(node.toString(),elemento);
-		    	  if(verifica==true) {
-		    		  
-		    		  riga.setCObsAccessSubject(2);
-		        		
-		              listaFeatureCommandInstances.remove(i);   		
-		        	  listaFeatureCommandInstances.add(i, riga);
-		        	  
-		        	 
-		    	  }
-		    		  
-		    	  }
-		     }
-		     }
-		*/	
 			return true;
 		}
 		
@@ -566,6 +363,14 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			return modifier;
 		}
 		
-	
+	private MethodDeclaration getMethodDeclaration(ASTNode node) {
+		ASTNode pnode = node;
+		while (pnode != null && pnode.getNodeType() != ASTNode.METHOD_DECLARATION) {
+			pnode = pnode.getParent();
+		}
+		
+		return (MethodDeclaration) pnode;
+		
+	}
 	
 }
