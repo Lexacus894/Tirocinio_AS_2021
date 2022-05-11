@@ -125,32 +125,73 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 		    	
 		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-
-		    	String classe1 = riga.getClass1();
+		    	String classe1 = "";
 		    	
-		    	System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.indexOf(" ")));
-		    	if (classeAnalizzata.equals(classe1.substring(0,classe1.indexOf(" ")))) {
-		    		String classe2 = riga.getClass2();
+		    	if (riga.getClass1().contains(classeAnalizzata + " - CC")) {
+		    		classe1 = riga.getClass1();
+		    	}
+		    	else if (riga.getClass2().contains(classeAnalizzata + " - CC")) {
+		    		classe1 = riga.getClass2();
+		    	}
+		    	else if (riga.getClass3().contains(classeAnalizzata + " - CC")) {
+		    		classe1 = riga.getClass3();
+		    	}
+		    	else if (riga.getClass4().contains(classeAnalizzata + " - CC")) {
+		    		classe1 = riga.getClass4();
+		    	}
+		    	else if (riga.getClass5().contains(classeAnalizzata + " - CC")) {
+		    		classe1 = riga.getClass5();
+		    	}
+		    	
+		    	if (!classe1.equals("") && classe1 != null) {
+		    		System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " " + riga);
+			    	if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-5))) {
+			    		System.out.println("PROVA PROVA PROVA - ENTRATO - classe1:" + classe1);
+			    		String classe2 = "";
+			    		
+			    		if (riga.getClass1().contains(" - CI")) {
+				    		classe2 = riga.getClass1();
+				    	}
+				    	else if (riga.getClass2().contains(" - CI")) {
+				    		classe2 = riga.getClass2();
+				    	}
+				    	else if (riga.getClass3().contains(" - CI")) {
+				    		classe2 = riga.getClass3();
+				    	}
+				    	else if (riga.getClass4().contains(" - CI")) {
+				    		classe2 = riga.getClass4();
+				    	}
+				    	else if (riga.getClass5().contains(" - CI")) {
+				    		classe2 = riga.getClass5();
+				    	}
+			    		
+			    		ITypeBinding tempsuperclass = superclass;
+			    		//Confronto estensione
+			    		while (tempsuperclass != null && !tempsuperclass.getName().equals("Object")) {
+			    			if (!classe2.equals("") && classe2 != null) {
+			    				System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + tempsuperclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-5));
+				    			if (tempsuperclass.getName().equals(classe2.substring(0,classe2.length()-5))) {
+				    				System.out.println("OK ESTENSIONE");
+				    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
+				    			}
+			    			}
+			    			tempsuperclass = tempsuperclass.getSuperclass();
+			    		}
+			    		
+			    		//Confronto implementazione
+			    		ITypeBinding[] interfaces = binding.getInterfaces();
+			    		for (ITypeBinding sInterface : interfaces) {
+			    			if (!classe2.equals("") && classe2 != null) {
+			    				if (sInterface.getName().equals(classe2.substring(0,classe2.length()-5))) {
+				    				System.out.println("OK IMPLEMENTAZIONE");
+				    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
+				    			}
+			    			}
+			    			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
+			    		}
+			    	}
+		    	}
 		    		
-		    		//Confronto estensione
-		    		if (superclass != null) {
-		    			System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + superclass.getName() + ", classe2: " + classe2.substring(0,classe2.indexOf(" ")));
-		    			if (superclass.getName().equals(classe2.substring(0,classe2.indexOf(" ")))) {
-		    				System.out.println("OK ESTENSIONE");
-		    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
-		    			}
-		    		}
-		    		
-		    		//Confronto implementazione
-		    		ITypeBinding[] interfaces = binding.getInterfaces();
-		    		for (ITypeBinding sInterface : interfaces) {
-		    			if (sInterface.getName().equals(classe2.substring(0,classe2.indexOf(" ")))) {
-		    				System.out.println("OK IMPLEMENTAZIONE");
-		    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
-		    			}
-		    			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
-		    		}
-		    	}	
 		    }		
 		          
 		return true ;

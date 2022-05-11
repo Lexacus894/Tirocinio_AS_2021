@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;CommandRelationship;ExecuteRelationship;IsPartOfExecute;AddNewRelationship";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;ExecuteRelationship;IsPartOfExecute;AddNewRelationship";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -366,7 +366,7 @@ else {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -659,6 +659,15 @@ else {
 		             fileWriter.append(COMMA_DELIMITER);
 		              
 		             fileWriter.append(vettoreFeat.getClass2());
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(vettoreFeat.getClass3());
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(vettoreFeat.getClass4());
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(vettoreFeat.getClass5());
 		             fileWriter.append(COMMA_DELIMITER);
 		              
 		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));

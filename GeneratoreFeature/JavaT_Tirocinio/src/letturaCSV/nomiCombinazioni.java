@@ -13,6 +13,15 @@ public class nomiCombinazioni {
 		this.classe4 = classe4;
 	}
 	
+	public nomiCombinazioni(String classe1, String classe2, String classe3, String classe4, String classe5) {
+		super();
+		this.classe1 = classe1;
+		this.classe2 = classe2;
+		this.classe3 = classe3;
+		this.classe4 = classe4;
+		this.classe5 = classe5;
+	}
+	
 	
 	public String getClasse1() {
 		return classe1;
@@ -39,11 +48,19 @@ public class nomiCombinazioni {
 		this.classe4 = classe4;
 	}
 	
+	public String getClasse5() {
+		return classe5;
+	}
+	
+	public void setClasse5(String classe5) {
+		this.classe5 = classe5;
+	}
+	
 	
 	@Override
 	public String toString() {
 		return "nomiCombinazioni [classe1 = " + classe1 + ", classe2 = " + classe2 + ", classe3 = " + classe3 + ", classe4 = "
-				+ classe4 + "]";
+				+ classe4 + ", Classe 5 =" + classe5 + "]";
 	}
 	
 	
@@ -51,7 +68,6 @@ public class nomiCombinazioni {
 	private String classe2;
 	private String classe3;
 	private String classe4;
-	
-
+	private String classe5;
 
 }

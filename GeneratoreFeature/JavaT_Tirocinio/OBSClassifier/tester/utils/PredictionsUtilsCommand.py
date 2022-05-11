@@ -43,11 +43,11 @@ def get_instances_predictions_list(data, predictions, labels):
 
     return predictionResults
 
-def roles_permutation(predictions_list):
-    pairs_list = list(itertools.permutations(predictions_list, 2))
-    triplets_list = list(itertools.permutations(predictions_list, 3))
-    quadruplets_list = list(itertools.permutations(predictions_list, 4))
-    quintuplets_list = list(itertools.permutations(predictions_list, 5))
+def roles_combinations(predictions_list):
+    pairs_list = list(itertools.combinations(predictions_list, 2))
+    triplets_list = list(itertools.combinations(predictions_list, 3))
+    quadruplets_list = list(itertools.combinations(predictions_list, 4))
+    quintuplets_list = list(itertools.combinations(predictions_list, 5))
     #print(pairs_list)
     return (pairs_list, triplets_list, quadruplets_list, quintuplets_list)
 

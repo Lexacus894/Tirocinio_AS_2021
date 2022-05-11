@@ -19,7 +19,7 @@ PREDICTIONS_ROOT_DIRECTORY       = 'OBSClassifier/tester/predictions'
 SOFTWARES_ROOT_DIRECTORY         = 'softwares'
 ROLES_PREDICTIONS_HEADER         = ['Class','Role','Probability']
 ROLES_PREDICTIONS_FILE_PATH      = PREDICTIONS_ROOT_DIRECTORY + '/roles_predictions_command.csv'
-SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware.csv'
+SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware2.csv'
 
 def main():
     SW_ROLES_BATCH_SIZE=8
@@ -35,7 +35,7 @@ def main():
     roles_predictions_list=p_utils.get_roles_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
     p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
-    classes_pairs_pred, classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_permutation(roles_predictions_list)
+    classes_pairs_pred, classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_combinations(roles_predictions_list)
 
     classes_pairs_act,classes_pairs_roles = p_utils.filter_pairs_list(roles_predictions_list, classes_pairs_pred)
     classes_triplets_act, classes_triplets_roles = p_utils.filter_triplets_list(roles_predictions_list, classes_triplets_pred)
