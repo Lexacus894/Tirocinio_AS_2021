@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;ExecuteRelationship;IsPartOfExecute;AddNewRelationship";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;ExecuteRelationship;InvokeMethod";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -674,6 +674,9 @@ else {
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getExecuteRelationship()));
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
 	        	
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }

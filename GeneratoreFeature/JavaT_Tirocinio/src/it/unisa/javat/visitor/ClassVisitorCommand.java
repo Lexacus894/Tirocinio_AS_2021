@@ -253,9 +253,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//System.out.println(nomeClasseDichiarante);
 		//Utils.print("    [MD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.toString() + " ]");
 		
-		String nomeMetodo = binding.toString().toLowerCase();
+		String metodo = binding.toString().toLowerCase();
 		
-		if ((nomeMetodo.contains("execute") || nomeMetodo.contains("actionperformed")) && !nomeMetodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
+		if ((metodo.contains("execute") || metodo.contains("actionperformed")) && !metodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
 			//Ricerca classe
 			for(int i = 0;i < arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
@@ -273,7 +273,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		// Utils.print(" ]MD");
 	}
 	
-	// Method Invocation - AddsCommandMethod, ExecutesCommand, Ricerca Classi in execute()
+	// Method Invocation - Instantiates, ExecutesCommand, Ricerca Classi in execute()
 	@Override
 	public boolean visit(MethodInvocation node) {
 			
@@ -281,7 +281,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
 		MethodDeclaration mnode = getMethodDeclaration(node);
-		Assignment anode = getAssignment(node);
+		String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
 		
 		if (mnode != null) {
 			IMethodBinding mbinding = mnode.resolveBinding(); 
@@ -291,7 +291,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
 			if (node.resolveMethodBinding() != null) {
-				String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+				
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
 				
 				boolean bool = false;
@@ -312,70 +312,34 @@ public class ClassVisitorCommand extends ASTVisitor {
 				
 			}
 			
-			//IF l'istruzione contiene ".add" o "new" e "Command" o "Action" e non contiene "ActionListener"
-			/*if (istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put")) {
-				if ((istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
-					//feat.setAddsCommandMethod(2);
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);
-						}
+			//ExecutesCommand
+			if (istruzioneChiamata.contains(".execute")) {
+				int temp = 2;
+				
+				if (nomeClasseDichiarante.toLowerCase().contains("command")) {
+					if (Modifier.isAbstract(node.resolveMethodBinding().getDeclaringClass().getModifiers())) {
+						System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE ASTRATTA:" + nomeClasseDichiarante);
+						temp = 4;
 					}
+					else {
+						System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE NON ASTRATTA:" + nomeClasseDichiarante);
+						temp = 3;
+					}
+					
 				}
-			}
-			/*else if (istruzioneChiamata.contains("=")) {
-				String substring = istruzioneChiamata.substring(istruzioneChiamata.indexOf("="));
-				//System.out.println("PROVA PROVA PROVA PROVA PROVA PROVA" + substring);
-				if ((substring.contains("command") || substring.contains("action")) && !substring.contains("actionListener")) {
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setAddsCommandMethod(2);
-						}
-					}	
-				}
-			}*/
-			
-			//IF l'istruzione contiene ".execute" - ExecutesCommand
-			if (istruzioneChiamata.contains(".execute") && !istruzioneChiamata.contains(".executeQuery")) {
-				//feat.setExecutesCommand(2);
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
 					String FQN = arrayListTemp.get(i).getFQNClass();
 					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-						arrayListTemp.get(i).setExecutesCommand(2);
+						arrayListTemp.get(i).setExecutesCommand(temp);
 					}
 				}
 			}
-			
-			//Vecchia implementazione di InstantiatesCommand per MethodInvocation
-			/*if (istruzioneChiamata.contains("new")) {
-				ArrayList<String> importedCommandsTemp = importedCommands;
-				for(int i=0;i<importedCommandsTemp.size();i++) {
-					if (istruzioneChiamata.contains("new " + importedCommandsTemp.get(i).toLowerCase())) {
-						System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
-						System.out.println("ISTRUZIONE CHIAMATA: " + istruzioneChiamata);
-						importedCommandsTemp.remove(i);
-						//Ricerca classe
-						for(int j=0;j<arrayListTemp.size();j++) {
-							String FQN = arrayListTemp.get(j).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-								arrayListTemp.get(j).setInstantiatesCommand(2);
-							}
-						}
-					}
-				}
-			}*/
 			
 			//InstantiatesCommand
 			if (istruzioneChiamata.contains("new")) {
 				String ist = istruzioneChiamata.substring(istruzioneChiamata.indexOf("new"));
 				if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
-					//System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
-					System.out.println("ISTRUZIONE CHIAMATA: " + istruzioneChiamata);
 					//Ricerca classe
 					for(int j=0;j<arrayListTemp.size();j++) {
 						String FQN = arrayListTemp.get(j).getFQNClass();

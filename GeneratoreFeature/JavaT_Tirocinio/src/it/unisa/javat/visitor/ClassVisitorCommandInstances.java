@@ -64,16 +64,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	Stack<Scope> _scope;
     ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
 
-    String classeAnalizzata;
-    ArrayList<String> elementiDichiaratiSubject = new ArrayList<String>();
+    //String classeAnalizzata;
     
-	
-	
-	//verificare se la chiamata arriva dopo un changeState
-	boolean ChangeState2=false;
-	
-	//verifica se è presente una dipendenza 
-	boolean SubDip1;
 
 
 	public ClassVisitorCommandInstances(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandInstances> listaFeature) {
@@ -83,26 +75,26 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		_scope = new Stack<Scope>();
 		listaFeatureCommandInstances = listaFeature;
 
-	} // fine Costruttore
+	}
 	
 	
 	
 	// Compilation Unit
-		@Override
-		public boolean visit(CompilationUnit node) {
+	@Override
+	public boolean visit(CompilationUnit node) {
 
-			//Utils.print("Ritorno qui");
-			_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
-			//Utils.print("(VISITOR2)[CU " + node.getClass().getSimpleName());
-			
+		//Utils.print("Ritorno qui");
+		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
+		//Utils.print("(VISITOR2)[CU " + node.getClass().getSimpleName());
+		
 
-			return true;
-		}
+		return true;
+	}
 
-		@Override
-		public void endVisit(CompilationUnit node) {
-	     
-			//Utils.print(" ]CU(VISITOR2)");
+	@Override
+	public void endVisit(CompilationUnit node) {
+     
+		//Utils.print(" ]CU(VISITOR2)");
 			
 			_scope.pop();
    
@@ -116,16 +108,18 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			ITypeBinding binding = node.resolveBinding();
 			if (binding == null) {
 				//Utils.print("[TD NOBIND]");
-				return false;
-			}
-			
-			String classeAnalizzata = binding.getName();
-			ITypeBinding superclass = binding.getSuperclass();
-			
-		    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-		    	
-		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-		    	String classe1 = "";
+			return false;
+		}
+		
+		String classeAnalizzata = binding.getName();
+		ITypeBinding superclass = binding.getSuperclass();
+		
+	    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+	    	
+	    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+	    	
+	    	if (riga.toString().contains(classeAnalizzata)) {
+	    		String classe1 = "";
 		    	
 		    	if (riga.getClass1().contains(classeAnalizzata + " - CC")) {
 		    		classe1 = riga.getClass1();
@@ -191,24 +185,30 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		}
 			    	}
 		    	}
-		    		
-		    }		
-		          
-		return true ;
-		      
-		}
+	    	}
+	    	
+	    		
+	    }		
+	          
+	return true ;
+	      
+	}
+	
+	// Method Invocation - ExecuteRelationship
+	@Override
+	public boolean visit(MethodInvocation node) {
 		
-		// Method Invocation - ExecuteRelationship
-		@Override
-		public boolean visit(MethodInvocation node) {
-			
-			String classeAnalizzata = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-			MethodDeclaration mnode = getMethodDeclaration(node);
-			
-			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-		    	
-		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-		    	String classe1 = "";
+		String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
+		String classeAnalizzata = getTypeDeclaration(node).getName().toString();
+		//MethodDeclaration mnode = getMethodDeclaration(node);
+		String istruzioneChiamata = node.toString().toLowerCase();
+		
+		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+	    	
+	    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+	    	
+	    	if (riga.toString().contains(classeAnalizzata)) {
+	    		String classe1 = "";
 		    	
 		    	if (riga.getClass1().contains(" - CC")) {
 		    		classe1 = riga.getClass1();
@@ -227,10 +227,11 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    	}
 		    	
 		    	if (!classe1.equals("") && classe1 != null) {
-		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
-			    	//if (classeAnalizzata.equals(classe1.substring(0,classe1.length()-5))) {
+		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
+			    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
 			    		
 			    		String classe2 = "";
+			    		String classe3 = "";
 			    		
 			    		if (riga.getClass1().contains(" - RE")) {
 				    		classe2 = riga.getClass1();
@@ -248,23 +249,78 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				    		classe2 = riga.getClass5();
 				    	}
 			    		
-			    		System.out.println("PROVA PROVA PROVA EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
+			    		//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
 			    		
-			    		if (classe2.equals(classeAnalizzata + " - RE")) {
-			    			System.out.println("PROVA PROVA PROVA EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
+			    		if (classe2.equals(classeDichiarante + " - RE")) {
+			    			//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
 			    			listaFeatureCommandInstances.get(i).setExecuteRelationship(2);
 			    		}
+			    		
+			    		if (riga.getClass1().contains(" - IN")) {
+				    		classe2 = riga.getClass1();
+				    	}
+				    	else if (riga.getClass2().contains(" - IN")) {
+				    		classe2 = riga.getClass2();
+				    	}
+				    	else if (riga.getClass3().contains(" - IN")) {
+				    		classe2 = riga.getClass3();
+				    	}
+				    	else if (riga.getClass4().contains(" - IN")) {
+				    		classe2 = riga.getClass4();
+				    	}
+				    	else if (riga.getClass5().contains(" - IN")) {
+				    		classe2 = riga.getClass5();
+				    	}
+			    		
+			    		if (riga.getClass1().contains(" - CL")) {
+				    		classe3 = riga.getClass1();
+				    	}
+				    	else if (riga.getClass2().contains(" - CL")) {
+				    		classe3 = riga.getClass2();
+				    	}
+				    	else if (riga.getClass3().contains(" - CL")) {
+				    		classe3 = riga.getClass3();
+				    	}
+				    	else if (riga.getClass4().contains(" - CL")) {
+				    		classe3 = riga.getClass4();
+				    	}
+				    	else if (riga.getClass5().contains(" - CL")) {
+				    		classe3 = riga.getClass5();
+				    	}
+			    		
+			    		if (!classe2.equals("") && classe2 != null) {
+				    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
+
+				    		if (!classe3.equals("") && classe3 != null) {
+				    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
+					    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
+		
+					    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
+					    		}	
+			    			}
+			    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
+				    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
+				    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
+						    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
+	
+					    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
+				    			}
+				    		}
+			    		}
+				    		
 			    	//}
 		    	}
-			}	
-				
-			String istruzioneChiamata = node.toString().toLowerCase();
+	    	}
+	    	
+		}	
 			
-			//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
-			//MethodDeclaration mnode = getMethodDeclaration(node);
-			//Assignment anode = getAssignment(node);
-			
-			/*if (mnode != null) {
+		
+		
+		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
+		//MethodDeclaration mnode = getMethodDeclaration(node);
+		//Assignment anode = getAssignment(node);
+		
+		/*if (mnode != null) {
 				IMethodBinding mbinding = mnode.resolveBinding(); 
 				
 				//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
@@ -303,65 +359,65 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						}
 					}
 */
-			return true;
-			
-			}
+		return true;
+		
+		}
 
 
-		@Override
-		public void endVisit(MethodInvocation node) {
-			// Utils.print(" ]MI");
-		}
-		
-		@Override
-		public void endVisit(TypeDeclaration node) {
-			//Utils.print("  ]TD (VISITOR2)");
-		}
-		
-		// Field Declaration
-		@Override
-		public boolean visit(FieldDeclaration node) {
+	@Override
+	public void endVisit(MethodInvocation node) {
+		// Utils.print(" ]MI");
+	}
 	
-			return true;
-		}
-		
-		
-		@Override
-		public void endVisit(FieldDeclaration node) {
-			 //Utils.print(" ]FD (VISITOR2)");
-		}
-		
-		@Override
-		public boolean visit(FieldAccess node) {
-			
-			return true;
-		}
-		
-		@Override
-		public void endVisit(FieldAccess node) {
-			//Utils.print("    ]fieldACCESS (VISITOR2)");
-			
-		}
-		
-		
-		
+	@Override
+	public void endVisit(TypeDeclaration node) {
+		//Utils.print("  ]TD (VISITOR2)");
+	}
+	
+	// Field Declaration
+	@Override
+	public boolean visit(FieldDeclaration node) {
 
-		private String printModifiers(int mod) {
-			String modifier = "";
-			if (Modifier.isPublic(mod))
-				modifier += " PUBLIC";
-			if (Modifier.isProtected(mod))
-				modifier += " PROTECTED";
-			if (Modifier.isPrivate(mod))
-				modifier += " PRIVATE";
-			if (Modifier.isStatic(mod))
-				modifier += " STATIC";
-			if (Modifier.isInterface(mod))
-				modifier += " INTERFACE";
-			if (Modifier.isAbstract(mod))
-				modifier += " ABSTRACT";
-			return modifier;
-		}
+		return true;
+	}
+	
+	
+	@Override
+	public void endVisit(FieldDeclaration node) {
+		 //Utils.print(" ]FD (VISITOR2)");
+	}
+	
+	@Override
+	public boolean visit(FieldAccess node) {
+		
+		return true;
+	}
+	
+	@Override
+	public void endVisit(FieldAccess node) {
+		//Utils.print("    ]fieldACCESS (VISITOR2)");
+		
+	}
+	
+	
+	
+
+	private String printModifiers(int mod) {
+		String modifier = "";
+		if (Modifier.isPublic(mod))
+			modifier += " PUBLIC";
+		if (Modifier.isProtected(mod))
+			modifier += " PROTECTED";
+		if (Modifier.isPrivate(mod))
+			modifier += " PRIVATE";
+		if (Modifier.isStatic(mod))
+			modifier += " STATIC";
+		if (Modifier.isInterface(mod))
+			modifier += " INTERFACE";
+		if (Modifier.isAbstract(mod))
+			modifier += " ABSTRACT";
+		return modifier;
+	}
 		
 	private MethodDeclaration getMethodDeclaration(ASTNode node) {
 		ASTNode pnode = node;
@@ -371,6 +427,15 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		return (MethodDeclaration) pnode;
 		
+	}
+	
+	private TypeDeclaration getTypeDeclaration(ASTNode node) {
+		ASTNode pnode = node;
+		while (pnode != null && pnode.getNodeType() != ASTNode.TYPE_DECLARATION) {
+			pnode = pnode.getParent();
+		}
+
+		return (TypeDeclaration) pnode;
 	}
 	
 }
