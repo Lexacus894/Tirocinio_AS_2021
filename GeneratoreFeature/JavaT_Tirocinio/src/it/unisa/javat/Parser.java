@@ -322,6 +322,7 @@ public class Parser {
 
 			Map<String, String> options = JavaCore.getOptions();
 			JavaCore.setComplianceOptions(_javaVersion, options);
+			options.put(JavaCore.COMPILER_SOURCE, "1.8");
 			parser.setCompilerOptions(options);
 
 			Document document = new Document(str);

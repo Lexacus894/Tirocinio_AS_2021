@@ -67,8 +67,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 	String folder;
 	String nomeProgetto;
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
+	int tempval;
 	
-	ArrayList<String> importedCommands = new ArrayList<String>();
+	//ArrayList<String> importedCommands = new ArrayList<String>();
 
 	
 	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandRoles> arrayListFeatureVisitor, String folder,String nomeProgetto) {
@@ -77,10 +78,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
 		
-		//cicloDopo= new Stack<String>();
+
 		this.arrayListFeature = arrayListFeatureVisitor;
-		
-	    //listaClassiListener = new ArrayList<String>();
 	    
 	    this.arrayListTemp = new ArrayList<FeatureCommandRoles>();
 	    this.folder = folder;
@@ -103,31 +102,14 @@ public class ClassVisitorCommand extends ASTVisitor {
 			}
 		}
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
-		//Utils.print("[CU " + node.getClass().getSimpleName());
-		//listaVariabili=new ArrayList<strutturaVariabile>();
-
 		return true;
 	}
 
 	@Override
 	public void endVisit(CompilationUnit node) {
-       /*for (strutturaVariabile var : listaVariabili) {
-        	System.out.println("NOME : " + var.getNomeVariabile() + " BOOL: " + var.getlocaleGlobale());
-        }*/
-		//Utils.print(" ]CU");
 		ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
 		for(int i=0; i<arrayListTemp.size();i++) {
-			/*FeatureCommandRoles currentfeat = arrayListTemp.get(i);
-			if (arrayListTemp.get(i).getInstantiatesCommand()==2 && arrayListTemp.get(i).getExecutesCommand()==2) {
-				FeatureCommandRoles tempfeat = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Client",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-				FeatureCommandRoles tempfeat2 = new FeatureCommandRoles(currentfeat.getSoftwareName(),currentfeat.getFileName(),currentfeat.getFQNClass() + " - Invoker",currentfeat.getClassType(),currentfeat.getClassDeclarationKeyword(),currentfeat.getMethodDeclarationKeyword(),2,currentfeat.getInstantiatesCommand(),currentfeat.getHasSuperclass(),currentfeat.getImplementsInterfaces(),currentfeat.getIsPartOfExecute());
-				arrayListScissione.add(tempfeat);
-				arrayListScissione.add(tempfeat2);
-				arrayListTemp.remove(i);
-			}
-			else {*/
 				arrayListFeature.add(arrayListTemp.get(i));
-			//}
 		}
 		for(int i=0; i<arrayListScissione.size();i++) {
 			arrayListFeature.add(arrayListScissione.get(i));
@@ -217,41 +199,28 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 	@Override
 	public void endVisit(TypeDeclaration node) {
-		//Utils.print("  ]TD");
 	}
 	
 	// Import Declaration
 		@Override
 		public boolean visit(ImportDeclaration node) {
-			String classeImportata = node.toString().replaceAll(".+\\.", "").toLowerCase();
-			if ((classeImportata.contains("command") || classeImportata.contains("action")) && !classeImportata.contains("actionlistener")) {
-				String command = node.toString().replaceAll(".+\\.", "");
-				System.out.println("Questa classe importa " + command.substring(0,command.length()-2));
-				importedCommands.add(command.substring(0,command.length()-2));
-			}
 			return true;
 		}
 
 		@Override
 		public void endVisit(ImportDeclaration node) {
-			// Utils.print(" ]ID");
 		}
 
 	// Method Declaration - ClassType, MethodDeclarationKeyword
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		
-		//String stringa="NO";
-		//cicloDopo.push(stringa);
+
 		IMethodBinding binding = node.resolveBinding();
 		if (binding == null) {
-			//Utils.print("[MD NOBIND]");
 			return false;
 		}
 		
 		String nomeClasseDichiarante = node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-		//System.out.println(nomeClasseDichiarante);
-		//Utils.print("    [MD" + printModifiers(binding.getModifiers()) + " " + node.getClass().getSimpleName() + " " + binding.toString() + " ]");
 		
 		String metodo = binding.toString().toLowerCase();
 		
@@ -270,7 +239,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 	@Override
 	public void endVisit(MethodDeclaration node) {
-		// Utils.print(" ]MD");
 	}
 	
 	// Method Invocation - Instantiates, ExecutesCommand, Ricerca Classi in execute()
@@ -281,17 +249,19 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
 		MethodDeclaration mnode = getMethodDeclaration(node);
-		String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
 		
-		if (mnode != null) {
-			IMethodBinding mbinding = mnode.resolveBinding(); 
-			
-			//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
-			//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
-			
-			//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
-			if (node.resolveMethodBinding() != null) {
+		
+		
+			if (mnode != null) {
+				IMethodBinding mbinding = mnode.resolveBinding(); 
 				
+				if (node.resolveMethodBinding() != null) {
+					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+			
+				//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
+				//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
+			
+				//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
 				
 				boolean bool = false;
@@ -309,31 +279,37 @@ public class ClassVisitorCommand extends ASTVisitor {
 								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
 					}
 				}
-				
 			}
 			
 			//ExecutesCommand
 			if (istruzioneChiamata.contains(".execute")) {
-				int temp = 2;
-				
-				if (nomeClasseDichiarante.toLowerCase().contains("command")) {
-					if (Modifier.isAbstract(node.resolveMethodBinding().getDeclaringClass().getModifiers())) {
-						System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE ASTRATTA:" + nomeClasseDichiarante);
-						temp = 4;
+				if (node.resolveMethodBinding() != null) {
+					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
+					if (nomeClasseDichiarante.toLowerCase().contains("command")) {
+						if (Modifier.isAbstract(node.resolveMethodBinding().getDeclaringClass().getModifiers())) {
+							System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE ASTRATTA:" + nomeClasseDichiarante);
+							tempval = 4;
+						}
+						else {
+							System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE NON ASTRATTA:" + nomeClasseDichiarante);
+							tempval = 3;
+						}	
 					}
-					else {
-						System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE NON ASTRATTA:" + nomeClasseDichiarante);
-						temp = 3;
-					}
-					
 				}
+				else {
+					tempval = 2;
+				}
+				
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
 					String FQN = arrayListTemp.get(i).getFQNClass();
 					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-						arrayListTemp.get(i).setExecutesCommand(temp);
+						if (tempval > arrayListTemp.get(i).getExecutesCommand()) {
+							arrayListTemp.get(i).setExecutesCommand(tempval);
+						}
 					}
 				}
+			
 			}
 			
 			//InstantiatesCommand
@@ -349,9 +325,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 				}
 			}
-			
-			
-			
+
 		}
 		
 		return true;
@@ -360,7 +334,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 	@Override
 	public void endVisit(MethodInvocation node) {
-		// Utils.print(" ]MI");
 	}
 	
 	//Field Declaration - InstantiatesCommand
@@ -370,19 +343,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		String istruzione = node.getRightHandSide().toString().toLowerCase();
 		//System.out.println("PROVA PROVA PROVA" + istruzione);
 		if (istruzione.contains("new")) {
-			/*for(int i=0;i<importedCommands.size();i++) {
-				if (istruzione.contains("new" + importedCommands.get(i).toLowerCase())) {
-					System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommands.get(i) + " che ha importato, in un'assegnazione. PROVA PROVA PROVA");
-					importedCommands.remove(i);
-					//Ricerca classe
-					for(int j=0;j<arrayListTemp.size();j++) {
-						String FQN = arrayListTemp.get(j).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(j).setInstantiatesCommand(2);
-						}
-					}
-				}
-			}*/
 			String ist = istruzione.substring(istruzione.indexOf("new"));
 			if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
 				//System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
