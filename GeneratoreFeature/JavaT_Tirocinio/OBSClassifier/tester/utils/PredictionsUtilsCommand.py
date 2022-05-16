@@ -183,7 +183,7 @@ def filter_quintuplets_list(predictions_list,quintuplets_list):
 
 
         if (roles[0]!=roles[1] and roles[0]!=roles[2] and roles[0]!=roles[3] and roles[0] != roles[4] and roles[1]!=roles[2] and roles[1]!=roles[3] and roles[1] != roles[4] and roles[2]!=roles[3] and roles[2] != roles[4] and roles[3]!=roles[4]):
-            print("ECCOMI ECCOMI ECCOMI ECCOMI ECCOMI")
+            #print("ECCOMI ECCOMI ECCOMI ECCOMI ECCOMI")
             filtered_quintuplets_list.append(item)
             for i in range(5):
                 if (roles[i] == 'CommandInterface'):

@@ -300,6 +300,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 					tempval = 2;
 				}
 				
+				
 				//Ricerca classe
 				for(int i=0;i<arrayListTemp.size();i++) {
 					String FQN = arrayListTemp.get(i).getFQNClass();
@@ -312,23 +313,35 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			}
 			
+			
 			//InstantiatesCommand
-			if (istruzioneChiamata.contains("new")) {
-				String ist = istruzioneChiamata.substring(istruzioneChiamata.indexOf("new"));
-				if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
-					//Ricerca classe
-					for(int j=0;j<arrayListTemp.size();j++) {
-						String FQN = arrayListTemp.get(j).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(j).setInstantiatesCommand(2);
+			tempval = 1;
+			if (istruzioneChiamata.contains("add")) {
+				if (istruzioneChiamata.contains("new") && (istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
+					if (node.resolveMethodBinding() != null) {
+						String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+						if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
+							tempval = 4;
 						}
+						else {
+							tempval = 3;
+						}
+						
+						//Ricerca classe DA CAMBIARE
+						for(int j=0;j<arrayListTemp.size();j++) {
+							String FQN = arrayListTemp.get(j).getFQNClass();
+							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+								arrayListTemp.get(j).setInstantiatesCommand(tempval);
+							}
+						}
+						
 					}
 				}
 			}
 
 		}
 		
-		return true;
+		return true;	
 			
 	}
 
@@ -336,7 +349,35 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(MethodInvocation node) {
 	}
 	
-	//Field Declaration - InstantiatesCommand
+	//Instantiates Command
+	@Override 
+	public boolean visit(ClassInstanceCreation node) {
+		MethodDeclaration mnode = getMethodDeclaration(node);
+		if (mnode != null) {
+			String ist = node.toString().substring(0,node.toString().indexOf("(")).toLowerCase();
+			if ((ist.contains("command") || ist.contains("action"))  && !ist.contains("actionlistener")) {
+
+					//Ricerca classe DA CAMBIARE
+					for(int j=0;j<arrayListTemp.size();j++) {
+						String FQN = arrayListTemp.get(j).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN) && arrayListTemp.get(j).getInstantiatesCommand()==1) {
+							arrayListTemp.get(j).setInstantiatesCommand(2);
+						}
+					}
+					
+			}
+		}
+		
+		return true;
+	}
+	
+	@Override
+	
+	public void endVisit(ClassInstanceCreation node) {
+		
+	}
+	
+	/*Field Declaration - InstantiatesCommand
 	@Override
 	public boolean visit(Assignment node) {
 		MethodDeclaration mnode = getMethodDeclaration(node);
@@ -361,25 +402,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 	@Override
 	public void endVisit(Assignment node) {
-		// Utils.print(" ]FD");
-	}
-
-	/*
-	 * @Override public boolean visit(Assignment node) { AST ast = node.getAST();
-	 * MethodInvocation setter = ast.newMethodInvocation();
-	 * 
-	 * setter.setName(ast.newSimpleName("setField"));
-	 * 
-	 * Expression expr = node.getRightHandSide(); Utils.print(">>>>>>>>>>>>>>>>>" +
-	 * expr.toString());
-	 * 
-	 * setter.arguments().add(_rewriter.createMoveTarget(node.getRightHandSide()));
-	 * _rewriter.replace(node, setter, null);
-	 * 
-	 * Utils.print(">>>>>>>>>>>>>>>>>" + node.toString()); return true; }
-	 */
-
-	/****/
+	}*/
 	
 	//FINE VISITE
 
