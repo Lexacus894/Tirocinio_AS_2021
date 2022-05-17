@@ -2,9 +2,7 @@ import os
 from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
 
-INSTANCES_FEATURE_COLUMNS = ['HasConcreteCommand','HasCommandInterface','SubjectsRelationship','SubObsDependencies',
-                             'CSubObsDependencies','ObserversRelationship','CallListeners','CObsAccessSubject',
-                             'NoC','IsCommand']
+INSTANCES_FEATURE_COLUMNS = ['Class1' , 'Class2', 'Class3', 'Class4', 'Class5','CommandRelationship','CCRERelationship','InvokeMethod','ExecutesWithContext','UsesCommandList']
 INSTANCES_LABELS          = ['Not Command','Command']
 INSTANCES_DATASET_PATH    = "../datasets/com_instances_dataset.csv"
 
@@ -15,18 +13,19 @@ INSTANCES_EVALUATE_BATCH_SIZE = 2
 INSTANCES_TRAINING_STEPS      = 500
 
 PREDICTIONS_ROOT_DIRECTORY       = 'OBSClassifier/tester/predictions'
-INSTANCES_MOKUP_PATH             = PREDICTIONS_ROOT_DIRECTORY +'/com_combinations_mokup.csv'
+INSTANCES_MOKUP_PATH             = PREDICTIONS_ROOT_DIRECTORY +'/combinations_mockup_command.csv'
 INSTANCES_PREDICTIONS_FILE_PATH  = PREDICTIONS_ROOT_DIRECTORY +'/com_instances_predictions.csv'
 INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
 
 
 INSTANCES_COMBINATIONS_HEADER    = ['Classes'] + INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEATURE_COLUMNS)-1]
 INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
-INSTANCES_MOKUP_PATH             = PREDICTIONS_ROOT_DIRECTORY +'/combinations_mokup.csv'
-INSTANCES_PREDICTIONS_FILE_PATH  = PREDICTIONS_ROOT_DIRECTORY +'/instances_predictions_Command.csv'
-INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
+#INSTANCES_MOKUP_PATH             = PREDICTIONS_ROOT_DIRECTORY +'/combinations_mokup.csv'
+#INSTANCES_PREDICTIONS_FILE_PATH  = PREDICTIONS_ROOT_DIRECTORY +'/instances_predictions_Command.csv'
+#INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
 
 def main():
+    print("PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO")
     SW_CLASSES_COMBINATIONS_BATCH_SIZE = 5
 
     instancesClassifier = InstancesClassifier(INSTANCES_FEATURE_COLUMNS, INSTANCES_LABELS, FOLDERS_NUMBER)

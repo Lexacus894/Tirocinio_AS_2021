@@ -8,18 +8,23 @@ public class FeatureCommandInstances {
 	private String class4;
 	private String class5;
 	private int CommandRelationship;
-	private int ExecuteRelationship;
+	private int CCRERelationship;
 	private int InvokeMethod;
+	private int ExecutesWithContext;
+	private int UsesCommandList;
 	
-	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5, int commandRelationship, int executeRelationship, int invokeMethod) {
+	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5, int commandRelationship, int ccRERelationship, int invokeMethod,
+			int executesWithContext, int usesCommandList) {
 		this.class1 = class1;
 		this.class2 = class2;
 		this.class3 = class3;
 		this.class4 = class4;
 		this.class5 = class5;
 		this.CommandRelationship = commandRelationship;
-		this.ExecuteRelationship = executeRelationship;
+		this.CCRERelationship = ccRERelationship;
 		this.InvokeMethod = invokeMethod;
+		this.ExecutesWithContext = executesWithContext;
+		this.UsesCommandList = usesCommandList;
 	}
 
 	public String getClass1() {
@@ -70,12 +75,12 @@ public class FeatureCommandInstances {
 		CommandRelationship = commandRelationship;
 	}
 
-	public int getExecuteRelationship() {
-		return ExecuteRelationship;
+	public int getCCRERelationship() {
+		return CCRERelationship;
 	}
 
-	public void setExecuteRelationship(int executeRelationship) {
-		ExecuteRelationship = executeRelationship;
+	public void setCCRERelationship(int ccRERelationship) {
+		CCRERelationship = ccRERelationship;
 	}
 
 	public int getInvokeMethod() {
@@ -85,10 +90,26 @@ public class FeatureCommandInstances {
 	public void setInvokeMethod(int invokeMethod) {
 		InvokeMethod = invokeMethod;
 	}
+	
+	public int getExecutesWithContext() {
+		return ExecutesWithContext;
+	}
+
+	public void setExecutesWithContext(int executesWithContext) {
+		ExecutesWithContext = executesWithContext;
+	}
+	
+	public int getUsesCommandList() {
+		return UsesCommandList;
+	}
+
+	public void setUsesCommandList(int usesCommandList) {
+		UsesCommandList = usesCommandList;
+	}
 
 	@Override
 	public String toString() {
-		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", CommandRelationship: " + CommandRelationship + ", ExecuteRelationship: " + ExecuteRelationship 
+		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", CommandRelationship: " + CommandRelationship + ", CCRERelationship: " + CCRERelationship 
 				+ ", InvokeMethod: " + InvokeMethod);
 	}
 	

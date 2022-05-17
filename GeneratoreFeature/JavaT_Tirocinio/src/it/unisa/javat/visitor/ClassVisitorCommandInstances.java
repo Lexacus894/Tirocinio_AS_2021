@@ -179,114 +179,91 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		if (node.resolveMethodBinding() != null) {
 			String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-			String classeAnalizzata = getTypeDeclaration(node).getName().toString();
-			//MethodDeclaration mnode = getMethodDeclaration(node);
-			String istruzioneChiamata = node.toString().toLowerCase();
-			
-			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-		    	
-		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-		    	
-		    	if (riga.toString().contains(classeAnalizzata)) {
-		    		String classe1 = "";
+			if (getTypeDeclaration(node) != null) {
+				String classeAnalizzata = getTypeDeclaration(node).getName().toString();
+				//MethodDeclaration mnode = getMethodDeclaration(node);
+				String istruzioneChiamata = node.toString().toLowerCase();
+				
+				for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 			    	
-			    	classe1 = ricercaRuolo(riga,"CC");
+			    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 			    	
-			    	if (!classe1.equals("") && classe1 != null) {
-			    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
-				    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
-				    		
-				    		String classe2 = "";
-				    		String classe3 = "";
-				    		
-				    		classe2 = ricercaRuolo(riga,"RE");
-				    		
-				    		//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
-				    		
-				    		if (classe2.equals(classeDichiarante + " - RE")) {
-				    			//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
-				    			listaFeatureCommandInstances.get(i).setExecuteRelationship(2);
-				    		}
-				    		
-				    		classe2 = ricercaRuolo(riga,"IN");
-				    		
-				    		classe3 = ricercaRuolo(riga,"CL");
-				    		
-				    		if (!classe2.equals("") && classe2 != null) {
-					    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
-	
-					    		if (!classe3.equals("") && classe3 != null) {
-					    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
-						    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
-			
-						    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
-						    		}	
-				    			}
-				    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
-					    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
-					    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
-							    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
-		
-						    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
-					    			}
-					    		}
-				    		}
+			    	//CCRERELATIONSHIP - INVOKEMETHOD
+			    	if (riga.toString().contains(classeAnalizzata + " - CC")) {
+			    		String classe1 = ricercaRuolo(riga,"CC");;
+				    	
+				    	if (!classe1.equals("") && classe1 != null) {
+				    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
+					    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
 					    		
-				    	//}
+					    		String classe2 = "";
+					    		String classe3 = "";
+					    		
+					    		classe2 = ricercaRuolo(riga,"RE");
+					    		
+					    		//System.out.println("PROVA PROVA PROVA " + i + " CCRERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
+					    		
+					    		if (classe2.equals(classeDichiarante + " - RE")) {
+					    			//System.out.println("PROVA PROVA PROVA " + i + " CCRERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
+					    			listaFeatureCommandInstances.get(i).setCCRERelationship(2);
+					    		}
+					    		
+					    		classe2 = ricercaRuolo(riga,"IN");
+					    		
+					    		classe3 = ricercaRuolo(riga,"CL");
+					    		
+					    		if (!classe2.equals("") && classe2 != null) {
+						    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
+					    			
+						    		if (!classe3.equals("") && classe3 != null) {
+						    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
+							    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
+				
+							    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
+							    		}	
+					    			}
+					    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
+						    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
+						    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
+								    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
+			
+							    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
+						    			}
+						    		}
+					    		}
+						    		
+					    	//}
+				    	}
 			    	}
-		    	}
-		    	
+			    	//EXECUTES WITH COMMAND
+			    	else if (riga.toString().contains(classeAnalizzata + " - IN")) {
+			    		
+			    		if (istruzioneChiamata.contains(".execute")) {
+			    			if (node.arguments().size()>0) {
+			    				boolean flag = false;
+				    			for (int j = 0;j<node.arguments().size();j++) {
+				    				if (node.arguments().get(j).toString().toLowerCase() .contains("context")) {
+				    					listaFeatureCommandInstances.get(i).setExecutesWithContext(3);
+				    					flag = true;
+				    					break;
+				    				}
+				    			}
+				    			if (flag == false) {
+				    				listaFeatureCommandInstances.get(i).setExecutesWithContext(2);
+				    			}
+			    			}
+			    		}
+			    		
+			    	}
+			    	
+				}
 			}
+			
 		}
 			
-		
-		
-		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
-		//MethodDeclaration mnode = getMethodDeclaration(node);
-		//Assignment anode = getAssignment(node);
-		
-		/*if (mnode != null) {
-				IMethodBinding mbinding = mnode.resolveBinding(); 
-				
-				//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
-				//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
-				
-				//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
-				if (node.resolveMethodBinding() != null) {
-					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
-					String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
-					
-					boolean bool = false;
-					if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
-						//System.out.println(mnode.toString());
-						for (int i=0;i<listaClassiInExecute.size();i++) { 
-							if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
-								bool = true;
-								break;
-							}
-						}
-						if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
-							listaClassiInExecute.add(nomeClasseDichiarante);
-							System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
-									+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
-						}
-					}
-					
-				}
-				
-				
-/*
-					//Ricerca classe
-					for(int i=0;i<arrayListTemp.size();i++) {
-						String FQN = arrayListTemp.get(i).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-							arrayListTemp.get(i).setExecutesCommand(2);
-						}
-					}
-*/
 		return true;
 		
-		}
+	}
 
 
 	@Override
@@ -297,6 +274,27 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	// Field Declaration
 	@Override
 	public boolean visit(FieldDeclaration node) {
+		if (getTypeDeclaration(node) != null) {
+			String classeAnalizzata = getTypeDeclaration(node).getName().toString();
+			
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				
+				if (riga.toString().contains(classeAnalizzata)) {
+					if (node.getType().toString().contains("ArrayList") || node.getType().toString().contains("Map")) {
+						if (node.toString().toLowerCase().contains("command")) {
+							System.out.println("CONTIENE ARRAY E COMMAND " + node.getType().toString());
+							//listaFeatureCommandInstances.get(i).setUsesCommandList(3);
+						}
+						else {
+							System.out.println("CONTIENE SOLO ARRAY " + node.getType().toString());
+							//listaFeatureCommandInstances.get(i).setUsesCommandList(2);
+						}
+					}
+				}		
+			}
+		
+		}
 
 		return true;
 	}
@@ -310,7 +308,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	// Field Declaration
 	@Override
 	public boolean visit(ArrayCreation node) {
-		System.out.println("prova " + node.toString());
+		//System.out.println("prova " + node.toString());
 		return true;
 	}
 	

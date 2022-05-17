@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;ExecuteRelationship;InvokeMethod";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;InvokeMethod;ExecutesWithContext;UsesCommandList";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -366,7 +366,7 @@ else {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -673,11 +673,16 @@ else {
 		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getExecuteRelationship()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getCCRERelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
-	        	
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(String.valueOf(vettoreFeat.getExecutesWithContext()));
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(String.valueOf(vettoreFeat.getUsesCommandList()));
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 			}
@@ -780,9 +785,8 @@ else {
 			
 			//COMMAND - CLASSIFICAZIONE DELLE ISTANZE - COMMAND
 			else if (r.equals("8")) {
-				//BatchCommand bc2 = new BatchCommand();
-				//bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
-				Utils.print("Non ancora implementato.");
+				BatchCommand bc2 = new BatchCommand();
+				bc2.execCommand("C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTesterCommand.py");
 			}
 		}
 		
