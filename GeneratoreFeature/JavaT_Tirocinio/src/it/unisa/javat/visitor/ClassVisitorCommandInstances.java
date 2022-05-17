@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.ArrayAccess;
+import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
@@ -121,21 +122,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	    	if (riga.toString().contains(classeAnalizzata)) {
 	    		String classe1 = "";
 		    	
-		    	if (riga.getClass1().contains(classeAnalizzata + " - CC")) {
-		    		classe1 = riga.getClass1();
-		    	}
-		    	else if (riga.getClass2().contains(classeAnalizzata + " - CC")) {
-		    		classe1 = riga.getClass2();
-		    	}
-		    	else if (riga.getClass3().contains(classeAnalizzata + " - CC")) {
-		    		classe1 = riga.getClass3();
-		    	}
-		    	else if (riga.getClass4().contains(classeAnalizzata + " - CC")) {
-		    		classe1 = riga.getClass4();
-		    	}
-		    	else if (riga.getClass5().contains(classeAnalizzata + " - CC")) {
-		    		classe1 = riga.getClass5();
-		    	}
+		    	classe1 = ricercaRuolo(riga,"CC");
 		    	
 		    	if (!classe1.equals("") && classe1 != null) {
 		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " " + riga);
@@ -143,21 +130,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		//System.out.println("PROVA PROVA PROVA - ENTRATO - classe1:" + classe1);
 			    		String classe2 = "";
 			    		
-			    		if (riga.getClass1().contains(" - CI")) {
-				    		classe2 = riga.getClass1();
-				    	}
-				    	else if (riga.getClass2().contains(" - CI")) {
-				    		classe2 = riga.getClass2();
-				    	}
-				    	else if (riga.getClass3().contains(" - CI")) {
-				    		classe2 = riga.getClass3();
-				    	}
-				    	else if (riga.getClass4().contains(" - CI")) {
-				    		classe2 = riga.getClass4();
-				    	}
-				    	else if (riga.getClass5().contains(" - CI")) {
-				    		classe2 = riga.getClass5();
-				    	}
+			    		classe2 = ricercaRuolo(riga,"CI");
 			    		
 			    		ITypeBinding tempsuperclass = superclass;
 			    		//Confronto estensione
@@ -165,7 +138,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    			if (!classe2.equals("") && classe2 != null) {
 			    				//System.out.println("PROVA PROVA PROVA PROVA PROVA - Superclasse: " + tempsuperclass.getName() + ", classe2: " + classe2.substring(0,classe2.length()-5));
 				    			if (tempsuperclass.getName().equals(classe2.substring(0,classe2.length()-5))) {
-				    				System.out.println("OK ESTENSIONE");
+				    				//System.out.println("OK ESTENSIONE");
 				    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
 				    			}
 			    			}
@@ -177,7 +150,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		for (ITypeBinding sInterface : interfaces) {
 			    			if (!classe2.equals("") && classe2 != null) {
 			    				if (sInterface.getName().equals(classe2.substring(0,classe2.length()-5))) {
-				    				System.out.println("OK IMPLEMENTAZIONE");
+				    				//System.out.println("OK IMPLEMENTAZIONE");
 				    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
 				    			}
 			    			}
@@ -193,126 +166,78 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	return true ;
 	      
 	}
+		
+	@Override
+	public void endVisit(TypeDeclaration node) {
+		//Utils.print("  ]TD (VISITOR2)");
+	}
+		
 	
 	// Method Invocation - ExecuteRelationship
 	@Override
 	public boolean visit(MethodInvocation node) {
 		
-		String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-		String classeAnalizzata = getTypeDeclaration(node).getName().toString();
-		//MethodDeclaration mnode = getMethodDeclaration(node);
-		String istruzioneChiamata = node.toString().toLowerCase();
-		
-		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-	    	
-	    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-	    	
-	    	if (riga.toString().contains(classeAnalizzata)) {
-	    		String classe1 = "";
+		if (node.resolveMethodBinding() != null) {
+			String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
+			String classeAnalizzata = getTypeDeclaration(node).getName().toString();
+			//MethodDeclaration mnode = getMethodDeclaration(node);
+			String istruzioneChiamata = node.toString().toLowerCase();
+			
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 		    	
-		    	if (riga.getClass1().contains(" - CC")) {
-		    		classe1 = riga.getClass1();
-		    	}
-		    	else if (riga.getClass2().contains(" - CC")) {
-		    		classe1 = riga.getClass2();
-		    	}
-		    	else if (riga.getClass3().contains(" - CC")) {
-		    		classe1 = riga.getClass3();
-		    	}
-		    	else if (riga.getClass4().contains(" - CC")) {
-		    		classe1 = riga.getClass4();
-		    	}
-		    	else if (riga.getClass5().contains(" - CC")) {
-		    		classe1 = riga.getClass5();
-		    	}
+		    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 		    	
-		    	if (!classe1.equals("") && classe1 != null) {
-		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
-			    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
-			    		
-			    		String classe2 = "";
-			    		String classe3 = "";
-			    		
-			    		if (riga.getClass1().contains(" - RE")) {
-				    		classe2 = riga.getClass1();
-				    	}
-				    	else if (riga.getClass2().contains(" - RE")) {
-				    		classe2 = riga.getClass2();
-				    	}
-				    	else if (riga.getClass3().contains(" - RE")) {
-				    		classe2 = riga.getClass3();
-				    	}
-				    	else if (riga.getClass4().contains(" - RE")) {
-				    		classe2 = riga.getClass4();
-				    	}
-				    	else if (riga.getClass5().contains(" - RE")) {
-				    		classe2 = riga.getClass5();
-				    	}
-			    		
-			    		//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
-			    		
-			    		if (classe2.equals(classeDichiarante + " - RE")) {
-			    			//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
-			    			listaFeatureCommandInstances.get(i).setExecuteRelationship(2);
-			    		}
-			    		
-			    		if (riga.getClass1().contains(" - IN")) {
-				    		classe2 = riga.getClass1();
-				    	}
-				    	else if (riga.getClass2().contains(" - IN")) {
-				    		classe2 = riga.getClass2();
-				    	}
-				    	else if (riga.getClass3().contains(" - IN")) {
-				    		classe2 = riga.getClass3();
-				    	}
-				    	else if (riga.getClass4().contains(" - IN")) {
-				    		classe2 = riga.getClass4();
-				    	}
-				    	else if (riga.getClass5().contains(" - IN")) {
-				    		classe2 = riga.getClass5();
-				    	}
-			    		
-			    		if (riga.getClass1().contains(" - CL")) {
-				    		classe3 = riga.getClass1();
-				    	}
-				    	else if (riga.getClass2().contains(" - CL")) {
-				    		classe3 = riga.getClass2();
-				    	}
-				    	else if (riga.getClass3().contains(" - CL")) {
-				    		classe3 = riga.getClass3();
-				    	}
-				    	else if (riga.getClass4().contains(" - CL")) {
-				    		classe3 = riga.getClass4();
-				    	}
-				    	else if (riga.getClass5().contains(" - CL")) {
-				    		classe3 = riga.getClass5();
-				    	}
-			    		
-			    		if (!classe2.equals("") && classe2 != null) {
-				    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
-
-				    		if (!classe3.equals("") && classe3 != null) {
-				    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
-					    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
-		
-					    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
-					    		}	
-			    			}
-			    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
-				    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
-				    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
-						    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
-	
-					    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
-				    			}
-				    		}
-			    		}
+		    	if (riga.toString().contains(classeAnalizzata)) {
+		    		String classe1 = "";
+			    	
+			    	classe1 = ricercaRuolo(riga,"CC");
+			    	
+			    	if (!classe1.equals("") && classe1 != null) {
+			    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
+				    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
 				    		
-			    	//}
+				    		String classe2 = "";
+				    		String classe3 = "";
+				    		
+				    		classe2 = ricercaRuolo(riga,"RE");
+				    		
+				    		//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
+				    		
+				    		if (classe2.equals(classeDichiarante + " - RE")) {
+				    			//System.out.println("PROVA PROVA PROVA " + i + " EXECUTERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
+				    			listaFeatureCommandInstances.get(i).setExecuteRelationship(2);
+				    		}
+				    		
+				    		classe2 = ricercaRuolo(riga,"IN");
+				    		
+				    		classe3 = ricercaRuolo(riga,"CL");
+				    		
+				    		if (!classe2.equals("") && classe2 != null) {
+					    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
+	
+					    		if (!classe3.equals("") && classe3 != null) {
+					    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
+						    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
+			
+						    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
+						    		}	
+				    			}
+				    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
+					    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
+					    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
+							    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
+		
+						    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
+					    			}
+					    		}
+				    		}
+					    		
+				    	//}
+			    	}
 		    	}
-	    	}
-	    	
-		}	
+		    	
+			}
+		}
 			
 		
 		
@@ -369,11 +294,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		// Utils.print(" ]MI");
 	}
 	
-	@Override
-	public void endVisit(TypeDeclaration node) {
-		//Utils.print("  ]TD (VISITOR2)");
-	}
-	
 	// Field Declaration
 	@Override
 	public boolean visit(FieldDeclaration node) {
@@ -384,6 +304,19 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public void endVisit(FieldDeclaration node) {
+		 //Utils.print(" ]FD (VISITOR2)");
+	}
+	
+	// Field Declaration
+	@Override
+	public boolean visit(ArrayCreation node) {
+		System.out.println("prova " + node.toString());
+		return true;
+	}
+	
+	
+	@Override
+	public void endVisit(ArrayCreation node) {
 		 //Utils.print(" ]FD (VISITOR2)");
 	}
 	
@@ -436,6 +369,27 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		}
 
 		return (TypeDeclaration) pnode;
+	}
+	
+	private String ricercaRuolo(FeatureCommandInstances riga, String ruolo) {
+		if (riga.getClass1().contains(" - " + ruolo)) {
+    		return riga.getClass1();
+    	}
+    	else if (riga.getClass2().contains(" - " + ruolo)) {
+    		return riga.getClass2();
+    	}
+    	else if (riga.getClass3().contains(" - " + ruolo)) {
+    		return riga.getClass3();
+    	}
+    	else if (riga.getClass4().contains(" - " + ruolo)) {
+    		return riga.getClass4();
+    	}
+    	else if (riga.getClass5().contains(" - " + ruolo)) {
+    		return riga.getClass5();
+    	}
+    	else {
+    		return "";
+    	}
 	}
 	
 }
