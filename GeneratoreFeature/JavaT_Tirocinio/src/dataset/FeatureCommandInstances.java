@@ -12,9 +12,10 @@ public class FeatureCommandInstances {
 	private int InvokeMethod;
 	private int ExecutesWithContext;
 	private int UsesCommandList;
+	private int NumC;
 	
 	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5, int commandRelationship, int ccRERelationship, int invokeMethod,
-			int executesWithContext, int usesCommandList) {
+			int executesWithContext, int usesCommandList, int numC) {
 		this.class1 = class1;
 		this.class2 = class2;
 		this.class3 = class3;
@@ -25,6 +26,7 @@ public class FeatureCommandInstances {
 		this.InvokeMethod = invokeMethod;
 		this.ExecutesWithContext = executesWithContext;
 		this.UsesCommandList = usesCommandList;
+		this.NumC = numC;
 	}
 
 	public String getClass1() {
@@ -105,6 +107,15 @@ public class FeatureCommandInstances {
 
 	public void setUsesCommandList(int usesCommandList) {
 		UsesCommandList = usesCommandList;
+	}
+	
+
+	public int getNumC() {
+		return NumC;
+	}
+
+	public void setNumC(int numC) {
+		NumC = numC;
 	}
 
 	@Override

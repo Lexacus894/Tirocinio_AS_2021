@@ -3,7 +3,7 @@ from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
 
 INSTANCES_FEATURE_COLUMNS = ['Class1', 'Class2', 'Class3', 'Class4', 'Class5', 'CommandRelationship',
-                             'CCRERelationship', 'InvokeMethod', 'ExecutesWithContext', 'UsesCommandList','IsCommand']
+                             'CCRERelationship', 'InvokeMethod', 'ExecutesWithContext', 'UsesCommandList','NumC','IsCommand']
 INSTANCES_LABELS = ['NotCommand', 'Command']
 INSTANCES_DATASET_PATH = "datasets/com_instances_dataset.csv"
 
@@ -27,7 +27,6 @@ INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_t
 # INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
 
 def main():
-    print("PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO PARTITO")
     SW_CLASSES_COMBINATIONS_BATCH_SIZE = 5
 
     instancesClassifier = InstancesClassifier(INSTANCES_FEATURE_COLUMNS, INSTANCES_LABELS, FOLDERS_NUMBER)

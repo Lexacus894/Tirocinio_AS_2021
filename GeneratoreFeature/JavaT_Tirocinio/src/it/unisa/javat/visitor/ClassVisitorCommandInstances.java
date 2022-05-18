@@ -64,7 +64,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
     ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
-
+    ArrayList<String> prova = new ArrayList<String>();
     //String classeAnalizzata;
     
 
@@ -171,7 +171,47 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	public void endVisit(TypeDeclaration node) {
 		//Utils.print("  ]TD (VISITOR2)");
 	}
+	
+	
+	@Override
+	public boolean visit(MethodDeclaration node) {
+		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+			
+			String classe1 = ricercaRuolo(riga,"CC");
+			
+			String classe2 = ricercaRuolo(riga,"IN");
+			
+			if (!classe1.equals("") && classe1 != null && !classe2.equals("") && classe2 != null) {
+				//System.out.println(node.toString());
+				if (node.toString().contains("new " + classe1.substring(0,classe1.length()-5))) {
+					//prova.add(classe1);
+					if (node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(classe2.substring(0,classe2.length()-5))) {
+						listaFeatureCommandInstances.get(i).setInvokeMethod(2);
+					}
+					//System.out.println("AGGIUNTO " + node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") + " ALL'ARRAY - " + node.toString());
+				}
+			}
+		}
+	    	
+	    	
+		return true;
+	}
+	
+	@Override
+	public void endVisit(MethodDeclaration node) {
+	}
+	
+	@Override
+	public boolean visit(ClassInstanceCreation node) {
 		
+		return true;
+	}
+	
+	@Override
+	public void endVisit(ClassInstanceCreation node) {
+	}
+	
 	
 	// Method Invocation - ExecuteRelationship
 	@Override
@@ -196,12 +236,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " +classeDichiarante + ", classe1: " + classe1.substring(0,classe1.length()-5) + " - " + riga);
 					    	//if (classeDichiarante.equals(classe1.substring(0,classe1.length()-5))) {
 					    		
-					    		String classe2 = "";
-					    		String classe3 = "";
-					    		
-					    		classe2 = ricercaRuolo(riga,"RE");
-					    		
-					    		//System.out.println("PROVA PROVA PROVA " + i + " CCRERELATIONSHIP - classe1: " + classe1 + ", classe2: " + classe2);
+					    		String classe2 = ricercaRuolo(riga,"RE");
 					    		
 					    		if (classe2.equals(classeDichiarante + " - RE")) {
 					    			//System.out.println("PROVA PROVA PROVA " + i + " CCRERELATIONSHIP - CLASSE2 DICHIARA IL METODO DI CLASSE1");
@@ -209,8 +244,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					    		}
 					    		
 					    		classe2 = ricercaRuolo(riga,"IN");
-					    		
-					    		classe3 = ricercaRuolo(riga,"CL");
+					    		String classe3 = ricercaRuolo(riga,"CL");
 					    		
 					    		if (!classe2.equals("") && classe2 != null) {
 						    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe2.substring(0,classe2.length()-5).toLowerCase() + " classeDichiarante: " + classeDichiarante + " istruzione: " + istruzioneChiamata);
@@ -218,16 +252,22 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						    		if (!classe3.equals("") && classe3 != null) {
 						    			if (istruzioneChiamata.contains("new") && istruzioneChiamata.contains(classe1.substring(0,classe1.length()-5).toLowerCase()) && classeDichiarante.equals(classe2.substring(0,classe2.length()-5))) {
 							    			System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD CLIENT ISTANZIA SIA " + classe1 + " CHE " + classe2 + " istruzione: " + istruzioneChiamata);
-				
+							    			
 							    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
 							    		}	
 					    			}
-					    			else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
+					    			/*else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
 						    			if (classeAnalizzata.equals(classe3.substring(0,classe3.length()-5))) {
 						    				System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD " + classeAnalizzata + " ISTANZIA SOLO CLASSE1 istruzione: " + istruzioneChiamata);
 								    		//System.out.println("PROVA PROVA PROVA " + i + " INVOKEMETHOD - classe1: " + classe1.substring(0,classe1.length()-5).toLowerCase() + ", classe2: " + classe1.substring(0,classe1.length()-5).toLowerCase() + " classeAnalizzata2: " + classeAnalizzata + " istruzione: " + istruzioneChiamata);
 			
-							    			listaFeatureCommandInstances.get(i).setInvokeMethod(2);
+							    			listaFeatureCommandInstances.get(i).setInvokeMethod(3);
+						    			}
+						    		}*/
+						    		
+						    		else if (istruzioneChiamata.contains("new " + classe1.substring(0,classe1.length()-5).toLowerCase())) {
+						    			if (classeAnalizzata.equals(classe2.substring(0,classe2.length()-5))) {
+						    				listaFeatureCommandInstances.get(i).setInvokeMethod(2);
 						    			}
 						    		}
 					    		}
@@ -235,7 +275,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					    	//}
 				    	}
 			    	}
-			    	//EXECUTES WITH COMMAND
+			    	//EXECUTES WITH CONTEXT
 			    	else if (riga.toString().contains(classeAnalizzata + " - IN")) {
 			    		
 			    		if (istruzioneChiamata.contains(".execute")) {
@@ -281,6 +321,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 				
 				if (riga.toString().contains(classeAnalizzata)) {
+					//System.out.println(node.toString());
 					if (node.getType().toString().contains("ArrayList") || node.getType().toString().contains("Map")) {
 						if (node.toString().toLowerCase().contains("command")) {
 							System.out.println("CONTIENE ARRAY E COMMAND " + node.getType().toString());
@@ -367,6 +408,15 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		}
 
 		return (TypeDeclaration) pnode;
+	}
+	
+	private MethodInvocation getMethodInvocation(ASTNode node) {
+		ASTNode pnode = node;
+		while (pnode != null && pnode.getNodeType() != ASTNode.METHOD_INVOCATION) {
+			pnode = pnode.getParent();
+		}
+
+		return (MethodInvocation) pnode;
 	}
 	
 	private String ricercaRuolo(FeatureCommandInstances riga, String ruolo) {

@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;InvokeMethod;ExecutesWithContext;UsesCommandList";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;InvokeMethod;ExecutesWithContext;UsesCommandList;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -366,7 +366,7 @@ else {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -451,7 +451,7 @@ else {
 		    	Utils.print(e);
 		    }//fine Catch
 		    
-            creaCSV3("Combination_mockup_Command.csv");
+            creaCSV3("combinations_mockup_command.csv");
 		    
 		}
 		
@@ -655,19 +655,39 @@ else {
 		          
 		         for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
 		        	 
+		        	 String numC = "2";
+		        	 
 		        	 fileWriter.append(vettoreFeat.getClass1());	 
 		             fileWriter.append(COMMA_DELIMITER);
 		              
 		             fileWriter.append(vettoreFeat.getClass2());
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(vettoreFeat.getClass3());
+		             if (vettoreFeat.getClass3().equals("")) {
+		            	 fileWriter.append("None");
+		             }
+		             else {
+		            	 fileWriter.append(vettoreFeat.getClass3());
+		            	 numC = "3";
+		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(vettoreFeat.getClass4());
+		             if (vettoreFeat.getClass4().equals("")) {
+		            	 fileWriter.append("None");
+		             }
+		             else {
+		            	 fileWriter.append(vettoreFeat.getClass4());
+		            	 numC = "4";
+		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(vettoreFeat.getClass5());
+		             if (vettoreFeat.getClass5().equals("")) {
+		            	 fileWriter.append("None");
+		             }
+		             else {
+		            	 fileWriter.append(vettoreFeat.getClass5());
+		            	 numC = "5";
+		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		              
 		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
@@ -683,6 +703,9 @@ else {
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getUsesCommandList()));
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(numC);
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 			}

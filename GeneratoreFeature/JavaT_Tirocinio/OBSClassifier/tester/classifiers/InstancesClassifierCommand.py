@@ -15,11 +15,12 @@ class InstancesClassifier(AbstractClassifier):
 
     def initFeatureColumns(self):
         self.featureColumns = []
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=4))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[6], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[7], num_buckets=5))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[8], num_buckets=5))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[9], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[9], num_buckets=6))
+        #self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[10], num_buckets=3))
 
     def initClassifier(self):
         self.classifier=tf.estimator.LinearClassifier(feature_columns=self.featureColumns,
