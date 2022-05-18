@@ -44,12 +44,12 @@ def get_instances_predictions_list(data, predictions, labels):
     return predictionResults
 
 def roles_combinations(predictions_list):
-    #pairs_list = list(itertools.combinations(predictions_list, 2))
+    pairs_list = list(itertools.combinations(predictions_list, 2))
     triplets_list = list(itertools.combinations(predictions_list, 3))
     quadruplets_list = list(itertools.combinations(predictions_list, 4))
     quintuplets_list = list(itertools.combinations(predictions_list, 5))
     #print(pairs_list)
-    return (triplets_list, quadruplets_list, quintuplets_list)
+    return (pairs_list,triplets_list, quadruplets_list, quintuplets_list)
 
 def filter_pairs_list(prediction_list, pairs_list):
     pairs = []
@@ -208,20 +208,20 @@ def get_logger(format,name):
     logger=logging.getLogger(name=name)
     return logger
 
-def log_combinations_on_file(path,header,triplets,quadruplets, quintuplets,triplets_roles,quadruplets_roles, quintuplets_roles):
+def log_combinations_on_file(path,header,pairs,triplets,quadruplets, quintuplets,pairs_roles,triplets_roles,quadruplets_roles, quintuplets_roles):
     with open(path, "w") as fp:
         writer = csv.writer(fp, delimiter=";", dialect="excel", lineterminator="\n")
         writer.writerow(header)
         #pairs combinations
-        #for i,classes_set in enumerate(pairs):
-        #    row = ''
-        #    for j,pairs in enumerate(classes_set):
-        #        if ((2*i+1) < len(pairs_roles)):
-        #            if j==1:
-        #                row = row + pairs + ' - ' + pairs_roles[2*i+1]
-        #            else:
-        #                row = row + pairs + ' - ' + pairs_roles[2*i] + ', '
-        #    writer.writerow([row])
+        for i,classes_set in enumerate(pairs):
+            row = ''
+            for j,pairs in enumerate(classes_set):
+                if ((2*i+1) < len(pairs_roles)):
+                    if j==1:
+                        row = row + pairs + ' - ' + pairs_roles[2*i+1]
+                    else:
+                        row = row + pairs + ' - ' + pairs_roles[2*i] + ', '
+            writer.writerow([row])
 
         #triplets combinations
         for i,classes_set in enumerate(triplets):
