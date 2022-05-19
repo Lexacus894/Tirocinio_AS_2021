@@ -265,9 +265,6 @@ public class Process {
 				    }
 				   
 			        System.out.println("-------------ArrayList Feature  CREATO -----------------");
-				    
-				   
-			     
 
 				    _params = new Parameters(args, this.getClass().getName());
 					_params.print();
