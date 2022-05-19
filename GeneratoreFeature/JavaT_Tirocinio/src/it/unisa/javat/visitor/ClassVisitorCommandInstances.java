@@ -294,13 +294,25 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					}
 				}	
 				
-				//INVOKEMETHOD = 2 - CONTROLLA SE L'INVOKER CONTIENE NEW COMMAND.execute
+				
 				else if (riga.toString().contains(classeAnalizzata + " - IN")) {
 					String classe1 = ricercaClasse(riga,"CC");
 					if (!classe1.equals("") && classe1 != null) {
+						//INVOKEMETHOD = 2 - CONTROLLA SE L'INVOKER CONTIENE NEW COMMAND.execute
 						if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains(".execute") && listaFeatureCommandInstances.get(i).getInvokeMethod()!=3) {
 							listaFeatureCommandInstances.get(i).setInvokeMethod(2);
 						}
+						//CCRERELATIONSHIP
+						if (!istruzioneChiamata.contains(".execute")) {
+							if (node.resolveMethodBinding() != null) {
+								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
+								if (classeDichiarante.equals(classe1)) {
+									listaFeatureCommandInstances.get(i).setCCRERelationship(3);
+								}
+							}
+						}
+						
+						
 					}
 				}
 				
@@ -316,6 +328,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						}	
 					}
 				}
+				
 			}
 		}
 			

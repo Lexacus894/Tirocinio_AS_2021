@@ -15,12 +15,12 @@ class InstancesClassifier(AbstractClassifier):
 
     def initFeatureColumns(self):
         self.featureColumns = []
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=4))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[6], num_buckets=3))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[7], num_buckets=5))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[8], num_buckets=5))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[9], num_buckets=6))
-        #self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[10], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[0], num_buckets=4))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[1], num_buckets=4))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[2], num_buckets=6))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[3], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[4], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=6))
 
     def initClassifier(self):
         self.classifier=tf.estimator.LinearClassifier(feature_columns=self.featureColumns,
@@ -41,6 +41,6 @@ class InstancesClassifier(AbstractClassifier):
         return self.evaluationResult
 
     def predict(self,data_path,header,delimiter,batch_size):
-        obs_instances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter,na_values=[])
+        obs_instances=pd.read_csv(data_path,names=self.columnsName[:len(self.columnsName)-1],header=header,delimiter=delimiter)
         predictions = self.classifier.predict(input_fn=lambda: DatasetUtils.eval_input_fn(obs_instances, labels=None, batch_size=batch_size))
         return (obs_instances,predictions)

@@ -1,13 +1,15 @@
 import os
 from utils import PredictionsUtilsCommand as p_utils
 from classifiers.RolesClassifierCommand import RolesClassifier
-from classifiers import InstancesClassifierTesterCommand
+
 
 ROLES_DATASET_PATH        = 'datasets/com_roles_dataset.csv'
 ROLES_FEATURE_COLUMNS     = ['ClassType','ClassDeclarationKeyword',
                              'MethodsDeclarationKeyword','ExecutesCommand', 'InstantiatesCommand', 'HasSuperclass',
                              'ImplementsInterfaces','IsPartOfExecute','Role']
 ROLES_LABELS              = ['CommandInterface', 'ConcreteCommand', 'Invoker', 'Receiver', 'Client','None']
+
+INSTANCES_FEATURE_COLUMNS = ['Classes']
 
 ROLES_TRAIN_BATCH_SIZE    = 20
 ROLES_EVALUATE_BATCH_SIZE = 5
@@ -20,6 +22,9 @@ SOFTWARES_ROOT_DIRECTORY         = 'softwares'
 ROLES_PREDICTIONS_HEADER         = ['Class','Role','Probability']
 ROLES_PREDICTIONS_FILE_PATH      = PREDICTIONS_ROOT_DIRECTORY + '/roles_predictions_command.csv'
 SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware2.csv'
+
+INSTANCES_COMBINATIONS_HEADER    = INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEATURE_COLUMNS)-1]
+INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
 
 def main():
     SW_ROLES_BATCH_SIZE=8
@@ -45,9 +50,9 @@ def main():
     #combinations = [classes_pairs_act, classes_triplets_act]
     #roles = [classes_pairs_roles, classes_triplets_roles]
 
-    p_utils.log_combinations_on_file(InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_FILE_PATH, InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
+    p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH, INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
 
-    print('The combinations to test as observer instances are in '+InstancesClassifierTesterCommand.INSTANCES_COMBINATIONS_FILE_PATH)
+    print('The combinations to test as observer instances are in '+ INSTANCES_COMBINATIONS_FILE_PATH)
     print('Please, assign values to features columns before proceeding.')
 
 if __name__ == '__main__':
