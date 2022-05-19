@@ -96,42 +96,57 @@ def filter_pairs_list(prediction_list, pairs_list):
 def filter_triplets_list(prediction_list, triplets_list):
     filtered_triplets_list=[]
     triplets_roles = []
+    roles = [1,2,3]
 
     for item in triplets_list:
-        roleOne = prediction_list[item[0]][0]
-        roleTwo = prediction_list[item[1]][0]
-        roleThree = prediction_list[item[2]][0]
+        roles[0] = prediction_list[item[0]][0]
+        roles[1] = prediction_list[item[1]][0]
+        roles[2] = prediction_list[item[2]][0]
 
-        if roleOne == 'CommandInterface' and roleTwo == 'ConcreteCommand' and roleThree == 'Invoker':
+        if (roles[0] != roles[1] and roles[0] != roles[2] and roles[1] != roles[2]):
             filtered_triplets_list.append(item)
-            triplets_roles.append('CI')
-            triplets_roles.append('CC')
-            triplets_roles.append('IN')
-        if roleOne == 'CommandInterface' and roleTwo == 'Invoker' and roleThree == 'ConcreteCommand':
-            filtered_triplets_list.append(item)
-            triplets_roles.append('CI')
-            triplets_roles.append('IN')
-            triplets_roles.append('CC')
-        if roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface' and roleThree == 'Invoker':
-            filtered_triplets_list.append(item)
-            triplets_roles.append('CC')
-            triplets_roles.append('CI')
-            triplets_roles.append('IN')
-        if roleOne == 'ConcreteCommand' and roleTwo == 'Invoker' and roleThree == 'CommandInterface':
-            filtered_triplets_list.append(item)
-            triplets_roles.append('CC')
-            triplets_roles.append('IN')
-            triplets_roles.append('CI')
-        if roleOne == 'Invoker' and roleTwo == 'ConcreteCommand' and roleThree == 'CommandInterface':
-            filtered_triplets_list.append(item)
-            triplets_roles.append('IN')
-            triplets_roles.append('CC')
-            triplets_roles.append('CI')
-        if roleOne == 'Invoker' and roleTwo == 'CommandInterface' and roleThree == 'ConcreteCommand':
-            filtered_triplets_list.append(item)
-            triplets_roles.append('IN')
-            triplets_roles.append('CI')
-            triplets_roles.append('CC')
+            for i in range(3):
+                if (roles[i] == 'CommandInterface'):
+                    triplets_roles.append('CI')
+                elif (roles[i] == 'ConcreteCommand'):
+                    triplets_roles.append('CC')
+                elif (roles[i] == 'Invoker'):
+                    triplets_roles.append('IN')
+                elif (roles[i] == 'Receiver'):
+                    triplets_roles.append('RE')
+                elif (roles[i] == 'Client'):
+                    triplets_roles.append('CL')
+        #if roleOne == 'CommandInterface' and roleTwo == 'ConcreteCommand' and roleThree == 'Invoker':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('CI')
+        #    triplets_roles.append('CC')
+        #    triplets_roles.append('IN')
+        #if roleOne == 'CommandInterface' and roleTwo == 'Invoker' and roleThree == 'ConcreteCommand':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('CI')
+        #    triplets_roles.append('IN')
+        #    triplets_roles.append('CC')
+        #if roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface' and roleThree == 'Invoker':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('CC')
+        #    triplets_roles.append('CI')
+        #    triplets_roles.append('IN')
+        #if roleOne == 'ConcreteCommand' and roleTwo == 'Invoker' and roleThree == 'CommandInterface':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('CC')
+        #    triplets_roles.append('IN')
+        #    triplets_roles.append('CI')
+        #if roleOne == 'Invoker' and roleTwo == 'ConcreteCommand' and roleThree == 'CommandInterface':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('IN')
+        #    triplets_roles.append('CC')
+        #    triplets_roles.append('CI')
+        #if roleOne == 'Invoker' and roleTwo == 'CommandInterface' and roleThree == 'ConcreteCommand':
+        #    filtered_triplets_list.append(item)
+        #    triplets_roles.append('IN')
+        #    triplets_roles.append('CI')
+        #    triplets_roles.append('CC')
+
         #if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
         #    filtered_triplets_list.append(item)
         #if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':

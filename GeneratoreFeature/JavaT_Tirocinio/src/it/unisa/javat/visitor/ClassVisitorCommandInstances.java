@@ -226,6 +226,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				if (riga.toString().contains(classeAnalizzata + " - IN")) {
 					String classe2 = ricercaClasse(riga, "CC");
 					
+					//INVOKEMETHOD = 2 - CONTROLLA SE L'INVOKER ISTANZIA IL CONCRETECOMMAND OLTRE AD ESEGUIRLO
 					for(int j=0;j<node.fragments().size();j++) {
 						if (dichiarazione.contains("new " + classe2.toLowerCase())) {
 							if (getMethodDeclaration(node)!=null) {
@@ -235,17 +236,14 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								}
 							}
 						}
-						
 					}
+					
 				}
 			}
 		}
-		
-	    	
-	    	
-	    	
-		
+
 		return true;
+
 	}
 	
 	@Override
@@ -264,27 +262,37 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 				
-				//INVOKE METHOD = 3/4
+				//INVOKE METHOD = 3/4/5
 				if (riga.toString().contains(classeAnalizzata + " - CL")) {
 					
 					String classe1 = ricercaClasse(riga,"CC");
 					String classe2 = ricercaClasse(riga,"IN");
 					
-					//INVOKE METHOD = 4 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA CONCRETECOMMAND E LO AGGIUNGE AD UN INVOKER TRAMITE IL METODO ADD DI QUEST'ULTIMO
-					if (istruzioneChiamata.contains(".add") && istruzioneChiamata.contains(classe1.toLowerCase())) {
-						if (node.resolveMethodBinding() != null) {
-							String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-							if (classeDichiarante.equals(classe2)) {
-								listaFeatureCommandInstances.get(i).setInvokeMethod(4);
+					if (!classe1.equals("") && classe1 != null) {
+						//INVOKE METHOD = 4 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA CONCRETECOMMAND E LO AGGIUNGE AD UN INVOKER TRAMITE IL METODO ADD DI QUEST'ULTIMO
+						if (istruzioneChiamata.contains(".add") && istruzioneChiamata.contains(classe1.toLowerCase())) {
+							if (node.resolveMethodBinding() != null) {
+								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+								if (classeDichiarante.contains("javax.swing") || classeDichiarante.contains("java.awt")) {
+									listaFeatureCommandInstances.get(i).setInvokeMethod(5);
+								}
+								else if (!classe2.equals("") && classe2 != null) {
+									if (classeDichiarante.replaceAll(".+\\.", "").equals(classe2)) {
+										listaFeatureCommandInstances.get(i).setInvokeMethod(4);
+									}
+								}
+								
+							}	
+						}
+						
+						//INVOKE METHOD = 3 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA SIA INVOKER CHE CONCRETECOMMAND
+						else if (!classe2.equals("") && classe2 != null) {
+							if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains("new " + classe2) /*&& listaFeatureCommandInstances.get(i).getInvokeMethod()==1*/) {
+								listaFeatureCommandInstances.get(i).setInvokeMethod(3);
 							}
-						}	
+						}
 					}
-					
-					//INVOKE METHOD = 3 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA SIA INVOKER CHE CONCRETECOMMAND
-					else if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains("new " + classe2) /*&& listaFeatureCommandInstances.get(i).getInvokeMethod()==1*/) {
-						listaFeatureCommandInstances.get(i).setInvokeMethod(3);
-					}
-				}
+				}	
 				
 				//INVOKEMETHOD = 2 - CONTROLLA SE L'INVOKER CONTIENE NEW COMMAND.execute
 				else if (riga.toString().contains(classeAnalizzata + " - IN")) {
