@@ -82,17 +82,13 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	@Override
 	public boolean visit(CompilationUnit node) {
 
-		//Utils.print("Ritorno qui");
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
-		//Utils.print("(VISITOR2)[CU " + node.getClass().getSimpleName());
-		
+
 		return true;
 	}
 
 	@Override
 	public void endVisit(CompilationUnit node) {
-     
-		//Utils.print(" ]CU(VISITOR2)");
 			
 			_scope.pop();
 	}
@@ -104,7 +100,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
 		if (binding == null) {
-			//Utils.print("[TD NOBIND]");
 			return false;
 		}
 		
@@ -121,9 +116,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		    	classe1 = ricercaClasse(riga,"CC");
 		    	
 		    	if (!classe1.equals("") && classe1 != null) {
-		    		//System.out.println("PROVA PROVA PROVA - Classe analizzata: " + classeAnalizzata + ", classe1: " + classe1.substring(0,classe1.length()-5) + " " + riga);
 			    	if (classeAnalizzata.equals(classe1)) {
-			    		//System.out.println("PROVA PROVA PROVA - ENTRATO - classe1:" + classe1);
 			    		String classe2 = "";
 			    		
 			    		classe2 = ricercaClasse(riga,"CI");
@@ -144,7 +137,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		for (ITypeBinding sInterface : interfaces) {
 			    			if (!classe2.equals("") && classe2 != null) {
 			    				if (sInterface.getName().equals(classe2)) {
-				    				//System.out.println("OK IMPLEMENTAZIONE");
 				    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
 				    			}
 			    			}
