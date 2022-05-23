@@ -165,18 +165,20 @@ def filter_quadruplets_list(predictions_list,quadruplets_list):
         roles[2] = predictions_list[item[2]][0]
         roles[3] = predictions_list[item[3]][0]
 
-        if (roles[0] != 'Client' and roles[1] != 'Client' and roles[2] != 'Client' and roles[3] != 'Client'):
-            if (roles[0]!=roles[1] and roles[0]!=roles[2] and roles[0]!=roles[3] and roles[1]!=roles[2] and roles[1]!=roles[3] and roles[2]!=roles[3]):
-                filtered_quadruplets_list.append(item)
-                for i in range(4):
-                    if (roles[i] == 'CommandInterface'):
-                        quadruplets_roles.append('CI')
-                    elif (roles[i] == 'ConcreteCommand'):
-                        quadruplets_roles.append('CC')
-                    elif (roles[i] == 'Invoker'):
-                        quadruplets_roles.append('IN')
-                    elif (roles[i] == 'Receiver'):
-                        quadruplets_roles.append('RE')
+        #if (roles[0] != 'Client' and roles[1] != 'Client' and roles[2] != 'Client' and roles[3] != 'Client'):
+        if (roles[0]!=roles[1] and roles[0]!=roles[2] and roles[0]!=roles[3] and roles[1]!=roles[2] and roles[1]!=roles[3] and roles[2]!=roles[3]):
+            filtered_quadruplets_list.append(item)
+            for i in range(4):
+                if (roles[i] == 'CommandInterface'):
+                    quadruplets_roles.append('CI')
+                elif (roles[i] == 'ConcreteCommand'):
+                    quadruplets_roles.append('CC')
+                elif (roles[i] == 'Invoker'):
+                    quadruplets_roles.append('IN')
+                elif (roles[i] == 'Receiver'):
+                    quadruplets_roles.append('RE')
+                elif (roles[i] == 'Client'):
+                    quadruplets_roles.append('CL')
         # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
         #    filtered_triplets_list.append(item)
         # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':

@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;InvokeMethod;ExecutesWithContext;UsesCommandList;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;InvokeMethod;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -178,7 +178,7 @@ public class Process {
 		        f.showOpenDialog(jf);
 
 		        String path = f.getSelectedFile().getPath();
-		        //System.out.println(path);
+
 		        
 				String _projectDir;
 				String _projectName;
@@ -291,19 +291,18 @@ public class Process {
 			        f.showOpenDialog(jf);
 
 			        String path = f.getSelectedFile().getPath();
-			        //System.out.println(path);
-String _projectDir;
-String _projectName;
-
-int pos = path.lastIndexOf(File.separator);
-if (pos > -1) {
-	_projectDir = path.substring(0, pos);
-	_projectName = path.substring(pos + 1);
-} 
-else {
-	_projectDir = ".";
-	_projectName = path;
-}
+					String _projectDir;
+					String _projectName;
+					
+					int pos = path.lastIndexOf(File.separator);
+					if (pos > -1) {
+						_projectDir = path.substring(0, pos);
+						_projectName = path.substring(pos + 1);
+					} 
+					else {
+						_projectDir = ".";
+						_projectName = path;
+					}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -363,7 +362,7 @@ else {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -375,8 +374,6 @@ else {
 					
 				for(int i=0;i<listaFeatureCommandRoles.size();i++) {
 				    	FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
-				    	//Utils.print(riga.toString());
-				
 				}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,19 +392,18 @@ else {
 		        f.showOpenDialog(jf);
 
 		        String path = f.getSelectedFile().getPath();
-		        //System.out.println(path);
-String _projectDir;
-String _projectName;
-
-int pos = path.lastIndexOf(File.separator);
-if (pos > -1) {
-	_projectDir = path.substring(0, pos);
-	_projectName = path.substring(pos + 1);
-} 
-else {
-	_projectDir = ".";
-	_projectName = path;
-}
+				String _projectDir;
+				String _projectName;
+				
+				int pos = path.lastIndexOf(File.separator);
+				if (pos > -1) {
+					_projectDir = path.substring(0, pos);
+					_projectName = path.substring(pos + 1);
+				} 
+				else {
+					_projectDir = ".";
+					_projectName = path;
+				}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -457,15 +453,15 @@ else {
 	
 	
 	
-	//Metodo per la creazione del Dataset con le feature dei ruoli per OBSERVER e COMMAND
+	//Metodo per la creazione del file CSV con le feature dei ruoli per OBSERVER e COMMAND
 	public void creaCSV(String fileName) {
 		
 		FileWriter fileWriter = null;
 	        
-        	try {
-	        
-        		fileWriter = new FileWriter(fileName);
-	        	            
+    	try {
+        
+    		fileWriter = new FileWriter(fileName);
+        	            
 	        if (dptype.equals("obs")) {
 	        	//Write the CSV file header
 	        	fileWriter.append(FILE_HEADER_OBSERVER_ROLES.toString());
@@ -473,124 +469,120 @@ else {
 	        	//Add a new line separator after the header
 		        fileWriter.append(NEW_LINE_SEPARATOR);
 		          
-		         for (Feature vettoreFeat : listaFeature) {
+		        for (Feature vettoreFeat : listaFeature) {
 		        	
-		        	  fileWriter.append(vettoreFeat.getSfotwareName());	 
-		              fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(vettoreFeat.getSfotwareName());	 
+		            fileWriter.append(COMMA_DELIMITER);
 		        	  
-		        	  fileWriter.append(vettoreFeat.getFQNClass());	 
-		              fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(vettoreFeat.getFQNClass());	 
+		            fileWriter.append(COMMA_DELIMITER);
 		        	  
-		        	  fileWriter.append(String.valueOf(vettoreFeat.getCollectionVariables()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(String.valueOf(vettoreFeat.getCollectionVariables()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		        	 
-		              fileWriter.append(String.valueOf(vettoreFeat.getAddListenerMethod()));	 
-		        	  fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getAddListenerMethod()));	 
+		        	fileWriter.append(COMMA_DELIMITER);
 		        	
-		        	  fileWriter.append(String.valueOf(vettoreFeat.getRemoveListenerMethod()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(String.valueOf(vettoreFeat.getRemoveListenerMethod()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getClassDeclarationKeyword()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getClassDeclarationKeyword()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getScanCollectionMethod()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getScanCollectionMethod()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getSCMCallAbsMethod()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getSCMCallAbsMethod()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getChangeState()));	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getChangeState()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getAfterChangeStateIterateOverList()));	 
-		        	
-		              fileWriter.append(NEW_LINE_SEPARATOR);
-		          }
-	         }
-	         else if (dptype.equals("com")) {
-	        	 
-	        	 ArrayList<String> lista = _parser.getListaNomiInExecute();
-	        	//Write the CSV file header
-	        	 fileWriter.append(FILE_HEADER_COMMAND_ROLES.toString());
-	        	 
-	        	 //Add a new line separator after the header
-		         fileWriter.append(NEW_LINE_SEPARATOR);
-		          
-		         for (FeatureCommandRoles vettoreFeat : listaFeatureCommandRoles) {
-		        	
-		        	  fileWriter.append(vettoreFeat.getSoftwareName());	 
-		              fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getAfterChangeStateIterateOverList()));	 
+		            fileWriter.append(NEW_LINE_SEPARATOR);
+		        }
+		    }
+         	else if (dptype.equals("com")) {
+        	 
+         		ArrayList<String> lista = _parser.getListaNomiInExecute();
+         		//Write the CSV file header
+         		fileWriter.append(FILE_HEADER_COMMAND_ROLES.toString());
+        	 
+         		//Add a new line separator after the header
+         		fileWriter.append(NEW_LINE_SEPARATOR);
+	          
+         		for (FeatureCommandRoles vettoreFeat : listaFeatureCommandRoles) {
+	        	
+		        	fileWriter.append(vettoreFeat.getSoftwareName());	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(vettoreFeat.getFileName());	 
+					fileWriter.append(COMMA_DELIMITER);
+							        	  
+					fileWriter.append(vettoreFeat.getFQNClass());	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getClassDeclarationKeyword()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					 
+					fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getInstantiatesCommand()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 
+					fileWriter.append(COMMA_DELIMITER);
+					  
+					fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
+					fileWriter.append(COMMA_DELIMITER);
 		              
-		              fileWriter.append(vettoreFeat.getFileName());	 
-		              fileWriter.append(COMMA_DELIMITER);
-		            		        	  
-		        	  fileWriter.append(vettoreFeat.getFQNClass());	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getClassType()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getClassDeclarationKeyword()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		             
-		              fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getInstantiatesCommand()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getHasSuperclass()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
-		              fileWriter.append(COMMA_DELIMITER);
-		              
-		              //Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
-		              for (int j = 0; j < lista.size(); j++) {
-							if (vettoreFeat.getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
-								vettoreFeat.setIsPartOfExecute(2);
-								break;
-							}
-		              }
-		              fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
-		              
-		              fileWriter.append(NEW_LINE_SEPARATOR);
-		         }
-	         }
-	          System.out.println("Il file CSV (" + fileName + ") contentente le feature dei ruoli è stato creato con successo!");
-
-		} 
-	        catch(Exception e) {
-	        	System.out.println("Errore nel CsvFileWriter !!!");
-	        	e.printStackTrace();
-	        } 
-	        finally {
-			
-	        	try {
-	        		fileWriter.flush();
-	        		fileWriter.close();
-	        	} 
-	        	catch (IOException e) {
-	        		System.out.println("Errore nel flush o nella chiusura !!!");
-	        	}
-			}
-		
-	}
+		            //Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
+		            for (int j = 0; j < lista.size(); j++) {
+						if (vettoreFeat.getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
+							vettoreFeat.setIsPartOfExecute(2);
+							break;
+						}
+		            }
+		            fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
+	              
+		            fileWriter.append(NEW_LINE_SEPARATOR);
+	            }
+	        }
+	        System.out.println("Il file CSV (" + fileName + ") contentente le feature dei ruoli è stato creato con successo!");
+    	} 
+    	catch(Exception e) {
+    		System.out.println("Errore nel CsvFileWriter !!!");
+    		e.printStackTrace();
+    	} 
+    	finally {
+    		try {
+    			fileWriter.flush();
+    			fileWriter.close();
+    		} 
+    		catch (IOException e) {
+    			System.out.println("Errore nel flush o nella chiusura !!!");
+    		}
+    	}
+    }
 	
 
 	public void creaCSV3(String fileName) {
@@ -601,83 +593,83 @@ else {
 			if (dptype.contains("obs")) {
 				fileWriter = new FileWriter(fileName);
 	            
-		         //Write the CSV file header
-		         fileWriter.append(FILE_HEADER_OBSERVER_INSTANCES.toString());
+		        //Write the CSV file header
+		        fileWriter.append(FILE_HEADER_OBSERVER_INSTANCES.toString());
 		       
-		         //Add a new line separator after the header
-		         fileWriter.append(NEW_LINE_SEPARATOR);
+		        //Add a new line separator after the header
+		        fileWriter.append(NEW_LINE_SEPARATOR);
 		          
-		         for (Feature3 vettoreFeat : listaFeature3) {
+		        for (Feature3 vettoreFeat : listaFeature3) {
 		        	 
-		        	 fileWriter.append(vettoreFeat.getClasses());	 
-		             fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(vettoreFeat.getClasses());	 
+		            fileWriter.append(COMMA_DELIMITER);
 		        	  
-		        	 fileWriter.append(String.valueOf(vettoreFeat.getHasSubject()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(String.valueOf(vettoreFeat.getHasSubject()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		        	 
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasObserver()));	 
-		        	 fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getHasObserver()));	 
+		        	fileWriter.append(COMMA_DELIMITER);
 		        	
-		        	 fileWriter.append(String.valueOf(vettoreFeat.getSubjectsRelationship()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		        	fileWriter.append(String.valueOf(vettoreFeat.getSubjectsRelationship()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getSubObsDepedencies()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getSubObsDepedencies()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getCSubObsDependencies()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getCSubObsDependencies()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getObserversRelationship()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getObserversRelationship()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getCallListeners()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getCallListeners()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getCObsAccessSubject()));	 
-		             fileWriter.append(COMMA_DELIMITER);
+		            fileWriter.append(String.valueOf(vettoreFeat.getCObsAccessSubject()));	 
+		            fileWriter.append(COMMA_DELIMITER);
 		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getNoc()));	 
+		            fileWriter.append(String.valueOf(vettoreFeat.getNoc()));	 
 	        	
-		             fileWriter.append(NEW_LINE_SEPARATOR);
-		          }
+		            fileWriter.append(NEW_LINE_SEPARATOR);
+		        }
 			}
 			else if (dptype.equals("com")) {
 				fileWriter = new FileWriter(fileName);
-	            
-		         //Write the CSV file header
-		         fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());
-		       
-		         //Add a new line separator after the header
-		         fileWriter.append(NEW_LINE_SEPARATOR);
-		          
-		         for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
-		        	 
-		        	 String numC = "2";
-		        	 
-		        	 fileWriter.append(vettoreFeat.getClass1());	 
-		             fileWriter.append(COMMA_DELIMITER);
-		              
-		             fileWriter.append(vettoreFeat.getClass2());
-		             fileWriter.append(COMMA_DELIMITER);
-		             
-		             if (vettoreFeat.getClass3().equals("")) {
-		            	 fileWriter.append("None");
-		             }
-		             else {
-		            	 fileWriter.append(vettoreFeat.getClass3());
-		            	 numC = "3";
-		             }
-		             fileWriter.append(COMMA_DELIMITER);
-		             
-		             if (vettoreFeat.getClass4().equals("")) {
-		            	 fileWriter.append("None");
-		             }
-		             else {
-		            	 fileWriter.append(vettoreFeat.getClass4());
-		            	 numC = "4";
-		             }
-		             fileWriter.append(COMMA_DELIMITER);
-		             
+            
+				//Write the CSV file header
+				fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());
+	       
+				//Add a new line separator after the header
+				fileWriter.append(NEW_LINE_SEPARATOR);
+	          
+				for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
+	        	 
+					String numC = "2";
+	        	 
+					fileWriter.append(vettoreFeat.getClass1());	 
+					fileWriter.append(COMMA_DELIMITER);
+	              
+					fileWriter.append(vettoreFeat.getClass2());
+					fileWriter.append(COMMA_DELIMITER);
+	             
+					if (vettoreFeat.getClass3().equals("")) {
+						fileWriter.append("None");
+					}
+					else {
+						fileWriter.append(vettoreFeat.getClass3());
+	            		numC = "3";
+					}
+					fileWriter.append(COMMA_DELIMITER);
+	             
+					if (vettoreFeat.getClass4().equals("")) {
+						fileWriter.append("None");
+					}
+					else {
+						fileWriter.append(vettoreFeat.getClass4());
+						numC = "4";
+					}
+					fileWriter.append(COMMA_DELIMITER);
+	             
 		             if (vettoreFeat.getClass5().equals("")) {
 		            	 fileWriter.append("None");
 		             }
@@ -696,19 +688,12 @@ else {
 		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getExecutesWithContext()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getUsesCommandList()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
 		             fileWriter.append(numC);
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 			}
-	         
+   
 			System.out.println("Il file CSV ("+ fileName +") contenente le predizioni delle istanze è stato creato con successo!");
-
 		} 
 		catch(Exception e) {
 			System.out.println("Errore nel CsvFileWriter !!!");

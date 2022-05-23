@@ -3,7 +3,7 @@ from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
 
 INSTANCES_FEATURE_COLUMNS = ['CommandRelationship',
-                             'CCRERelationship', 'InvokeMethod', 'ExecutesWithContext', 'UsesCommandList','NumC','IsCommand']
+                             'CCRERelationship', 'InvokeMethod','NumC','IsCommand']
 INSTANCES_LABELS = ['NotCommand', 'Command']
 INSTANCES_DATASET_PATH = "datasets/com_instances_dataset.csv"
 

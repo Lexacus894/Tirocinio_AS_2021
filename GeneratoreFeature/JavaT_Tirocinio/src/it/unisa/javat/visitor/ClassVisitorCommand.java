@@ -376,33 +376,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(ClassInstanceCreation node) {
 		
 	}
-	
-	/*Field Declaration - InstantiatesCommand
-	@Override
-	public boolean visit(Assignment node) {
-		MethodDeclaration mnode = getMethodDeclaration(node);
-		String istruzione = node.getRightHandSide().toString().toLowerCase();
-		//System.out.println("PROVA PROVA PROVA" + istruzione);
-		if (istruzione.contains("new")) {
-			String ist = istruzione.substring(istruzione.indexOf("new"));
-			if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
-				//System.out.println("PROVA PROVA PROVA Questa classe istanzia la classe " + importedCommandsTemp.get(i) + " che ha importato, in un'invocazione. PROVA PROVA PROVA");
-				System.out.println("ISTRUZIONE CHIAMATA: " + istruzione);
-				//Ricerca classe
-				for(int j=0;j<arrayListTemp.size();j++) {
-					String FQN = arrayListTemp.get(j).getFQNClass();
-					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-						arrayListTemp.get(j).setInstantiatesCommand(2);
-					}
-				}
-			}
-		}
-		return true;
-	}
 
-	@Override
-	public void endVisit(Assignment node) {
-	}*/
 	
 	//FINE VISITE
 
