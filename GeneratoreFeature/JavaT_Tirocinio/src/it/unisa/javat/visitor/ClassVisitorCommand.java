@@ -96,7 +96,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		for (Comment c : comments) {
 			try {
 				String codeComment = _document.get(c.getStartPosition(), c.getLength());
-				//Utils.print("[CO " + codeComment + " ]CO");
 			} 
 			catch (BadLocationException e) {
 			}
@@ -126,14 +125,12 @@ public class ClassVisitorCommand extends ASTVisitor {
 			Utils.print("[PD NOBIND]");
 			return false;
 		}
-		//Utils.print("  [PD " + node.getClass().getSimpleName() + " " + binding.getName() + " ]");
 		
 		return true;
 	}
 
 	@Override
 	public void endVisit(PackageDeclaration node) {
-		// Utils.print(" ]PD");
 	}
 
 	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
@@ -141,7 +138,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
 		if (binding == null) {
-			//Utils.print("[TD NOBIND]");
 			return false;
 		}
 	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
@@ -150,7 +146,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 		//ClassType
 		if (binding.isInterface()) {
 			feat.setClassType(3);
-			//Utils.print("  [TD" + printModifiers(binding.getModifiers()) + " INTERFACE " + node.getClass().getSimpleName() + " " + binding.getQualifiedName());
 		} 
 		else if(Modifier.isAbstract(binding.getModifiers())) {
 				feat.setClassType(2);
@@ -266,8 +261,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 				
 				boolean bool = false;
 				if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
-					//System.out.println(mnode.toString());
-					for (int i=0;i<listaClassiInExecute.size();i++) { 
+					/*for (int i=0;i<listaClassiInExecute.size();i++) { 
 						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
 							bool = true;
 							break;
@@ -275,8 +269,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 					}
 					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
 						listaClassiInExecute.add(nomeClasseDichiarante);
-						System.out.println("ECCOMI ECCOMI ECCOMI - " + mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
-								+ " usa la classe " + nomeClasseDichiarante + " - ECCOMI ECCOMI ECCOMI");
+					}*/
+					if (!listaClassiInExecute.contains(nomeClasseDichiarante)) {
+						listaClassiInExecute.add(nomeClasseDichiarante);
 					}
 				}
 			}
@@ -287,11 +282,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
 					if (nomeClasseDichiarante.toLowerCase().contains("command")) {
 						if (Modifier.isAbstract(node.resolveMethodBinding().getDeclaringClass().getModifiers())) {
-							System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE ASTRATTA:" + nomeClasseDichiarante);
 							tempval = 4;
 						}
 						else {
-							System.out.println("PROVA PROVA PROVA PROVA NOME CLASSE DICHIARANTE NON ASTRATTA:" + nomeClasseDichiarante);
 							tempval = 3;
 						}	
 					}

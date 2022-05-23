@@ -44,12 +44,13 @@ def get_instances_predictions_list(data, predictions, labels):
     return predictionResults
 
 def roles_combinations(predictions_list):
-    pairs_list = list(itertools.combinations(predictions_list, 2))
+    #pairs_list = list(itertools.combinations(predictions_list, 2))
     triplets_list = list(itertools.combinations(predictions_list, 3))
     quadruplets_list = list(itertools.combinations(predictions_list, 4))
     quintuplets_list = list(itertools.combinations(predictions_list, 5))
     #print(pairs_list)
-    return (pairs_list,triplets_list, quadruplets_list, quintuplets_list)
+    #return (pairs_list,triplets_list, quadruplets_list, quintuplets_list)
+    return (triplets_list, quadruplets_list, quintuplets_list)
 
 def filter_pairs_list(prediction_list, pairs_list):
     pairs = []
@@ -116,41 +117,6 @@ def filter_triplets_list(prediction_list, triplets_list):
                     triplets_roles.append('RE')
                 elif (roles[i] == 'Client'):
                     triplets_roles.append('CL')
-        #if roleOne == 'CommandInterface' and roleTwo == 'ConcreteCommand' and roleThree == 'Invoker':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('CI')
-        #    triplets_roles.append('CC')
-        #    triplets_roles.append('IN')
-        #if roleOne == 'CommandInterface' and roleTwo == 'Invoker' and roleThree == 'ConcreteCommand':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('CI')
-        #    triplets_roles.append('IN')
-        #    triplets_roles.append('CC')
-        #if roleOne == 'ConcreteCommand' and roleTwo == 'CommandInterface' and roleThree == 'Invoker':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('CC')
-        #    triplets_roles.append('CI')
-        #    triplets_roles.append('IN')
-        #if roleOne == 'ConcreteCommand' and roleTwo == 'Invoker' and roleThree == 'CommandInterface':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('CC')
-        #    triplets_roles.append('IN')
-        #    triplets_roles.append('CI')
-        #if roleOne == 'Invoker' and roleTwo == 'ConcreteCommand' and roleThree == 'CommandInterface':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('IN')
-        #    triplets_roles.append('CC')
-        #    triplets_roles.append('CI')
-        #if roleOne == 'Invoker' and roleTwo == 'CommandInterface' and roleThree == 'ConcreteCommand':
-        #    filtered_triplets_list.append(item)
-        #    triplets_roles.append('IN')
-        #    triplets_roles.append('CI')
-        #    triplets_roles.append('CC')
-
-        #if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
-        #    filtered_triplets_list.append(item)
-        #if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':
-        #    filtered_triplets_list.append(item)
 
     return (filtered_triplets_list,triplets_roles)
 
@@ -165,7 +131,6 @@ def filter_quadruplets_list(predictions_list,quadruplets_list):
         roles[2] = predictions_list[item[2]][0]
         roles[3] = predictions_list[item[3]][0]
 
-        #if (roles[0] != 'Client' and roles[1] != 'Client' and roles[2] != 'Client' and roles[3] != 'Client'):
         if (roles[0]!=roles[1] and roles[0]!=roles[2] and roles[0]!=roles[3] and roles[1]!=roles[2] and roles[1]!=roles[3] and roles[2]!=roles[3]):
             filtered_quadruplets_list.append(item)
             for i in range(4):
@@ -179,10 +144,6 @@ def filter_quadruplets_list(predictions_list,quadruplets_list):
                     quadruplets_roles.append('RE')
                 elif (roles[i] == 'Client'):
                     quadruplets_roles.append('CL')
-        # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
-        #    filtered_triplets_list.append(item)
-        # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':
-        #    filtered_triplets_list.append(item)
 
     return (filtered_quadruplets_list, quadruplets_roles)
 
@@ -200,7 +161,6 @@ def filter_quintuplets_list(predictions_list,quintuplets_list):
 
 
         if (roles[0]!=roles[1] and roles[0]!=roles[2] and roles[0]!=roles[3] and roles[0] != roles[4] and roles[1]!=roles[2] and roles[1]!=roles[3] and roles[1] != roles[4] and roles[2]!=roles[3] and roles[2] != roles[4] and roles[3]!=roles[4]):
-            #print("ECCOMI ECCOMI ECCOMI ECCOMI ECCOMI")
             filtered_quintuplets_list.append(item)
             for i in range(5):
                 if (roles[i] == 'CommandInterface'):
@@ -213,10 +173,6 @@ def filter_quintuplets_list(predictions_list,quintuplets_list):
                     quintuplets_roles.append('RE')
                 elif (roles[i] == 'Client'):
                     quintuplets_roles.append('CL')
-        # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteObserver':
-        #    filtered_triplets_list.append(item)
-        # if roleOne == 'ConcreteObserver' and roleTwo == 'Subject' and roleThree == 'ConcreteSubject':
-        #    filtered_triplets_list.append(item)
 
     return (filtered_quintuplets_list, quintuplets_roles)
 
@@ -225,20 +181,20 @@ def get_logger(format,name):
     logger=logging.getLogger(name=name)
     return logger
 
-def log_combinations_on_file(path,header,pairs,triplets,quadruplets, quintuplets,pairs_roles,triplets_roles,quadruplets_roles, quintuplets_roles):
+def log_combinations_on_file(path,header,triplets,quadruplets, quintuplets,triplets_roles,quadruplets_roles, quintuplets_roles):
     with open(path, "w") as fp:
         writer = csv.writer(fp, delimiter=";", dialect="excel", lineterminator="\n")
         writer.writerow(header)
         #pairs combinations
-        for i,classes_set in enumerate(pairs):
-            row = ''
-            for j,pairs in enumerate(classes_set):
-                if ((2*i+1) < len(pairs_roles)):
-                    if j==1:
-                        row = row + pairs + ' - ' + pairs_roles[2*i+1]
-                    else:
-                        row = row + pairs + ' - ' + pairs_roles[2*i] + ', '
-            writer.writerow([row])
+        #for i,classes_set in enumerate(pairs):
+        #    row = ''
+        #    for j,pairs in enumerate(classes_set):
+        #        if ((2*i+1) < len(pairs_roles)):
+        #            if j==1:
+        #                row = row + pairs + ' - ' + pairs_roles[2*i+1]
+        #            else:
+        #                row = row + pairs + ' - ' + pairs_roles[2*i] + ', '
+        #    writer.writerow([row])
 
         #triplets combinations
         for i,classes_set in enumerate(triplets):
