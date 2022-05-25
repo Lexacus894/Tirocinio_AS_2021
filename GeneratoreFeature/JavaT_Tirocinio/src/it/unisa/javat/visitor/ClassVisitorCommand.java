@@ -185,7 +185,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 			else {
 				feat.setImplementsInterfaces(2);
 			}
-			//Utils.print("   [IMP" + printModifiers(sInterface.getModifiers()) + " " + sInterface.getName() + " ]");
 		}
 
 		arrayListTemp.add(feat);
@@ -261,15 +260,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 				
 				boolean bool = false;
 				if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
-					/*for (int i=0;i<listaClassiInExecute.size();i++) { 
-						if (nomeClasseDichiarante.equals(listaClassiInExecute.get(i))) {
-							bool = true;
-							break;
-						}
-					}
-					if (bool == false && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals("") && !mnode.resolveBinding().getDeclaringClass().getQualifiedName().equals(node.resolveMethodBinding().getDeclaringClass().getQualifiedName())) { //IF il nome del metodo non è già presente nella lista, aggiungilo
-						listaClassiInExecute.add(nomeClasseDichiarante);
-					}*/
 					if (!listaClassiInExecute.contains(nomeClasseDichiarante)) {
 						listaClassiInExecute.add(nomeClasseDichiarante);
 					}
