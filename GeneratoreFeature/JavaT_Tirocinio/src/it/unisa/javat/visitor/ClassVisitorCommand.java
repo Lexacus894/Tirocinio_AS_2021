@@ -298,7 +298,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 			
 			//InstantiatesCommand
 			tempval = 1;
-			if (istruzioneChiamata.contains("add")) {
+			if (istruzioneChiamata.contains(".add")) {
 				if (istruzioneChiamata.contains("new") && (istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
 					if (node.resolveMethodBinding() != null) {
 						String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();

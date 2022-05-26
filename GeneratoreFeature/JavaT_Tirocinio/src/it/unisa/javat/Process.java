@@ -563,7 +563,6 @@ public class Process {
 						}
 		            }
 		            fileWriter.append(String.valueOf(vettoreFeat.getIsPartOfExecute()));	 
-	              
 		            fileWriter.append(NEW_LINE_SEPARATOR);
 	            }
 	        }
