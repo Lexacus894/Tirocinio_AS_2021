@@ -122,7 +122,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public boolean visit(PackageDeclaration node) {
 		IPackageBinding binding = node.resolveBinding();
 		if (binding == null) {
-			Utils.print("[PD NOBIND]");
 			return false;
 		}
 		

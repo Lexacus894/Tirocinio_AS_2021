@@ -65,7 +65,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
     ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
-    static ArrayList<String> prova = new ArrayList<String>();;
+    //static ArrayList<String> prova = new ArrayList<String>();;
+    //static HashMap<String,String> genitoreFiglio = new HashMap<String,String>(); 
     //String classeAnalizzata;
     
 
@@ -105,6 +106,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		
 		String classeAnalizzata = binding.getName();
 		ITypeBinding superclass = binding.getSuperclass();
+		//System.out.println(node.toString());
 		
 	    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 	    	
@@ -124,6 +126,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			    		ITypeBinding tempsuperclass = superclass;
 			    		//COMMANDRELATIONSHIP 2 - CONTROLLA SE LA CLASSE CONCRETECOMMAND O UN SUO GENITORE HA COME GENITORE L'INTERFACCIA COMMAND
 			    		while (tempsuperclass != null && !tempsuperclass.getName().equals("Object")) {
+			    			String tempsuperclassname = tempsuperclass.getName();
 			    			if (!classe2.equals("") && classe2 != null) {
 			    				if (tempsuperclass.getName().equals(classe2)) {
 				    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
@@ -218,7 +221,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		String istruzioneChiamata = node.toString().toLowerCase();
 		
 		if (getTypeDeclaration(node) != null) {
-			String classeAnalizzata = getTypeDeclaration(node).getName().toString();
+			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 			
 			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
@@ -263,7 +266,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains(".execute") && listaFeatureCommandInstances.get(i).getInvokeMethod()!=3) {
 							listaFeatureCommandInstances.get(i).setInvokeMethod(2);
 						}
-						//CCRERELATIONSHIP
+						/*//CCRERELATIONSHIP
 						if (!istruzioneChiamata.contains(".execute")) {
 							if (node.resolveMethodBinding() != null) {
 								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
@@ -271,7 +274,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 									listaFeatureCommandInstances.get(i).setCCRERelationship(3);
 								}
 							}
-						}
+						}*/
 						
 						
 					}
@@ -280,18 +283,31 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				//CCRERELATIONSHIP = 2 - CONTROLLA SE IL METODO INVOCATO DALLA CLASSE CONCRETECOMMAND VIENE DICHIARATO DALLA CLASSE RECEIVER
 				if (riga.toString().contains(classeAnalizzata + " - CC")) {
 					String classe1 = ricercaClasse(riga,"RE");
-					if (!classe1.equals("") && classe1 != null) {
+					
 						if (node.resolveMethodBinding() != null) {
-							String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-							if (classeDichiarante.equals(classe1)) {
-								listaFeatureCommandInstances.get(i).setCCRERelationship(2);
+							String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+							if (!classe1.equals("") && classe1 != null) {
+								//CLASSE DICHIARANTE E' RECEIVER DELLA COMBINAZIONE
+								if (classeDichiarante.replaceAll(".+\\.", "").equals(classe1)) {
+									listaFeatureCommandInstances.get(i).setCCRERelationship(2);
+								}
 							}
-						}	
+							//CLASSE DICHIARANTE FA PARTE DI JAVAX SWING O DI JAVA AWT
+							else if (classeDichiarante.contains("javax.swing") || classeDichiarante.contains("java.awt")) {
+								listaFeatureCommandInstances.get(i).setCCRERelationship(3);
+							}
+							//CLASSE ANALIZZATA DICHIARA IL METODO INVOCATO
+							else if (classeDichiarante.replaceAll(".+\\.", "").equals(classeAnalizzata)) {
+								listaFeatureCommandInstances.get(i).setCCRERelationship(4);
+							}	
+								
+								
+						}
+							
 					}
 				}
 				
 			}
-		}
 			
 		return true;
 		
