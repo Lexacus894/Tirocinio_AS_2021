@@ -158,27 +158,30 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	
 	@Override
-	public boolean visit(MethodDeclaration node) {    	
-		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName();
-		//System.out.println(node.toString());
-		String primariga = "";
-		if (node.toString().indexOf("{") != -1) {
-			primariga = node.toString().substring(0,node.toString().indexOf("{")).toLowerCase();
-		}
-		else if (node.toString().indexOf(" {") != -1) {
-			primariga = node.toString().substring(0,node.toString().indexOf(" {")).toLowerCase();
-		}
-		
-		if (primariga.contains(" execute") || primariga.contains("actionperformed")) {
-			for(int i = 0; i<listaFeatureCommandInstances.size(); i++) {
-				
-				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-				
-				if (riga.toString().contains(classeAnalizzata + " - CC")) {
-					listaFeatureCommandInstances.get(i).setCCHasExecute(2);
-				}	
+	public boolean visit(MethodDeclaration node) { 
+		if (getTypeDeclaration(node) != null) {
+			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName();
+			//System.out.println(node.toString());
+			String primariga = "";
+			if (node.toString().indexOf("{") != -1) {
+				primariga = node.toString().substring(0,node.toString().indexOf("{")).toLowerCase();
+			}
+			else if (node.toString().indexOf(" {") != -1) {
+				primariga = node.toString().substring(0,node.toString().indexOf(" {")).toLowerCase();
+			}
+			
+			if (primariga.contains(" execute") || primariga.contains("actionperformed")) {
+				for(int i = 0; i<listaFeatureCommandInstances.size(); i++) {
+					
+					FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+					
+					if (riga.toString().contains(classeAnalizzata + " - CC")) {
+						listaFeatureCommandInstances.get(i).setCCHasExecute(2);
+					}	
+				}
 			}
 		}
+			
 		
 		return true;
 	}

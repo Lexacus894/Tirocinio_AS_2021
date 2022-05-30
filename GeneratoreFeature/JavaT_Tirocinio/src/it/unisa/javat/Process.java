@@ -444,7 +444,7 @@ public class Process {
 		    	Utils.print(e);
 		    }//fine Catch
 		    
-            creaCSV3("combinations_mockup_command.csv");
+            creaCSV3("combinations_mockup_command_" + _project.getProjectName() + ".csv");
 		    
 		}
 		
