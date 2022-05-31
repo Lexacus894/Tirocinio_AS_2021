@@ -33,7 +33,7 @@ def get_instances_predictions_list(data, predictions, labels):
     predictionResults = dict()
 
     for row, column in data.iterrows():
-        classNames.append(row)
+        classNames.append(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]) )
 
     for pred in predictions:
         class_id = pred['class_ids'][0]
