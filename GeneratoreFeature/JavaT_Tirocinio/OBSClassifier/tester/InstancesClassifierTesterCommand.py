@@ -2,15 +2,16 @@ import os
 from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
 
-INSTANCES_FEATURE_COLUMNS = ['CCRERelationship', 'CCHasNoExecute','InvokeMethod','NumC','IsCommand']
+INSTANCES_FEATURE_COLUMNS = ['CommandRelationship',
+                             'CCRERelationship', 'CCHasExecute','InvokeMethod','HasExternalInvoker','HasExternalReceiver','NumC','IsCommand']
 INSTANCES_LABELS = ['NotCommand', 'Command']
 INSTANCES_DATASET_PATH = "datasets/com_instances_dataset.csv"
 
 FOLDERS_NUMBER = 5
 
-INSTANCES_TRAIN_BATCH_SIZE = 32
-INSTANCES_EVALUATE_BATCH_SIZE = 32
-INSTANCES_TRAINING_STEPS = 5000
+INSTANCES_TRAIN_BATCH_SIZE = 8
+INSTANCES_EVALUATE_BATCH_SIZE = 8
+INSTANCES_TRAINING_STEPS = 500
 
 PREDICTIONS_ROOT_DIRECTORY = 'OBSClassifier/tester/predictions'
 INSTANCES_MOKUP_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_mockup_command.csv'

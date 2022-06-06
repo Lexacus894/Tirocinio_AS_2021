@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CCRERelationship;CCHasNoExecute;InvokeMethod;NumC"; //HasExternalInvoker;HasExternalReceiver;
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;CCHasExecute;InvokeMethod;HasExternalInvoker;HasExternalReceiver;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -362,7 +362,7 @@ public class Process {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -642,25 +642,13 @@ public class Process {
 				fileWriter.append(NEW_LINE_SEPARATOR);
 	          
 				for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
-					int numC = 0;
-					//String numC = "2";
 	        	 
-					if (vettoreFeat.getClass1().equals("")) {
-						fileWriter.append("None");
-					}
-					else {
-						fileWriter.append(vettoreFeat.getClass1());
-						numC++;
-					}
+					String numC = "2";
+	        	 
+					fileWriter.append(vettoreFeat.getClass1());	 
 					fileWriter.append(COMMA_DELIMITER);
-					
-					if (vettoreFeat.getClass2().equals("")) {
-						fileWriter.append("None");
-					}
-					else {
-						fileWriter.append(vettoreFeat.getClass2());
-						numC++;
-					}
+	              
+					fileWriter.append(vettoreFeat.getClass2());
 					fileWriter.append(COMMA_DELIMITER);
 	             
 					if (vettoreFeat.getClass3().equals("")) {
@@ -668,7 +656,7 @@ public class Process {
 					}
 					else {
 						fileWriter.append(vettoreFeat.getClass3());
-						numC++;
+	            		numC = "3";
 					}
 					fileWriter.append(COMMA_DELIMITER);
 	             
@@ -677,7 +665,7 @@ public class Process {
 					}
 					else {
 						fileWriter.append(vettoreFeat.getClass4());
-						numC++;
+						numC = "4";
 					}
 					fileWriter.append(COMMA_DELIMITER);
 	             
@@ -686,26 +674,29 @@ public class Process {
 		             }
 		             else {
 		            	 fileWriter.append(vettoreFeat.getClass5());
-		            	 numC++;
+		            	 numC = "5";
 		             }
+		             fileWriter.append(COMMA_DELIMITER);
+		              
+		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getCCRERelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getCCHasNoExecute()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getCCHasExecute()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             /*fileWriter.append(String.valueOf(vettoreFeat.getHasExternalInvoker()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalInvoker()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalReceiver()));
-		             fileWriter.append(COMMA_DELIMITER);*/
+		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(numC));
+		             fileWriter.append(numC);
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 			}
