@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;InvokeMethod;CCRERelationship;HasClient;HasConcreteCommand;HasInvoker;HasReceiver;NumC"; //HasExternalInvoker;HasExternalReceiver;
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CCRERelationship;CCHasNoExecute;InvokeMethod;NumC"; //HasExternalInvoker;HasExternalReceiver;
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -362,19 +362,7 @@ public class Process {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1,1,1);
-			    	if (!nomi.getClasse1().equals("") && nomi.getClasse1()!=null) {
-			    		elemento.setHasClient(2);
-			    	}
-			    	if (!nomi.getClasse2().equals("") && nomi.getClasse1()!=null) {
-			    		elemento.setHasConcreteCommand(2);
-			    	}
-			    	if (!nomi.getClasse3().equals("") && nomi.getClasse1()!=null) {
-			    		elemento.setHasReceiver(2);
-			    	}
-			    	if (!nomi.getClasse4().equals("") && nomi.getClasse1()!=null) {
-			    		elemento.setHasInvoker(2);
-			    	}
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -384,8 +372,8 @@ public class Process {
 				_params = new Parameters(args, this.getClass().getName());
 				_params.print();
 					
-				for(int i=0;i<listaFeatureCommandInstances.size();i++) {
-				    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				for(int i=0;i<listaFeatureCommandRoles.size();i++) {
+				    	FeatureCommandInstances riga= listaFeatureCommandInstances.get(i);
 				}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -702,24 +690,20 @@ public class Process {
 		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getCCRERelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasClient()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getCCHasNoExecute()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasConcreteCommand()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasInvoker()));
+		             /*fileWriter.append(String.valueOf(vettoreFeat.getHasExternalInvoker()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasReceiver()));
-		             fileWriter.append(COMMA_DELIMITER);
+		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalReceiver()));
+		             fileWriter.append(COMMA_DELIMITER);*/
 		             
 		             fileWriter.append(String.valueOf(numC));
 		             fileWriter.append(NEW_LINE_SEPARATOR);

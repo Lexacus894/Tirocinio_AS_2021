@@ -65,7 +65,7 @@ class AbstractClassifier(object,metaclass=abc.ABCMeta):
             evaluationResult=self.evaluate(y_name, evaluation_batch_size)
             logger.warning("PHASE " + str(i + 1) + " RESULT - Test set accuracy: {accuracy:0.3f}\n".format(**evaluationResult))
 
-        logger.warning("FINAL RESULT - Avg Accuracy: %.3f"%self.getAvgAccuracy() +"\n")
+        logger.warning("FINAL RESULT - Avg Accuracy: %.3f"%self.getAvgAccuracy()+"\n")
 
     def getAvgAccuracy(self):
         return self.guessedInstances/self.dataSet[self.columnsName[0]].count()
