@@ -4,9 +4,7 @@ import sys
 import csv
 import os
 
-COMBINATIONS_ROLES_PREFIX=[['CI','CC','I','R','C']
-
-                           ]
+COMBINATIONS_ROLES_PREFIX=[['CI','CC','I','R','C']]
 
 def get_roles_predictions_list(data, predictions, labels):
     i = 0
@@ -19,6 +17,7 @@ def get_roles_predictions_list(data, predictions, labels):
     for pred in predictions:
         class_id = pred['class_ids'][0]
         probability = pred['probabilities'][class_id]
+
 
         if (class_id != 5):
             predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
@@ -38,6 +37,8 @@ def get_instances_predictions_list(data, predictions, labels):
     for pred in predictions:
         class_id = pred['class_ids'][0]
         probability = pred['probabilities'][class_id]
+        #print(pred)
+
         predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
         i = i + 1
 

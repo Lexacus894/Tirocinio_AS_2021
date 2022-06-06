@@ -54,7 +54,7 @@ import it.unisa.javat.Utils;
 
 public class ClassVisitorCommand extends ASTVisitor {
 	
-	//private static final int i = 0;
+	private static int n = 0;
 
 	CompilationUnit _compilation;
 	Document _document;
@@ -84,6 +84,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	    this.arrayListTemp = new ArrayList<FeatureCommandRoles>();
 	    this.folder = folder;
 	    this.nomeProgetto = nomeProgetto;
+	    n++;
 	    
 	}
 
@@ -131,15 +132,29 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(PackageDeclaration node) {
 	}
+	
+	// Import Declaration
+	@Override
+	public boolean visit(ImportDeclaration node) {
+		System.out.println("IMPORTDECLARATION START" + n);
+		n++;
+		return true;
+	}
+
+	@Override
+	public void endVisit(ImportDeclaration node) {
+		System.out.println("IMPORTDECLARATION END");
+	}
 
 	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
 	@Override
 	public boolean visit(TypeDeclaration node) {
+		System.out.println("TYPEDECLARATION START");
 		ITypeBinding binding = node.resolveBinding();
 		if (binding == null) {
 			return false;
 		}
-	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
+	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1,1);
 		feat.setFQNClass(binding.getName());
 		
 		//ClassType
@@ -192,17 +207,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 	@Override
 	public void endVisit(TypeDeclaration node) {
+		System.out.println("TYPEDECLARATION END");
 	}
-	
-	// Import Declaration
-		@Override
-		public boolean visit(ImportDeclaration node) {
-			return true;
-		}
-
-		@Override
-		public void endVisit(ImportDeclaration node) {
-		}
 
 	// Method Declaration - ClassType, MethodDeclarationKeyword
 	@Override
