@@ -20,8 +20,8 @@ class InstancesClassifier(AbstractClassifier):
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[1], num_buckets=4))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[2], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[3], num_buckets=5))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[4], num_buckets=3))
-        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=3))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[4], num_buckets=4))
+        self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=4))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[6], num_buckets=6))
         #self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[7], num_buckets=3))
 

@@ -50,7 +50,7 @@ public class Process {
 			+ "MethodDeclarationKeyword;ClassType;ScanCollectionMethod;SCMCallAbsMethod;HasSuperclass;ImplementsInterfaces;ChangeState;AfterChangeStateIterateOverList";
 	
 	//CSV file header (Ruoli Command)
-	private static final String FILE_HEADER_COMMAND_ROLES = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ExecutesCommand;"
+	private static final String FILE_HEADER_COMMAND_ROLES = "SoftwareName;FileName;FQNClass;ClassType;ClassDeclarationKeyword;MethodDeclarationKeyword;ImportDeclarationKeyword;ExecutesCommand;"
 			+ "InstantiatesCommand;HasSuperclass;ImplementsInterfaces;IsPartOfExecute";
 	 
 	//CSV file header (Combinazioni Observer)
@@ -542,6 +542,9 @@ public class Process {
 					  
 					fileWriter.append(String.valueOf(vettoreFeat.getMethodDeclarationKeyword()));	 
 					fileWriter.append(COMMA_DELIMITER);
+					
+					fileWriter.append(String.valueOf(vettoreFeat.getImportDeclarationKeyword()));	 
+					fileWriter.append(COMMA_DELIMITER);
 					 
 					fileWriter.append(String.valueOf(vettoreFeat.getExecutesCommand()));	 
 					fileWriter.append(COMMA_DELIMITER);
@@ -555,9 +558,9 @@ public class Process {
 					fileWriter.append(String.valueOf(vettoreFeat.getImplementsInterfaces()));	 
 					fileWriter.append(COMMA_DELIMITER);
 		              
-		            //Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
+		            //Ricerca delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command (1 se la classe in questione istanzia un command o esegue un command)
 		            for (int j = 0; j < lista.size(); j++) {
-						if (vettoreFeat.getFQNClass().replaceAll(".java", "").contentEquals(lista.get(j))) {
+						if (vettoreFeat.getFQNClass().replaceAll(".java", "").equals(lista.get(j)) && (vettoreFeat.getInstantiatesCommand()==1) && vettoreFeat.getExecutesCommand()==1) {
 							vettoreFeat.setIsPartOfExecute(2);
 							break;
 						}

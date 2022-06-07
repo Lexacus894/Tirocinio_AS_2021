@@ -68,6 +68,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	String nomeProgetto;
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
 	int tempval;
+	int importscommand = 1;
 	
 	//ArrayList<String> importedCommands = new ArrayList<String>();
 
@@ -131,6 +132,19 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(PackageDeclaration node) {
 	}
+	
+	// Import Declaration
+	@Override
+	public boolean visit(ImportDeclaration node) {
+		if ((node.toString().toLowerCase().contains("command") || node.toString().toLowerCase().contains("command")) && !node.toString().toLowerCase().contains("actionlistener")) {
+			importscommand = 2;
+		}
+		return true;
+	}
+
+	@Override
+	public void endVisit(ImportDeclaration node) {
+	}
 
 	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
 	@Override
@@ -139,8 +153,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (binding == null) {
 			return false;
 		}
-	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1);
+	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1,1);
 		feat.setFQNClass(binding.getName());
+		feat.setImportDeclarationKeyword(importscommand);
 		
 		//ClassType
 		if (binding.isInterface()) {
@@ -193,16 +208,6 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(TypeDeclaration node) {
 	}
-	
-	// Import Declaration
-		@Override
-		public boolean visit(ImportDeclaration node) {
-			return true;
-		}
-
-		@Override
-		public void endVisit(ImportDeclaration node) {
-		}
 
 	// Method Declaration - ClassType, MethodDeclarationKeyword
 	@Override
@@ -268,18 +273,13 @@ public class ClassVisitorCommand extends ASTVisitor {
 			//ExecutesCommand
 			if (istruzioneChiamata.contains(".execute")) {
 				if (node.resolveMethodBinding() != null) {
-					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
-					if (nomeClasseDichiarante.toLowerCase().contains("command")) {
-						if (Modifier.isAbstract(node.resolveMethodBinding().getDeclaringClass().getModifiers())) {
-							tempval = 4;
-						}
-						else {
-							tempval = 3;
-						}	
+					String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName(); 
+					if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
+						tempval = 3;
 					}
-				}
-				else {
-					tempval = 2;
+					else {
+						tempval = 2;
+					}	
 				}
 				
 				
@@ -300,15 +300,15 @@ public class ClassVisitorCommand extends ASTVisitor {
 			tempval = 1;
 			if (istruzioneChiamata.contains(".add")) {
 				if (istruzioneChiamata.contains("new") && (istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
-					if (node.resolveMethodBinding() != null) {
+					tempval = 2;
+					/*if (node.resolveMethodBinding() != null) {
 						String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
 						if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
-							tempval = 4;
-						}
-						else {
 							tempval = 3;
 						}
-						
+						else {
+							tempval = 2;
+						}*/
 						//Ricerca classe DA CAMBIARE
 						for(int j=0;j<arrayListTemp.size();j++) {
 							String FQN = arrayListTemp.get(j).getFQNClass();
@@ -317,7 +317,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 							}
 						}
 						
-					}
+					//}
 				}
 			}
 

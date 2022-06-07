@@ -5,17 +5,17 @@ from classifiers.RolesClassifierCommand import RolesClassifier
 
 ROLES_DATASET_PATH        = 'datasets/com_roles_dataset.csv'
 ROLES_FEATURE_COLUMNS     = ['ClassType','ClassDeclarationKeyword',
-                             'MethodsDeclarationKeyword','ExecutesCommand', 'InstantiatesCommand', 'HasSuperclass',
+                             'MethodsDeclarationKeyword','ImportDeclarationKeyword','ExecutesCommand', 'InstantiatesCommand', 'HasSuperclass',
                              'ImplementsInterfaces','IsPartOfExecute','Role']
 ROLES_LABELS              = ['CommandInterface', 'ConcreteCommand', 'Invoker', 'Receiver', 'Client','None']
 
 INSTANCES_FEATURE_COLUMNS = ['Classes']
 
-ROLES_TRAIN_BATCH_SIZE    = 20
+ROLES_TRAIN_BATCH_SIZE    = 5
 ROLES_EVALUATE_BATCH_SIZE = 5
-ROLES_TRAINING_STEPS      = 5500
+ROLES_TRAINING_STEPS      = 4000
 
-FOLDERS_NUMBER = 2
+FOLDERS_NUMBER = 3
 
 PREDICTIONS_ROOT_DIRECTORY       = 'OBSClassifier/tester/predictions'
 SOFTWARES_ROOT_DIRECTORY         = 'softwares'
@@ -27,7 +27,7 @@ INSTANCES_COMBINATIONS_HEADER    = INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEAT
 INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
 
 def main():
-    SW_ROLES_BATCH_SIZE=8
+    SW_ROLES_BATCH_SIZE=5
 
     rolesClassifier=RolesClassifier(ROLES_FEATURE_COLUMNS,ROLES_LABELS,FOLDERS_NUMBER)
     rolesClassifier.initFeatureColumns()

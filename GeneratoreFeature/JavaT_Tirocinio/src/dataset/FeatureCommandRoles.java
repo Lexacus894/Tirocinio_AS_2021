@@ -5,23 +5,25 @@ public class FeatureCommandRoles {
 	private String SoftwareName;
 	private String FileName;
 	private String FQNClass;
+	private int ClassType;
 	private int ClassDeclarationKeyword;
 	private int MethodDeclarationKeyword;
-	private int ClassType;
+	private int ImportDeclarationKeyword;
 	private int ExecutesCommand;
 	private int InstantiatesCommand;
 	private int HasSuperclass;
 	private int ImplementsInterfaces;
 	private int isPartOfExecute;
 
-	public FeatureCommandRoles(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int classType, int executesCommand, 
+	public FeatureCommandRoles(String softwareName, String fileName, String fqnClass, int classDeclaration, int methodDeclaration, int importDeclaration, int classType, int executesCommand, 
 			int instantiatesCommand, int hasSuperclass, int implementsInterfaces, int isPartOfExecute) {
 		this.SoftwareName = softwareName;
 		this.FileName = fileName;
 		this.FQNClass = fqnClass;
+		this.ClassType = classType;
 		this.ClassDeclarationKeyword = classDeclaration;
 		this.MethodDeclarationKeyword = methodDeclaration;
-		this.ClassType = classType;
+		this.ImportDeclarationKeyword = importDeclaration;
 		this.ExecutesCommand = executesCommand;
 		this.InstantiatesCommand = instantiatesCommand;
 		this.HasSuperclass = hasSuperclass;
@@ -67,6 +69,14 @@ public class FeatureCommandRoles {
 
 	public void setMethodDeclarationKeyword(int methodDeclarationKeyword) {
 		MethodDeclarationKeyword = methodDeclarationKeyword;
+	}
+	
+	public int getImportDeclarationKeyword() {
+		return ImportDeclarationKeyword;
+	}
+
+	public void setImportDeclarationKeyword(int importDeclarationKeyword) {
+		ImportDeclarationKeyword = importDeclarationKeyword;
 	}
 
 	public int getClassType() {
