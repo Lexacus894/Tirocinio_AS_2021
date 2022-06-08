@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Class1;Class2;Class3;Class4;Class5;CommandRelationship;CCRERelationship;CCHasExecute;InvokeMethod;HasExternalInvoker;HasExternalReceiver;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CommandRelationship;CCRERelationship;CCHasExecute;InvokeMethod;HasExternalInvoker;HasExternalReceiver;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -646,12 +646,24 @@ public class Process {
 	          
 				for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
 	        	 
-					String numC = "2";
+					int numC = 0;
 	        	 
-					fileWriter.append(vettoreFeat.getClass1());	 
+					if (vettoreFeat.getClass1().equals("")) {
+						fileWriter.append("None");
+					}
+					else {
+						fileWriter.append(vettoreFeat.getClass1());
+						numC++;
+					}
 					fileWriter.append(COMMA_DELIMITER);
 	              
-					fileWriter.append(vettoreFeat.getClass2());
+					if (vettoreFeat.getClass2().equals("")) {
+						fileWriter.append("None");
+					}
+					else {
+						fileWriter.append(vettoreFeat.getClass2());
+						numC++;
+					}
 					fileWriter.append(COMMA_DELIMITER);
 	             
 					if (vettoreFeat.getClass3().equals("")) {
@@ -659,7 +671,7 @@ public class Process {
 					}
 					else {
 						fileWriter.append(vettoreFeat.getClass3());
-	            		numC = "3";
+						numC++;
 					}
 					fileWriter.append(COMMA_DELIMITER);
 	             
@@ -668,7 +680,7 @@ public class Process {
 					}
 					else {
 						fileWriter.append(vettoreFeat.getClass4());
-						numC = "4";
+						numC++;
 					}
 					fileWriter.append(COMMA_DELIMITER);
 	             
@@ -677,7 +689,7 @@ public class Process {
 		             }
 		             else {
 		            	 fileWriter.append(vettoreFeat.getClass5());
-		            	 numC = "5";
+		            	 numC++;
 		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		              
@@ -699,7 +711,7 @@ public class Process {
 		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalReceiver()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(numC);
+		             fileWriter.append(String.valueOf(numC));
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 			}

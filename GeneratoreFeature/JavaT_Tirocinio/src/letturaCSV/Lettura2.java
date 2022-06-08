@@ -53,8 +53,13 @@ public ArrayList<nomiCombinazioni> listaCombinazioni = new  ArrayList<nomiCombin
 	        		classe2 = newline.substring(0);
 	        	}
 	        	
-	        	nomiCombinazioni rigaNomi = new nomiCombinazioni(classe1,classe2,classe3,classe4,classe5);
-	        	listaCombinazioni.add(rigaNomi);
+	        	ArrayList<String> listaClassi = new ArrayList<String>();
+	        	listaClassi.add(classe1);
+	        	listaClassi.add(classe2);
+	        	listaClassi.add(classe3);
+	        	listaClassi.add(classe4);
+	        	listaClassi.add(classe5);
+	        	listaCombinazioni.add(ordinaClassi(listaClassi));
 	       
 	        	i++;
 	        	System.out.println("CLASSI CLASSI CLASSI " + i + ": classe1:" + classe1 + ", classe2: " + classe2 + ", classe3: " + classe3 + ", classe 4: " + classe4 + ", classe 5: " + classe5);
@@ -69,5 +74,31 @@ public ArrayList<nomiCombinazioni> listaCombinazioni = new  ArrayList<nomiCombin
 	    return listaCombinazioni;
 	    
 	}
-	
+
+	private nomiCombinazioni ordinaClassi(ArrayList<String> listaClassi) {
+		String cc="",ci="",re="",cl="",in="";
+		for(int i=0;i<5;i++) {
+			if (!listaClassi.get(i).equals("")) {
+				if (listaClassi.get(i).contains(" - CC")) {
+					cc = listaClassi.get(i);
+				}
+				if (listaClassi.get(i).contains(" - CI")) {
+					ci = listaClassi.get(i);
+				}
+				if (listaClassi.get(i).contains(" - RE")) {
+					re = listaClassi.get(i);
+				}
+				if (listaClassi.get(i).contains(" - CL")) {
+					cl = listaClassi.get(i);
+				}
+				if (listaClassi.get(i).contains(" - IN")) {
+					in = listaClassi.get(i);
+				}
+			}
+		}
+		nomiCombinazioni rigaNomi = new nomiCombinazioni(cl,cc,re,in,ci);
+		return rigaNomi;
+	}
+
 }//fine class
+
