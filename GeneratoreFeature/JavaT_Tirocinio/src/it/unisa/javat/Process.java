@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CommandRelationship;CCRERelationship;CCHasExecute;InvokeMethod;HasExternalInvoker;HasExternalReceiver;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CCRERelationship;InvokeMethod;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -362,7 +362,7 @@ public class Process {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1,1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -692,23 +692,11 @@ public class Process {
 		            	 numC++;
 		             }
 		             fileWriter.append(COMMA_DELIMITER);
-		              
-		             fileWriter.append(String.valueOf(vettoreFeat.getCommandRelationship()));
-		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getCCRERelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getCCHasExecute()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalInvoker()));
-		             fileWriter.append(COMMA_DELIMITER);
-		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getHasExternalReceiver()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(numC));

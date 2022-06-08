@@ -100,53 +100,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		if (binding == null) {
 			return false;
 		}
-		
-		String classeAnalizzata = binding.getName();
-		ITypeBinding superclass = binding.getSuperclass();
-		//System.out.println(node.toString());
-		
-	    for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-	    	
-	    	FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-	    	
-	    	if (riga.toString().contains(classeAnalizzata)) {
-	    		String classe1 = "";
-		    	
-		    	classe1 = ricercaClasse(riga,"CC");
-		    	
-		    	if (!classe1.equals("") && classe1 != null) {
-			    	if (classeAnalizzata.equals(classe1)) {
-			    		String classe2 = "";
-			    		
-			    		classe2 = ricercaClasse(riga,"CI");
-			    		
-			    		ITypeBinding tempsuperclass = superclass;
-			    		//COMMANDRELATIONSHIP 2 - CONTROLLA SE LA CLASSE CONCRETECOMMAND O UN SUO GENITORE HA COME GENITORE L'INTERFACCIA COMMAND
-			    		while (tempsuperclass != null && !tempsuperclass.getName().equals("Object")) {
-			    			String tempsuperclassname = tempsuperclass.getName();
-			    			if (!classe2.equals("") && classe2 != null) {
-			    				if (tempsuperclass.getName().equals(classe2)) {
-				    				listaFeatureCommandInstances.get(i).setCommandRelationship(2);
-				    			}
-			    			}
-			    			tempsuperclass = tempsuperclass.getSuperclass();
-			    		}
-			    		
-			    		//COMMANDRELATIONSHIP 3 - CONTROLLA SE LA CLASSE CONCRETECOMMAND IMPLEMENTA L'INTERFACCIA COMMAND
-			    		ITypeBinding[] interfaces = binding.getInterfaces();
-			    		for (ITypeBinding sInterface : interfaces) {
-			    			if (!classe2.equals("") && classe2 != null) {
-			    				if (sInterface.getName().equals(classe2)) {
-				    				listaFeatureCommandInstances.get(i).setCommandRelationship(3);
-				    			}
-			    			}
-			    		}
-			    		
-			    	}
-		    	}
-	    	}
-	    			
-	    }		
 	          
 	return true ;
 	      
@@ -159,30 +112,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public boolean visit(MethodDeclaration node) { 
-		if (getTypeDeclaration(node) != null) {
-			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName();
-			//System.out.println(node.toString());
-			String primariga = "";
-			if (node.toString().indexOf("{") != -1) {
-				primariga = node.toString().substring(0,node.toString().indexOf("{")).toLowerCase();
-			}
-			else if (node.toString().indexOf(" {") != -1) {
-				primariga = node.toString().substring(0,node.toString().indexOf(" {")).toLowerCase();
-			}
-			
-			if (primariga.contains(" execute") || primariga.contains("actionperformed")) {
-				for(int i = 0; i<listaFeatureCommandInstances.size(); i++) {
-					
-					FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-					
-					if (riga.toString().contains(classeAnalizzata + " - CC")) {
-						listaFeatureCommandInstances.get(i).setCCHasExecute(2);
-					}	
-				}
-			}
-		}
-			
-		
 		return true;
 	}
 	
@@ -260,7 +189,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 							if (node.resolveMethodBinding() != null) {
 								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
 								if (classeDichiarante.contains("javax.swing") || classeDichiarante.contains("java.awt")) {
-									listaFeatureCommandInstances.get(i).setHasExternalInvoker(2);
+									//listaFeatureCommandInstances.get(i).setHasExternalInvoker(2);
 								}
 								//INVOKE METHOD = 4 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA CONCRETECOMMAND E LO AGGIUNGE AD UN INVOKER TRAMITE IL METODO ADD DI QUEST'ULTIMO
 								else if (!classe2.equals("") && classe2 != null) {
@@ -318,7 +247,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 							}
 							//CLASSE DICHIARANTE FA PARTE DI JAVAX SWING O DI JAVA AWT
 							else if (classeDichiarante.contains("javax.swing") || classeDichiarante.contains("java.awt")) {
-								listaFeatureCommandInstances.get(i).setHasExternalReceiver(2);
+								//listaFeatureCommandInstances.get(i).setHasExternalReceiver(2);
 							}
 							
 						}
