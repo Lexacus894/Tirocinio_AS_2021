@@ -48,6 +48,7 @@ public class Parser {
 	private String _classpathSeparator = System.getProperty("path.separator");
 	private String _jreHome;
 	ArrayList<String> lista = new ArrayList<String>();
+	int programHasReceivers = 0;
 
 	public Parser(int javaVersion) {
 		Utils.print("File parsing.");
@@ -262,6 +263,9 @@ public class Parser {
 			if (visitor == true) {
 				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document, rewriter, listaFeatureCommandInstances);
 				compilation.accept(visitor2);
+				if (visitor2.getProgramHasReceivers() == 1) {
+					programHasReceivers = 1;
+				}
 			} 
 			else {
 				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
@@ -282,5 +286,9 @@ public class Parser {
 
 	public ArrayList<String> getListaNomiInExecute() {
 		return lista;
+	}
+	
+	public Integer getProgramHasReceivers() {
+		return programHasReceivers;
 	}
 }

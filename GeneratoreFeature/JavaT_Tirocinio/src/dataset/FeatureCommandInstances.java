@@ -7,21 +7,21 @@ public class FeatureCommandInstances {
 	private String class3;
 	private String class4;
 	private String class5;
-	private int CCRERelationship;
+	private int HasExecuted;
 	private int HasExecutor;
-	private int InvokeMethod;
+	private int ExecutionRelationship;
 	private int NumC;
 	
 	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5,
-			int ccRERelationship, int hasExecutor, int invokeMethod, int numC) {
+			int hasExecuted, int hasExecutor, int executionRelationship, int numC) {
 		this.class1 = class1;
 		this.class2 = class2;
 		this.class3 = class3;
 		this.class4 = class4;
 		this.class5 = class5;
-		this.CCRERelationship = ccRERelationship;
+		this.HasExecuted = hasExecuted;
 		this.HasExecutor = hasExecutor;
-		this.InvokeMethod = invokeMethod;
+		this.ExecutionRelationship = executionRelationship;
 		this.NumC = numC;
 	}
 
@@ -65,12 +65,12 @@ public class FeatureCommandInstances {
 		this.class5 = class5;
 	}
 
-	public int getCCRERelationship() {
-		return CCRERelationship;
+	public int getHasExecuted() {
+		return HasExecuted;
 	}
 
-	public void setCCRERelationship(int ccRERelationship) {
-		CCRERelationship = ccRERelationship;
+	public void setHasExecuted(int hasExecuted) {
+		HasExecuted = hasExecuted;
 	}
 
 	public int getHasExecutor() {
@@ -81,12 +81,12 @@ public class FeatureCommandInstances {
 		HasExecutor = hasExecutor;
 	}
 
-	public int getInvokeMethod() {
-		return InvokeMethod;
+	public int getExecutionRelationship() {
+		return ExecutionRelationship;
 	}
 
-	public void setInvokeMethod(int invokeMethod) {
-		InvokeMethod = invokeMethod;
+	public void setExecutionRelationship(int executionRelationship) {
+		ExecutionRelationship = executionRelationship;
 	}
 
 	public int getNumC() {
@@ -99,7 +99,7 @@ public class FeatureCommandInstances {
 
 	@Override
 	public String toString() {
-		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", CCRERelationship: " + CCRERelationship 
+		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", HasExecuted: " + HasExecuted 
 				+ ", HasExecutor: " + HasExecutor  +  ", InvokeMethod: " + InvokeMethod  + ", N Classes: " + NumC);
 	}
 	

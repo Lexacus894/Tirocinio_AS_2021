@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;CCRERelationship;InvokeMethod;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecuted;HasExecutor;InvokeMethod;NumC";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -362,7 +362,7 @@ public class Process {
 			    listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
 			 
 			    for (nomiCombinazioni nomi : listaCombinazioni) {
-			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1);
+			    	FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(),nomi.getClasse2(),nomi.getClasse3(),nomi.getClasse4(),nomi.getClasse5(),1,1,1,1);
 			    	listaFeatureCommandInstances.add(elemento);
 			    	//System.out.println(nomi.toString());
 			    }
@@ -636,6 +636,8 @@ public class Process {
 		        }
 			}
 			else if (dptype.equals("com")) {
+				
+				int programHasReceivers = _parser.getProgramHasReceivers();
 				fileWriter = new FileWriter(fileName);
             
 				//Write the CSV file header
@@ -693,17 +695,29 @@ public class Process {
 		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getCCRERelationship()));
+		             //HAS EXECUTED
+		             //SE IL PROGRAMMA NON HA RECEIVER, I CONCRETE COMMAND VENGONO CONTATI COME CLASSI ESEGUITE
+		             if (programHasReceivers == 0 && !vettoreFeat.getClass2().equals("")) {
+		            	 fileWriter.append("2");
+		             }
+		             //ALTRIMENTI, DEVE ESSERCI UNA CORRELAZIONE TRA CONCRETECOMMAND E RECEIVER
+		             else {
+		            	 fileWriter.append(String.valueOf(vettoreFeat.getHasExecuted()));
+		             }
 		             fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(vettoreFeat.getInvokeMethod()));
+		             fileWriter.append(String.valueOf(vettoreFeat.getHasExecutor()));
+		             fileWriter.append(COMMA_DELIMITER);
+		             
+		             fileWriter.append(String.valueOf(vettoreFeat.getExecutionRelationship()));
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(numC));
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
+				System.out.println("DEBUG DEBUG DEBUG - PROGRAMHASRECEIVERS: " + programHasReceivers);
 			}
-   
+			
 			System.out.println("Il file CSV ("+ fileName +") contenente le predizioni delle istanze è stato creato con successo!");
 		} 
 		catch(Exception e) {

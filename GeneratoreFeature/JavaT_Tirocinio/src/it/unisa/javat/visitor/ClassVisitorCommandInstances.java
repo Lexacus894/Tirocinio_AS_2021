@@ -65,7 +65,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
     ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
-    
+    int programHasReceivers = 0;
 
 
 	public ClassVisitorCommandInstances(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandInstances> listaFeature) {
@@ -74,6 +74,11 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
 		listaFeatureCommandInstances = listaFeature;
+		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+			if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")) {
+				programHasReceivers = 1;
+			}
+		}
 	}
 
 	// Compilation Unit
@@ -109,8 +114,79 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	public void endVisit(TypeDeclaration node) {
 	}
 	
+	@Override
+	public boolean visit(MethodDeclaration node) {
+		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
+		
+		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+			
+			if (riga.toString().contains(classeAnalizzata + " - IN")) {
+				listaFeatureCommandInstances.get(i).setHasExecutor(2);
+			}
+			else if (riga.toString().contains(classeAnalizzata + " - CL")) {
+				if (node.toString().toLowerCase().contains(".execute(")) {
+					listaFeatureCommandInstances.get(i).setHasExecutor(2);
+				}
+			}
+		}
+		return true;
+	}
 	
 	@Override
+	public void endVisit(MethodDeclaration node) {
+	}
+	
+	@Override
+	public boolean visit(MethodInvocation node) {
+		String istruzioneChiamata = node.toString().toLowerCase();
+		
+		if (getTypeDeclaration(node) != null) {
+			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
+			
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				
+				//HASEXECUTED
+				if (riga.toString().contains(classeAnalizzata + " - CC")) {
+					String receiver = ricercaClasse(riga,"RE");
+					
+						if (node.resolveMethodBinding() != null) {
+							String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+							if (!receiver.equals("") && receiver != null) {
+								//CLASSE DICHIARANTE E' RECEIVER DELLA COMBINAZIONE
+								if (classeDichiarante.replaceAll(".+\\.", "").equals(receiver)) {
+									listaFeatureCommandInstances.get(i).setHasExecuted(2);
+								}	
+							}
+						}
+				}
+				//HASEXECUTED
+				
+				//EXECUTIONRELATIONSHIP
+				if (riga.toString().contains(classeAnalizzata + " - CL")) {
+					
+					String concretecommand = ricercaClasse(riga,"CC");
+					String invoker = ricercaClasse(riga,"IN");
+					
+					if (!concretecommand.equals("") && concretecommand != null) {
+						if (!invoker.equals("") && invoker != null) {
+							if (istruzioneChiamata.contains("new " + concretecommand) && istruzioneChiamata.contains("new " + invoker)) {
+								listaFeatureCommandInstances.get(i).setExecutionRelationship(2);;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void endVisit(MethodInvocation node) {
+	}
+	
+	/*@Override
 	public boolean visit(MethodDeclaration node) { 
 		return true;
 	}
@@ -130,9 +206,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public boolean visit(VariableDeclarationStatement node) {
+		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 		String dichiarazione = node.toString().toLowerCase();
 		if (dichiarazione.contains("new")) {
-			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 			
 			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
@@ -179,7 +255,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				//INVOKE METHOD + HAS EXTERNAL INVOKER
 				if (riga.toString().contains(classeAnalizzata + " - CL")) {
 					
-					String classe1 = ricercaClasse(riga,"CC");
+					String invoker = ricercaClasse(riga,"CC");
 					String classe2 = ricercaClasse(riga,"IN");
 					
 					if (!classe1.equals("") && classe1 != null) {
@@ -203,7 +279,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						
 						//INVOKE METHOD = 3 - CONTROLLA SE IL CLIENT CONTIENE UNA RIGA CHE ISTANZIA SIA INVOKER CHE CONCRETECOMMAND
 						else if (!classe2.equals("") && classe2 != null) {
-							if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains("new " + classe2) /*&& listaFeatureCommandInstances.get(i).getInvokeMethod()==1*/) {
+							if (istruzioneChiamata.contains("new " + classe1) && istruzioneChiamata.contains("new " + classe2) && listaFeatureCommandInstances.get(i).getInvokeMethod()==1) {
 								listaFeatureCommandInstances.get(i).setInvokeMethod(3);
 							}
 						}
@@ -296,7 +372,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public void endVisit(FieldAccess node) {	
-	}
+	}*/
 	
 	
 	
@@ -365,6 +441,10 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
     	else {
     		return "";
     	}
+	}
+	
+	public Integer getProgramHasReceivers() {
+		return programHasReceivers;
 	}
 	
 }
