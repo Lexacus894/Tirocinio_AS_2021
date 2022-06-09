@@ -222,12 +222,22 @@ public class ClassVisitorCommand extends ASTVisitor {
 		
 		String metodo = binding.toString().toLowerCase();
 		
-		if ((metodo.contains("execute") || metodo.contains("actionperformed")) && !metodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
+		if ((metodo.contains(" execute") || metodo.contains(" actionperformed")) && !metodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
 			//Ricerca classe
 			for(int i = 0;i < arrayListTemp.size();i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
 				if (nomeClasseDichiarante.equals(FQN)) {
 					arrayListTemp.get(i).setMethodDeclarationKeyword(2);
+				}
+			}
+		}
+		
+		if (node.toString().toLowerCase().contains(".execute(")) {
+			//Ricerca classe
+			for(int i = 0;i < arrayListTemp.size();i++) {
+				String FQN = arrayListTemp.get(i).getFQNClass();
+				if (nomeClasseDichiarante.equals(FQN)) {
+					arrayListTemp.get(i).setExecutesCommand(2);
 				}
 			}
 		}
@@ -275,10 +285,10 @@ public class ClassVisitorCommand extends ASTVisitor {
 				if (node.resolveMethodBinding() != null) {
 					String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName(); 
 					if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
-						tempval = 3;
+						tempval = 4;
 					}
 					else {
-						tempval = 2;
+						tempval = 3;
 					}	
 				}
 				
@@ -335,6 +345,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override 
 	public boolean visit(ClassInstanceCreation node) {
 		MethodDeclaration mnode = getMethodDeclaration(node);
+		//System.out.println(node.toString());
 		if (mnode != null) {
 			String ist = node.toString().substring(0,node.toString().indexOf("(")).toLowerCase();
 			if ((ist.contains("command") || ist.contains("action"))  && !ist.contains("actionlistener")) {
@@ -357,6 +368,16 @@ public class ClassVisitorCommand extends ASTVisitor {
 	
 	public void endVisit(ClassInstanceCreation node) {
 		
+	}
+	
+	// Package Declaration
+	@Override
+	public boolean visit(Assignment node) {
+		return true;
+	}
+
+	@Override
+	public void endVisit(Assignment node) {
 	}
 
 	
