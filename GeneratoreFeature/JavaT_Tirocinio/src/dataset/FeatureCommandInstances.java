@@ -100,7 +100,7 @@ public class FeatureCommandInstances {
 	@Override
 	public String toString() {
 		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", HasExecuted: " + HasExecuted 
-				+ ", HasExecutor: " + HasExecutor  +  ", InvokeMethod: " + InvokeMethod  + ", N Classes: " + NumC);
+				+ ", HasExecutor: " + HasExecutor  +  ", ExecutionRelationship: " + ExecutionRelationship + ", N Classes: " + NumC);
 	}
 	
 }

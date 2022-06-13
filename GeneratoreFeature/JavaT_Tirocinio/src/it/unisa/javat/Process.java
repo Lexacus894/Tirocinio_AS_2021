@@ -58,7 +58,7 @@ public class Process {
  	  		+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 	
 	//CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecuted;HasExecutor;InvokeMethod;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecuted;HasExecutor;ExecutionRelationship";
      
 	
 	public Process(String[] args) throws IOException, InterruptedException {
@@ -710,9 +710,9 @@ public class Process {
 		             fileWriter.append(COMMA_DELIMITER);
 		             
 		             fileWriter.append(String.valueOf(vettoreFeat.getExecutionRelationship()));
-		             fileWriter.append(COMMA_DELIMITER);
+		             //fileWriter.append(COMMA_DELIMITER);
 		             
-		             fileWriter.append(String.valueOf(numC));
+		             //fileWriter.append(String.valueOf(numC));
 		             fileWriter.append(NEW_LINE_SEPARATOR);
 		         }
 				System.out.println("DEBUG DEBUG DEBUG - PROGRAMHASRECEIVERS: " + programHasReceivers);

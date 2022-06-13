@@ -147,7 +147,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
 				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 				
-				//HASEXECUTED
+				//HASEXECUTED - CONTROLLA SE IL CONCRETECOMMAND INVOCA UN METODO DEL RECEIVER DELLA COMBINAZIONE
 				if (riga.toString().contains(classeAnalizzata + " - CC")) {
 					String receiver = ricercaClasse(riga,"RE");
 					
@@ -165,18 +165,47 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				
 				//EXECUTIONRELATIONSHIP
 				if (riga.toString().contains(classeAnalizzata + " - CL")) {
-					
+					//System.out.println(istruzioneChiamata);
 					String concretecommand = ricercaClasse(riga,"CC");
 					String invoker = ricercaClasse(riga,"IN");
 					
 					if (!concretecommand.equals("") && concretecommand != null) {
-						if (!invoker.equals("") && invoker != null) {
-							if (istruzioneChiamata.contains("new " + concretecommand) && istruzioneChiamata.contains("new " + invoker)) {
-								listaFeatureCommandInstances.get(i).setExecutionRelationship(2);;
+						//if (!invoker.equals("") && invoker != null) {
+							//SE IL CLIENT AGGIUNGE COMANDI AD UN INVOKER CHE HA ISTANZIATO IN PRECEDENZA (SIA INVOKER CHE FANNO PARTE DEL PROGRAMMA CHE ESTERNI)
+							if (istruzioneChiamata.contains(".add") && istruzioneChiamata.contains(concretecommand.toLowerCase())) {
+								if (node.resolveMethodBinding() != null) {
+									String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+									if (!invoker.equals("") && invoker != null) {
+										if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker))  {
+											String receiver = ricercaClasse(riga,"RE");
+											if (programHasReceivers==1) {
+												if (!receiver.equals("") && receiver != null) {
+													listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+												}
+											}
+											else if (receiver.equals("") || receiver == null) {
+												listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+											}
+											
+										}
+									}
+									else if (classeDichiarante.contains("javax.swing") || classeDichiarante.contains("java.awt")) {
+										listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+										listaFeatureCommandInstances.get(i).setHasExecutor(2);
+									}
+									else if (istruzioneChiamata.contains("new " + concretecommand.toLowerCase()) && listaFeatureCommandInstances.get(i).getHasExecutor()==2) {
+										listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+									}
+								}	
 							}
-						}
+						/*}
+						else if (istruzioneChiamata.contains("new " + concretecommand.toLowerCase()) && listaFeatureCommandInstances.get(i).getHasExecutor()==2) {
+							listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+						}*/
 					}
 				}
+				//EXECUTIONRELATIONSHIP
+				
 			}
 		}
 		return true;
@@ -184,6 +213,38 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public void endVisit(MethodInvocation node) {
+	}
+	
+	@Override
+	public boolean visit(VariableDeclarationStatement node) {
+		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
+		String dichiarazione = node.toString().toLowerCase();
+		if (dichiarazione.contains("new")) {
+			
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				
+				if (riga.toString().contains(classeAnalizzata + " - CL")) {
+					String concretecommand = ricercaClasse(riga, "CC");
+					String invoker = ricercaClasse(riga,"IN");
+					if (invoker.equals("") || invoker == null) {
+						if (!concretecommand.equals("") && concretecommand != null) {
+							if (dichiarazione.contains("new " + concretecommand.toLowerCase())) {
+								listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+							}
+						}
+					}
+					
+				}
+			}
+		}
+
+		return true;
+
+	}
+	
+	@Override
+	public void endVisit(VariableDeclarationStatement node) {
 	}
 	
 	/*@Override
