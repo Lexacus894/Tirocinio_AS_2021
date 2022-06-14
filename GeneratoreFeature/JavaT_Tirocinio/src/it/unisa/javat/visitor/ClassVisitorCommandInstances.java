@@ -116,20 +116,23 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
-		
-		for (int i=0;i<listaFeatureCommandInstances.size();i++) {
-			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+		if (getTypeDeclaration(node) != null) {
+			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 			
-			if (riga.toString().contains(classeAnalizzata + " - IN")) {
-				listaFeatureCommandInstances.get(i).setHasExecutor(2);
-			}
-			else if (riga.toString().contains(classeAnalizzata + " - CL")) {
-				if (node.toString().toLowerCase().contains(".execute(")) {
+			for (int i=0;i<listaFeatureCommandInstances.size();i++) {
+				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				
+				if (riga.toString().contains(classeAnalizzata + " - IN")) {
 					listaFeatureCommandInstances.get(i).setHasExecutor(2);
+				}
+				else if (riga.toString().contains(classeAnalizzata + " - CL")) {
+					if (node.toString().toLowerCase().contains(".execute(")) {
+						listaFeatureCommandInstances.get(i).setHasExecutor(2);
+					}
 				}
 			}
 		}
+		
 		return true;
 	}
 	
