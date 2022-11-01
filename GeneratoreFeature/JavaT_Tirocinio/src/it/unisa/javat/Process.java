@@ -37,13 +37,13 @@ public class Process {
 	private String filename;
 	// static boolean bool = false;
 	static String phase = "";
-	static String dpType = "";
+	static String dpType = "Non selezionato";
 	ArrayList<nomiCombinazioni> listaCombinazioni;
 	ArrayList<Feature3> listaFeature3;
 	ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
 
 	// Folder path
-	static String path = "";
+	static String path = "Non selezionata";
 
 	// Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ";";
@@ -67,7 +67,7 @@ public class Process {
 	public Process(String[] args) throws IOException, InterruptedException {
 
 		// Estrazione feature dei ruoli (Observer)
-		if (phase.equals("1") && dpType.equals("obs")) {
+		if (phase.equals("1") && dpType.equals("Observer")) {
 			try {
 				Info(true);
 
@@ -143,7 +143,7 @@ public class Process {
 		}
 
 		// Estrazione feature dei ruoli (Command)
-		else if (phase.equals("1") && dpType.equals("com")) {
+		else if (phase.equals("1") && dpType.equals("Command")) {
 			try {
 				Info(true);
 
@@ -218,7 +218,7 @@ public class Process {
 		}
 
 		// Estrazione feature delle combinazioni (Observer)
-		else if (phase.equals("3") && dpType.equals("obs")) {
+		else if (phase.equals("3") && dpType.equals("Observer")) {
 
 			try {
 				Info(true);
@@ -311,7 +311,7 @@ public class Process {
 		} // fine else bool=true
 
 		// Estrazione feature delle combinazioni (Command)
-		else if (phase.equals("3") && dpType.equals("com")) {
+		else if (phase.equals("3") && dpType.equals("Command")) {
 
 			try {
 				Info(true);
@@ -410,7 +410,7 @@ public class Process {
 
 			fileWriter = new FileWriter(fileName);
 
-			if (dpType.equals("obs")) {
+			if (dpType.equals("Observer")) {
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_OBSERVER_ROLES.toString());
 
@@ -461,7 +461,7 @@ public class Process {
 					fileWriter.append(String.valueOf(vettoreFeat.getAfterChangeStateIterateOverList()));
 					fileWriter.append(NEW_LINE_SEPARATOR);
 				}
-			} else if (dpType.equals("com")) {
+			} else if (dpType.equals("Command")) {
 
 				ArrayList<String> lista = _parser.getListaNomiInExecute();
 				// Write the CSV file header
@@ -521,7 +521,7 @@ public class Process {
 				}
 			}
 			System.out.println(
-					"Il file CSV (" + fileName + ") contentente le feature dei ruoli � stato creato con successo!");
+					"Il file CSV (" + fileName + ") contentente le feature dei ruoli è stato creato con successo!");
 		} catch (Exception e) {
 			System.out.println("Errore nel CsvFileWriter !!!");
 			e.printStackTrace();
@@ -540,7 +540,7 @@ public class Process {
 		FileWriter fileWriter = null;
 
 		try {
-			if (dpType.contains("obs")) {
+			if (dpType.contains("Observer")) {
 				fileWriter = new FileWriter(fileName);
 
 				// Write the CSV file header
@@ -582,7 +582,7 @@ public class Process {
 
 					fileWriter.append(NEW_LINE_SEPARATOR);
 				}
-			} else if (dpType.equals("com")) {
+			} else if (dpType.equals("Command")) {
 
 				int programHasReceivers = _parser.getProgramHasReceivers();
 				fileWriter = new FileWriter(fileName);
@@ -690,101 +690,79 @@ public class Process {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Scanner sc = new Scanner(System.in);
 		String modeSelect = "";
-		// Process proc = new Process(args);
 
 		while (!modeSelect.equals("4")) {
 			Utils.print("Cartella attuale: " + path + "\nPattern: " + dpType
-					+ "\nInserire numero corrispondente alla fase da eseguire\n"
+					+ "\nInserire numero corrispondente all'opzione da selezionare: \n"
 					+ "1 - Selezione cartella\n"
 					+ "2 - Selezione pattern\n"
 					+ "3 - Selezione fase\n"
 					+ "4 - Fine esecuzione\n");
+
 			modeSelect = sc.nextLine();
 
 			// SELEZIONE CARTELLA
 			if (modeSelect.equals("1")) {
 				selezioneCartella();
-				// System.out.println(path);
 			}
 
 			// SELEZIONE PATTERN
 			if (modeSelect.equals("2")) {
-				Utils.print("Selezione pattern da ricercare?\n 1 - Observer\n 2 - Command\n 3 - Indietro\n");
-				String dpSelect = sc.nextLine();
-				if (dpSelect.equals("1")) {
-					dpType = "obs";
-					new Process(args);
-
-				}
-				if (dpSelect.equals("2")) {
-					dpType = "com";
-					new Process(args);
-				}
+				selezionePattern(sc);
+				new Process(args);
 			}
 
 			// SELEZIONE FASE
-			else if (modeSelect.equals("3")) {
-				Utils.print("Selezione fase da eseguire:\n"
-						+ "1 - Estrazione feature dei ruoli\n"
-						+ "2 - Classificazione dei ruoli\n"
-						+ "3 - Estrazione feature delle combinazioni\n"
-						+ "4 - Classificazione delle istanze\n");
-				// ESTRAZIONE FEATURE RUOLI
+			if (modeSelect.equals("3")) {
+				Utils.print(
+						"Selezionare la fase da eseguire.\n"
+								+ "Verrà chiesto di selezionare cartella e pattern nel caso in cui non sia già stato fatto. \n"
+								+ "1 - Estrazione feature dei ruoli\n"
+								+ "2 - Classificazione dei ruoli\n"
+								+ "3 - Estrazione feature delle combinazioni\n"
+								+ "4 - Classificazione delle istanze\n"
+								+ "5 - Indietro\n");
+
 				String phaseSelect = sc.nextLine();
-				if (path.equals("")) {
-					selezioneCartella();
-				}
-				if (dpType.equals("")) {
-					Utils.print("Selezione pattern da ricercare?\n 1 - Observer\n 2 - Command\n 3 - Indietro\n");
-					String dpSelect = sc.nextLine();
-					if (dpSelect.equals("1")) {
-						dpType = "obs";
-						new Process(args);
-
+				if (Integer.valueOf(phaseSelect) < 5) {
+					if (path.equals("")) {
+						selezioneCartella();
 					}
-					if (dpSelect.equals("2")) {
-						dpType = "com";
+					if (dpType.equals("")) {
+						selezionePattern(sc);
 						new Process(args);
 					}
-				}
-				if (phaseSelect.equals("1")) {
-					phase = "1";
-					new Process(args);
-				}
-				// CLASSIFICAZIONE RUOLI
-				if (phaseSelect.equals("2")) {
-					BatchCommand bc = new BatchCommand();
-					if (dpType == "obs") {
-						bc.execCommand(
-								"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
+					// ESTRAZIONE FEATURE RUOLI O COMBINAZIONI
+					if (phaseSelect.equals("1") || phaseSelect.equals("3")) {
+						phase = phaseSelect;
+						new Process(args);
 					}
-					if (dpType == "com") {
-						bc.execCommand(
-								"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTesterCommand.py");
-
+					// CLASSIFICAZIONE RUOLI
+					if (phaseSelect.equals("2")) {
+						BatchCommand bc = new BatchCommand();
+						if (dpType == "Observer") {
+							bc.execCommand(
+									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
+						}
+						if (dpType == "Command") {
+							bc.execCommand(
+									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTesterCommand.py");
+						}
 					}
-				}
-				// ESTRAZIONE FEATURE COMBINAZIONI
-				if (phaseSelect.equals("3")) {
-					phase = "3";
-					new Process(args);
-				}
-				// CLASSIFICAZIONE COMBINAZIONI
-				if (phaseSelect.equals("4")) {
-					BatchCommand bc = new BatchCommand();
-					if (dpType == "obs") {
-						bc.execCommand(
-								"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
-					}
-					if (dpType == "com") {
-						bc.execCommand(
-								"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTesterCommand.py");
-
+					// CLASSIFICAZIONE COMBINAZIONI
+					if (phaseSelect.equals("4")) {
+						BatchCommand bc = new BatchCommand();
+						if (dpType == "Observer") {
+							bc.execCommand(
+									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
+						}
+						if (dpType == "Command") {
+							bc.execCommand(
+									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTesterCommand.py");
+						}
 					}
 				}
-
 			}
-
 		}
 
 		sc.close();
@@ -1875,15 +1853,37 @@ public class Process {
 	public static void selezioneCartella() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			JFrame jf = new JFrame("Dialog"); // added
+			JFrame jf = new JFrame("Dialog");
 			jf.setAlwaysOnTop(true);
 			JFileChooser f = new JFileChooser(System.getProperty("user.home") + "\\Desktop");
 			f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			f.showOpenDialog(jf);
-			path = f.getSelectedFile().getPath();
+			if (f.showOpenDialog(jf) == JFileChooser.APPROVE_OPTION) {
+				path = f.getSelectedFile().getPath();
+				return;
+			}
+			path = "";
 		} catch (Exception e) {
 			path = "";
 			e.printStackTrace();
 		}
 	}
+
+	public static void selezionePattern(Scanner sc) {
+
+		Utils.print("Selezione pattern da ricercare?\n 1 - Observer\n 2 - Command\n 3 - Indietro\n");
+		String dpSelect = sc.nextLine();
+
+		if (dpSelect.equals("1")) {
+			dpType = "Observer";
+			// new Process(args);
+
+		}
+		if (dpSelect.equals("2")) {
+			dpType = "Command";
+			// new Process(args);
+		}
+		// sc2.close();
+
+	}
+
 }
