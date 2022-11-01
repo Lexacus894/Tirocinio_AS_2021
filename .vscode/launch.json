@@ -9,7 +9,7 @@
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "it.unisa.javat.Process",
-            "args": "-out C:\\Users\\alex8\\Desktop\\Ale\\Tirocinio\\Tool\\DP\\Output"
+            "args": "-out C:\\Users\\alex8\\Desktop\\Ale\\Tesi\\Tool\\Tirocinio_AS_2021\\Output"
             //"${command:SpecifyProgramArgs}"s
             //-out C:\Users\alex8\Desktop\Ale\Tirocinio\Tool\DP\Output
         },
