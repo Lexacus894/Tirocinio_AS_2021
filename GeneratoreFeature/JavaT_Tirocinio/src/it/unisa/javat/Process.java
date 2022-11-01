@@ -155,23 +155,6 @@ public class Process {
 				_params = new Parameters(args, this.getClass().getName());
 				_params.print();
 
-				/*
-				 * // SELEZIONE CARTELLA
-				 * try {
-				 * UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				 * } catch (Exception e) {
-				 * e.printStackTrace();
-				 * }
-				 * JFrame jf = new JFrame("Dialog"); // added
-				 * jf.setAlwaysOnTop(true);
-				 * JFileChooser f = new JFileChooser(System.getProperty("user.home") +
-				 * "\\Desktop");
-				 * f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				 * f.showOpenDialog(jf);
-				 * 
-				 * String path = f.getSelectedFile().getPath();
-				 */
-
 				String _projectDir;
 				String _projectName;
 
@@ -269,20 +252,6 @@ public class Process {
 				}
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-				// SELEZIONE CARTELLA
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				JFrame jf = new JFrame("Dialog"); // added
-				jf.setAlwaysOnTop(true);
-				JFileChooser f = new JFileChooser();
-				f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				f.showOpenDialog(jf);
-
-				String path = f.getSelectedFile().getPath();
 				String _projectDir;
 				String _projectName;
 
@@ -371,19 +340,6 @@ public class Process {
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				// SELEZIONE CARTELLA
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				JFrame jf = new JFrame("Dialog"); // added
-				jf.setAlwaysOnTop(true);
-				JFileChooser f = new JFileChooser();
-				f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				f.showOpenDialog(jf);
-
-				String path = f.getSelectedFile().getPath();
 				String _projectDir;
 				String _projectName;
 
@@ -736,13 +692,13 @@ public class Process {
 		String modeSelect = "";
 		// Process proc = new Process(args);
 
-		while (!modeSelect.equals("9")) {
+		while (!modeSelect.equals("4")) {
 			Utils.print("Cartella attuale: " + path + "\nPattern: " + dpType
 					+ "\nInserire numero corrispondente alla fase da eseguire\n"
 					+ "1 - Selezione cartella\n"
 					+ "2 - Selezione pattern\n"
 					+ "3 - Selezione fase\n"
-					+ "9 - Fine esecuzione\n");
+					+ "4 - Fine esecuzione\n");
 			modeSelect = sc.nextLine();
 
 			// SELEZIONE CARTELLA
