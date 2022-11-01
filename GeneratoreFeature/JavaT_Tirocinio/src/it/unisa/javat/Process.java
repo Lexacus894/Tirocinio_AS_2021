@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class Process {
 				}
 				System.out.println("-------------FINE Process -----------------");
 
-				creaCSV("DATASET_OBS_" + _project.getProjectName() + ".csv");
+				creaCSV("OBSERVER_ROLE_FEATURES_" + _project.getProjectName() + ".csv");
 
 				Info(false);
 			} catch (LocalException e) {
@@ -206,7 +207,7 @@ public class Process {
 
 				System.out.println("-------------FINE Process -----------------");
 
-				creaCSV("DATASET_COM_" + _project.getProjectName() + ".csv");
+				creaCSV("COMMAND_ROLE_FEATURES_" + _project.getProjectName() + ".csv");
 
 				Info(false);
 			} catch (LocalException e) {
@@ -392,7 +393,7 @@ public class Process {
 				Utils.print(e);
 			} // fine Catch
 
-			creaCSV3("combinations_mockup_command_" + _project.getProjectName() + ".csv");
+			creaCSV3("COMMAND_COMBINATION_FEATURES_" + _project.getProjectName() + ".csv");
 
 		}
 
@@ -406,7 +407,7 @@ public class Process {
 
 		try {
 
-			fileWriter = new FileWriter(fileName);
+			fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
 
 			if (dpType.equals("Observer")) {
 				// Write the CSV file header
@@ -539,7 +540,7 @@ public class Process {
 
 		try {
 			if (dpType.contains("Observer")) {
-				fileWriter = new FileWriter(fileName);
+				fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
 
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_OBSERVER_INSTANCES.toString());
@@ -583,7 +584,7 @@ public class Process {
 			} else if (dpType.equals("Command")) {
 
 				int programHasReceivers = _parser.getProgramHasReceivers();
-				fileWriter = new FileWriter(fileName);
+				fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
 
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());
@@ -660,7 +661,7 @@ public class Process {
 			}
 
 			System.out.println("Il file CSV (" + fileName
-					+ ") contenente le predizioni delle istanze � stato creato con successo!");
+					+ ") contenente le predizioni delle istanze è stato creato con successo!");
 		} catch (Exception e) {
 			System.out.println("Errore nel CsvFileWriter !!!");
 			e.printStackTrace();
@@ -723,7 +724,7 @@ public class Process {
 
 				String phaseSelect = sc.nextLine();
 				if (Integer.valueOf(phaseSelect) < 5) {
-					if (path.equals("")) {
+					if (path.equals("Non selezionata")) {
 						selezioneCartella();
 					}
 					if (dpType.equals("Non selezionato")) {
@@ -1860,9 +1861,9 @@ public class Process {
 				path = f.getSelectedFile().getPath();
 				return;
 			}
-			path = "";
+			path = "Non selezionata";
 		} catch (Exception e) {
-			path = "";
+			path = "Non selezionata";
 			e.printStackTrace();
 		}
 	}
