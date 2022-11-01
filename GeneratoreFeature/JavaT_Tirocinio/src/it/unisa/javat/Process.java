@@ -735,9 +735,10 @@ public class Process {
 						phase = phaseSelect;
 						new Process(args);
 					}
+					BatchCommand bc = new BatchCommand();
 					// CLASSIFICAZIONE RUOLI
 					if (phaseSelect.equals("2")) {
-						BatchCommand bc = new BatchCommand();
+
 						if (dpType == "Observer") {
 							bc.execCommand(
 									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
@@ -749,7 +750,7 @@ public class Process {
 					}
 					// CLASSIFICAZIONE COMBINAZIONI
 					if (phaseSelect.equals("4")) {
-						BatchCommand bc = new BatchCommand();
+
 						if (dpType == "Observer") {
 							bc.execCommand(
 									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/InstancesClassifierTester.py");
