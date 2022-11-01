@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "it.unisa.javat.Process",
             "args": "-out C:\\Users\\alex8\\Desktop\\Ale\\Tirocinio\\Tool\\DP\\Output"
-            //"${command:SpecifyProgramArgs}"
+            //"${command:SpecifyProgramArgs}"s
             //-out C:\Users\alex8\Desktop\Ale\Tirocinio\Tool\DP\Output
         },
         {
