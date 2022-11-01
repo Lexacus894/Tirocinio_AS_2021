@@ -9,7 +9,7 @@
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "cwd": "JavaT_Tirocinio",
+            "cwd": "C:\\Users\\alex8\\Desktop\\Ale\\Tesi\\Tool\\Tirocinio_AS_2021\\GeneratoreFeature\\JavaT_Tirocinio",
             "args": "-out C:\\Users\\alex8\\Desktop\\Ale\\Tirocinio\\Tool\\DP\\Output"
         },
         {
@@ -18,7 +18,7 @@
             "request": "launch",
             "mainClass": "it.unisa.javat.Process",
             "projectName": "JavaT",
-            "cwd": "JavaT_Tirocinio",
+            "cwd": "C:\\Users\\alex8\\Desktop\\Ale\\Tesi\\Tool\\Tirocinio_AS_2021\\GeneratoreFeature\\JavaT_Tirocinio",
             "args": "-out C:\\Users\\alex8\\Desktop\\Ale\\Tirocinio\\Tool\\DP\\Output"
         }
     ]
