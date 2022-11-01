@@ -1,6 +1,10 @@
 import os
 from classifiers.InstancesClassifierCommand import InstancesClassifier
 from utils import PredictionsUtilsCommand as p_utils
+from tkinter import Tk     # from tkinter import Tk for Python 3.x
+from tkinter.filedialog import askopenfilename
+
+
 
 INSTANCES_FEATURE_COLUMNS = ['HasExecuted','HasExecutor','ExecutionRelationship','IsCommand']
 INSTANCES_LABELS = ['NotCommand', 'Command']
@@ -10,10 +14,10 @@ FOLDERS_NUMBER = 5
 
 INSTANCES_TRAIN_BATCH_SIZE = 10
 INSTANCES_EVALUATE_BATCH_SIZE = 10
-INSTANCES_TRAINING_STEPS = 10000
+INSTANCES_TRAINING_STEPS = 2000
 
 PREDICTIONS_ROOT_DIRECTORY = 'OBSClassifier/tester/predictions'
-INSTANCES_MOKUP_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_mockup_command.csv'
+#INSTANCES_MOKUP_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_mockup_command*.csv'
 INSTANCES_PREDICTIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/com_instances_predictions.csv'
 INSTANCES_PREDICTIONS_HEADER = ['Combinations', 'Result', 'Probability']
 
@@ -36,8 +40,12 @@ def main():
     instancesClassifier.kFoldersTrainAndEvaluation(INSTANCES_TRAIN_BATCH_SIZE, INSTANCES_TRAINING_STEPS,
                                                    INSTANCES_EVALUATE_BATCH_SIZE, True)
 
-    instances, instances_predictions = instancesClassifier.predict(INSTANCES_MOKUP_PATH, 0, ';',SW_CLASSES_COMBINATIONS_BATCH_SIZE)
+    Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+    filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+    print(filename)
+    instances, instances_predictions = instancesClassifier.predict(filename, 0, ';',SW_CLASSES_COMBINATIONS_BATCH_SIZE)
     instances_predictions_list = p_utils.get_instances_predictions_list(instances, instances_predictions,INSTANCES_LABELS)
+    
     p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY, INSTANCES_PREDICTIONS_FILE_PATH,INSTANCES_PREDICTIONS_HEADER, instances_predictions_list)
     print("Output has been produced in predictions folder")
 

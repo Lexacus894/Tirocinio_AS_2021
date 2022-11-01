@@ -80,8 +80,6 @@ public class Process {
 				_params = new Parameters(args, this.getClass().getName());
 				_params.print();
 
-				// System.out.println(path);
-
 				String _projectDir;
 				String _projectName;
 
@@ -728,9 +726,9 @@ public class Process {
 					if (path.equals("")) {
 						selezioneCartella();
 					}
-					if (dpType.equals("")) {
+					if (dpType.equals("Non selezionato")) {
 						selezionePattern(sc);
-						new Process(args);
+						// new Process(args);
 					}
 					// ESTRAZIONE FEATURE RUOLI O COMBINAZIONI
 					if (phaseSelect.equals("1") || phaseSelect.equals("3")) {
