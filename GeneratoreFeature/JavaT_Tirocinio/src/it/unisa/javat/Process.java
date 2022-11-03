@@ -406,10 +406,8 @@ public class Process {
 		FileWriter fileWriter = null;
 
 		try {
-
-			fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
-
 			if (dpType.equals("Observer")) {
+				fileWriter = new FileWriter(new File(".\\results\\observer\\role_features\\" + fileName));
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_OBSERVER_ROLES.toString());
 
@@ -463,6 +461,8 @@ public class Process {
 			} else if (dpType.equals("Command")) {
 
 				ArrayList<String> lista = _parser.getListaNomiInExecute();
+				fileWriter = new FileWriter(new File(".\\results\\command\\role_features\\" + fileName));
+
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_COMMAND_ROLES.toString());
 
@@ -540,7 +540,7 @@ public class Process {
 
 		try {
 			if (dpType.contains("Observer")) {
-				fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
+				fileWriter = new FileWriter(new File(".\\results\\observer\\combination_features\\" + fileName));
 
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_OBSERVER_INSTANCES.toString());
@@ -584,7 +584,7 @@ public class Process {
 			} else if (dpType.equals("Command")) {
 
 				int programHasReceivers = _parser.getProgramHasReceivers();
-				fileWriter = new FileWriter(new File(".\\results\\features\\" + fileName));
+				fileWriter = new FileWriter(new File(".\\results\\command\\combination_features\\" + fileName));
 
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());

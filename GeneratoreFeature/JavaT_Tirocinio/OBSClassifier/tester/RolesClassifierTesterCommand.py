@@ -18,7 +18,7 @@ ROLES_TRAINING_STEPS      = 4000
 
 FOLDERS_NUMBER = 3
 
-PREDICTIONS_ROOT_DIRECTORY       = 'results/predictions'
+PREDICTIONS_ROOT_DIRECTORY       = 'results/command/roles_predictions'
 COMBINATIONS_ROOT_DIRECTORY = "results/combinations"
 #SOFTWARES_ROOT_DIRECTORY         = 'softwares'
 ROLES_PREDICTIONS_HEADER         = ['Class','Role','Probability']
