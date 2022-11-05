@@ -304,8 +304,8 @@ public class Process {
 				Utils.print(e);
 			} // fine Catch
 
-			filename = "Combination_to_test_MIO.csv";
-			creaCSV3(filename);
+			filename = ".csv";
+			creaCSV3("OBSERVER_COMBINATION_FEATURES_" + _project.getProjectName() + ".csv");
 
 		} // fine else bool=true
 
@@ -319,7 +319,7 @@ public class Process {
 				listaFeatureCommandInstances = new ArrayList<FeatureCommandInstances>();
 
 				Lettura2 lettura = new Lettura2();
-				listaCombinazioni = lettura.procedura("combinations_to_test_Command.csv");
+				listaCombinazioni = lettura.procedura("combinations_to_test_command.csv");
 
 				for (nomiCombinazioni nomi : listaCombinazioni) {
 					FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(), nomi.getClasse2(),
@@ -584,7 +584,8 @@ public class Process {
 			} else if (dpType.equals("Command")) {
 
 				int programHasReceivers = _parser.getProgramHasReceivers();
-				fileWriter = new FileWriter(new File(".\\results\\command\\combination_features\\" + fileName));
+				File fileCommand = new File(".\\results\\command\\combination_features\\" + fileName);
+				fileWriter = new FileWriter(fileCommand);
 
 				// Write the CSV file header
 				fileWriter.append(FILE_HEADER_COMMAND_INSTANCES.toString());
@@ -593,7 +594,6 @@ public class Process {
 				fileWriter.append(NEW_LINE_SEPARATOR);
 
 				for (FeatureCommandInstances vettoreFeat : listaFeatureCommandInstances) {
-
 					int numC = 0;
 
 					if (vettoreFeat.getClass1().equals("")) {
@@ -659,7 +659,6 @@ public class Process {
 				}
 				System.out.println("DEBUG DEBUG DEBUG - PROGRAMHASRECEIVERS: " + programHasReceivers);
 			}
-
 			System.out.println("Il file CSV (" + fileName
 					+ ") contenente le predizioni delle istanze è stato creato con successo!");
 		} catch (Exception e) {

@@ -15,7 +15,7 @@ public class Lettura2 {
 	}
 
 	public ArrayList<nomiCombinazioni> procedura(String fileName) throws IOException, InterruptedException {
-		String dir = "./results/combinations";
+		String dir = "./results/combinations/";
 		String line = "";
 		int i = 0;
 
@@ -23,6 +23,7 @@ public class Lettura2 {
 
 			line = br.readLine();
 			while ((line = br.readLine()) != null) {
+
 				String classe1, classe2, classe3 = "", classe4 = "", classe5 = "";
 				classe1 = line.substring(0, line.indexOf(","));
 				String newline = line.substring(line.indexOf(",") + 2);
