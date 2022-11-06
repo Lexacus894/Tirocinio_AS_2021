@@ -1,7 +1,8 @@
 import os
 from utils import PredictionsUtilsCommand as p_utils
 from classifiers.RolesClassifierCommand import RolesClassifier
-
+from tkinter import Tk  
+from tkinter.filedialog import askopenfilename
 
 ROLES_DATASET_PATH        = 'datasets/com_roles_dataset.csv'
 ROLES_FEATURE_COLUMNS     = ['ClassType','ClassDeclarationKeyword',
@@ -17,14 +18,15 @@ ROLES_TRAINING_STEPS      = 4000
 
 FOLDERS_NUMBER = 3
 
-PREDICTIONS_ROOT_DIRECTORY       = 'OBSClassifier/tester/predictions'
-SOFTWARES_ROOT_DIRECTORY         = 'softwares'
+PREDICTIONS_ROOT_DIRECTORY       = 'results/command/roles_predictions'
+COMBINATIONS_ROOT_DIRECTORY = "results/combinations"
+#SOFTWARES_ROOT_DIRECTORY         = 'softwares'
 ROLES_PREDICTIONS_HEADER         = ['Class','Role','Probability']
 ROLES_PREDICTIONS_FILE_PATH      = PREDICTIONS_ROOT_DIRECTORY + '/roles_predictions_command.csv'
-SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware2.csv'
+#SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware2.csv'
 
 INSTANCES_COMBINATIONS_HEADER    = INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEATURE_COLUMNS)-1]
-INSTANCES_COMBINATIONS_FILE_PATH = PREDICTIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
+INSTANCES_COMBINATIONS_FILE_PATH = COMBINATIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
 
 def main():
     SW_ROLES_BATCH_SIZE=5
@@ -36,7 +38,10 @@ def main():
     rolesClassifier.suffleDataset()
     rolesClassifier.kFoldersTrainAndEvaluation(ROLES_TRAIN_BATCH_SIZE,ROLES_TRAINING_STEPS,ROLES_EVALUATE_BATCH_SIZE,True)
 
-    sw_classes,roles_predictions = rolesClassifier.predict(SW_PATH, 0, ';', SW_ROLES_BATCH_SIZE)
+    Tk().withdraw() 
+    filename = askopenfilename() 
+    #print(filename)
+    sw_classes,roles_predictions = rolesClassifier.predict(filename, 0, ';', SW_ROLES_BATCH_SIZE)
     roles_predictions_list=p_utils.get_roles_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
     p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
