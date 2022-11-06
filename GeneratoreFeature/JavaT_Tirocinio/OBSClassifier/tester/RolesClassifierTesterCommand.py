@@ -41,7 +41,6 @@ def main():
     Tk().withdraw() 
     filename = askopenfilename(initialdir="./results/command/role_features") 
     fileBaseName = os.path.basename(filename)
-    #projectName = fileBaseName[:fileBaseName.find("FEATURES_")]
     projectName = fileBaseName.split("_")[3]
     #print(filename)
     sw_classes,roles_predictions = rolesClassifier.predict(filename, 0, ';', SW_ROLES_BATCH_SIZE)
