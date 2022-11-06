@@ -12,24 +12,24 @@ ROLES_LABELS              = ['CommandInterface', 'ConcreteCommand', 'Invoker', '
 
 INSTANCES_FEATURE_COLUMNS = ['Classes']
 
-ROLES_TRAIN_BATCH_SIZE    = 5
-ROLES_EVALUATE_BATCH_SIZE = 5
-ROLES_TRAINING_STEPS      = 4000
+ROLES_TRAIN_BATCH_SIZE    = 8
+ROLES_EVALUATE_BATCH_SIZE = 8
+ROLES_TRAINING_STEPS      = 500
 
-FOLDERS_NUMBER = 3
+FOLDERS_NUMBER = 10
 
 PREDICTIONS_ROOT_DIRECTORY       = 'results/command/roles_predictions'
 COMBINATIONS_ROOT_DIRECTORY = "results/combinations"
 #SOFTWARES_ROOT_DIRECTORY         = 'softwares'
 ROLES_PREDICTIONS_HEADER         = ['Class','Role','Probability']
-ROLES_PREDICTIONS_FILE_PATH      = PREDICTIONS_ROOT_DIRECTORY + '/roles_predictions_command.csv'
+ROLES_PREDICTIONS_FILE_PATH      = PREDICTIONS_ROOT_DIRECTORY + '/roles_predictions_command'
 #SW_PATH                          = SOFTWARES_ROOT_DIRECTORY+'/TestSoftware2.csv'
 
 INSTANCES_COMBINATIONS_HEADER    = INSTANCES_FEATURE_COLUMNS[:len(INSTANCES_FEATURE_COLUMNS)-1]
-INSTANCES_COMBINATIONS_FILE_PATH = COMBINATIONS_ROOT_DIRECTORY + '/combinations_to_test_command.csv'
+INSTANCES_COMBINATIONS_FILE_PATH = COMBINATIONS_ROOT_DIRECTORY + '/combinations_to_test_command'
 
 def main():
-    SW_ROLES_BATCH_SIZE=5
+    SW_ROLES_BATCH_SIZE=8
 
     rolesClassifier=RolesClassifier(ROLES_FEATURE_COLUMNS,ROLES_LABELS,FOLDERS_NUMBER)
     rolesClassifier.initFeatureColumns()
@@ -40,10 +40,13 @@ def main():
 
     Tk().withdraw() 
     filename = askopenfilename() 
+    fileBaseName = os.path.basename(filename)
+    #projectName = fileBaseName[:fileBaseName.find("FEATURES_")]
+    projectName = fileBaseName.split("_")[3]
     #print(filename)
     sw_classes,roles_predictions = rolesClassifier.predict(filename, 0, ';', SW_ROLES_BATCH_SIZE)
     roles_predictions_list=p_utils.get_roles_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
-    p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
+    p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH  + "_" + projectName + ".csv",ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
     classes_pairs_pred,classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_combinations(roles_predictions_list)
     #classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_combinations(roles_predictions_list)
@@ -56,7 +59,7 @@ def main():
     #combinations = [classes_pairs_act, classes_triplets_act]
     #roles = [classes_pairs_roles, classes_triplets_roles]
 
-    p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH, INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
+    p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH + "_" + projectName + ".csv", INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
     #p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH, INSTANCES_COMBINATIONS_HEADER,classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
 
 
