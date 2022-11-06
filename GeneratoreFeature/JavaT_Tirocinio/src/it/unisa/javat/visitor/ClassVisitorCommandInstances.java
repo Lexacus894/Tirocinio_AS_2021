@@ -65,6 +65,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
 	ArrayList<FeatureCommandInstances> listaFeatureCommandInstances;
+	// TODO: Probabilmente può essere static per e il controllo può fermarsi se è =
+	// 1
 	int programHasReceivers = 0;
 
 	public ClassVisitorCommandInstances(CompilationUnit compilation, Document document, ASTRewrite rewriter,
@@ -75,7 +77,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		_scope = new Stack<Scope>();
 		listaFeatureCommandInstances = listaFeature;
 		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
-			if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")) {
+			if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")
+					|| listaFeatureCommandInstances.get(i).toString().contains(" (Receiver) - RE")) {
 				programHasReceivers = 1;
 			}
 		}
@@ -177,7 +180,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 						// if (!invoker.equals("") && invoker != null) {
 						// SE IL CLIENT AGGIUNGE COMANDI AD UN INVOKER CHE HA ISTANZIATO IN PRECEDENZA
 						// (SIA INVOKER CHE FANNO PARTE DEL PROGRAMMA CHE ESTERNI)
-						if (istruzioneChiamata.contains(".add")
+						if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put"))
 								&& istruzioneChiamata.contains(concretecommand.toLowerCase())) {
 							if (node.resolveMethodBinding() != null) {
 								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass()
