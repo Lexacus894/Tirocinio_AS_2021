@@ -230,7 +230,7 @@ public class Process {
 				for (nomiCombinazioni nomi : listaCombinazioni) {
 					Feature3 elemento = analisi(nomi);
 					listaFeature3.add(elemento);
-					System.out.println(nomi.toString());
+					// System.out.println(nomi.toString());
 				}
 				listaFeature = new ArrayList<Feature>();
 
@@ -707,7 +707,6 @@ public class Process {
 			// SELEZIONE PATTERN
 			if (modeSelect.equals("2")) {
 				selezionePattern(sc);
-				new Process(args);
 			}
 
 			// SELEZIONE FASE
