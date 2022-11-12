@@ -24,7 +24,7 @@ public class Lettura2 {
 			line = br.readLine();
 			while ((line = br.readLine()) != null) {
 
-				String classe1, classe2, classe3 = "", classe4 = "", classe5 = "";
+				String classe1, classe2, classe3 = "", classe4 = "";/* , classe5 = ""; */
 				classe1 = line.substring(0, line.indexOf(","));
 				String newline = line.substring(line.indexOf(",") + 2);
 
@@ -35,14 +35,16 @@ public class Lettura2 {
 					if (newline.indexOf(",") != -1) {
 						classe3 = newline.substring(0, newline.indexOf(","));
 						newline = newline.substring(newline.indexOf(",") + 2);
-
-						if (newline.indexOf(",") != -1) {
-							classe4 = newline.substring(0, newline.indexOf(","));
-							newline = newline.substring(newline.indexOf(",") + 2);
-							classe5 = newline.substring(0);
-						} else {
-							classe4 = newline.substring(0);
-						}
+						classe4 = newline.substring(0);
+						/*
+						 * if (newline.indexOf(",") != -1) {
+						 * classe4 = newline.substring(0, newline.indexOf(","));
+						 * newline = newline.substring(newline.indexOf(",") + 2);
+						 * //classe5 = newline.substring(0);
+						 * } else {
+						 * classe4 = newline.substring(0);
+						 * }
+						 */
 					} else {
 						classe3 = newline.substring(0);
 					}
@@ -55,12 +57,12 @@ public class Lettura2 {
 				listaClassi.add(classe2);
 				listaClassi.add(classe3);
 				listaClassi.add(classe4);
-				listaClassi.add(classe5);
+				// listaClassi.add(classe5);
 				listaCombinazioni.add(ordinaClassi(listaClassi));
 
 				i++;
 				System.out.println("CLASSI CLASSI CLASSI " + i + ": classe1:" + classe1 + ", classe2: " + classe2
-						+ ", classe3: " + classe3 + ", classe 4: " + classe4 + ", classe 5: " + classe5);
+						+ ", classe3: " + classe3 + ", classe 4: " + classe4 /* + ", classe 5: " + classe5 */);
 				System.out.println("\n");
 
 			}
