@@ -63,7 +63,7 @@ public class Process {
 			+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 
 	// CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecutorClient;HasInvoker;HasConcreteCommand;hasReceiver;hasExecutorCCRelationship;hasCCRERelationship;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecutorClient;HasInvoker;HasConcreteCommand;hasReceiver;hasCommandRelationship;hasExecutorCCRelationship;hasCCRERelationship;NumC";
 
 	public Process(String[] args) throws IOException, InterruptedException {
 
@@ -663,6 +663,9 @@ public class Process {
 					fileWriter.append(COMMA_DELIMITER);
 
 					fileWriter.append(String.valueOf(vettoreFeat.getHasReceiver()));
+					fileWriter.append(COMMA_DELIMITER);
+
+					fileWriter.append(String.valueOf(vettoreFeat.getHasCommandRelationship()));
 					fileWriter.append(COMMA_DELIMITER);
 
 					fileWriter.append(String.valueOf(vettoreFeat.getHasExecutorCCRelationship()));

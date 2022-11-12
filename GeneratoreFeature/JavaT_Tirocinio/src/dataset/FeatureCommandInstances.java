@@ -11,14 +11,17 @@ public class FeatureCommandInstances {
 	private int HasInvoker;
 	private int HasConcreteCommand;
 	private int HasReceiver;
+	private int HasCommandRelationship;
 	private int HasCCRERelationship;
 	private int HasExecutorCCRelationship;
 	// private int ExecutionRelationship;
 	private int NumC;
 
 	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5,
-			int hasCCRERelationship, int hasExecutorCCRelationship, int hasExecutor, int hasConcreteCommand,
-			int hasReceiver, int hasExecutorClient, int hasInvoker, /* int executionRelationship, */
+			int hasExecutorClient, int hasInvoker,
+			int hasReceiver, int HasCommandRelationship, int hasCCRERelationship, int hasExecutorCCRelationship,
+			int hasConcreteCommand,
+			/* int executionRelationship, */
 			int numC) {
 		this.class1 = class1;
 		this.class2 = class2;
@@ -29,6 +32,7 @@ public class FeatureCommandInstances {
 		this.HasInvoker = hasInvoker;
 		this.HasConcreteCommand = hasConcreteCommand;
 		this.HasReceiver = hasReceiver;
+		this.HasCommandRelationship = HasCommandRelationship;
 		this.HasCCRERelationship = hasCCRERelationship;
 		this.HasExecutorCCRelationship = hasExecutorCCRelationship;
 		// this.ExecutionRelationship = executionRelationship;
@@ -147,6 +151,14 @@ public class FeatureCommandInstances {
 
 	public void setHasInvoker(int hasInvoker) {
 		HasInvoker = hasInvoker;
+	}
+
+	public int getHasCommandRelationship() {
+		return HasCommandRelationship;
+	}
+
+	public void setHasCommandRelationship(int hasCommandRelationship) {
+		HasCommandRelationship = hasCommandRelationship;
 	}
 
 }
