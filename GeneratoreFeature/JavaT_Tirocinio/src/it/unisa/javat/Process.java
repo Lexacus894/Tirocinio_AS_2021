@@ -63,7 +63,7 @@ public class Process {
 			+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 
 	// CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecuted;HasExecutor;ExecutionRelationship";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecutorClient;HasInvoker;HasConcreteCommand;hasReceiver;hasExecutorCCRelationship;hasCCRERelationship;NumC";
 
 	public Process(String[] args) throws IOException, InterruptedException {
 
@@ -323,7 +323,7 @@ public class Process {
 
 				for (nomiCombinazioni nomi : listaCombinazioni) {
 					FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(), nomi.getClasse2(),
-							nomi.getClasse3(), nomi.getClasse4(), nomi.getClasse5(), 1, 1, 1, 1);
+							nomi.getClasse3(), nomi.getClasse4(), nomi.getClasse5(), 1, 1, 1, 1, 1, 1, 1, 1);
 					listaFeatureCommandInstances.add(elemento);
 					// System.out.println(nomi.toString());
 				}
@@ -333,9 +333,11 @@ public class Process {
 				_params = new Parameters(args, this.getClass().getName());
 				_params.print();
 
-				for (int i = 0; i < listaFeatureCommandRoles.size(); i++) {
-					FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
-				}
+				/*
+				 * for (int i = 0; i < listaFeatureCommandRoles.size(); i++) {
+				 * FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+				 * }
+				 */
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -639,22 +641,42 @@ public class Process {
 					// HAS EXECUTED
 					// SE IL PROGRAMMA NON HA RECEIVER, I CONCRETE COMMAND VENGONO CONTATI COME
 					// CLASSI ESEGUITE
-					if (programHasReceivers == 0 && !vettoreFeat.getClass2().equals("")) {
-						fileWriter.append("2");
-					}
-					// ALTRIMENTI, DEVE ESSERCI UNA CORRELAZIONE TRA CONCRETECOMMAND E RECEIVER
-					else {
-						fileWriter.append(String.valueOf(vettoreFeat.getHasExecuted()));
-					}
+					/*
+					 * if (programHasReceivers == 0 && !vettoreFeat.getClass2().equals("")) {
+					 * fileWriter.append("2");
+					 * }
+					 * // ALTRIMENTI, DEVE ESSERCI UNA CORRELAZIONE TRA CONCRETECOMMAND E RECEIVER
+					 * else {
+					 * fileWriter.append(String.valueOf(vettoreFeat.getHasExecuted()));
+					 * }
+					 * 
+					 * fileWriter.append(COMMA_DELIMITER);
+					 */
+
+					fileWriter.append(String.valueOf(vettoreFeat.getHasExecutorClient()));
 					fileWriter.append(COMMA_DELIMITER);
 
-					fileWriter.append(String.valueOf(vettoreFeat.getHasExecutor()));
+					fileWriter.append(String.valueOf(vettoreFeat.getHasInvoker()));
 					fileWriter.append(COMMA_DELIMITER);
 
-					fileWriter.append(String.valueOf(vettoreFeat.getExecutionRelationship()));
-					// fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(String.valueOf(vettoreFeat.getHasConcreteCommand()));
+					fileWriter.append(COMMA_DELIMITER);
 
-					// fileWriter.append(String.valueOf(numC));
+					fileWriter.append(String.valueOf(vettoreFeat.getHasReceiver()));
+					fileWriter.append(COMMA_DELIMITER);
+
+					fileWriter.append(String.valueOf(vettoreFeat.getHasExecutorCCRelationship()));
+					fileWriter.append(COMMA_DELIMITER);
+
+					fileWriter.append(String.valueOf(vettoreFeat.getHasCCRERelationship()));
+					fileWriter.append(COMMA_DELIMITER);
+
+					/*
+					 * fileWriter.append(String.valueOf(vettoreFeat.getExecutionRelationship()));
+					 * fileWriter.append(COMMA_DELIMITER);
+					 */
+
+					fileWriter.append(String.valueOf(numC));
 					fileWriter.append(NEW_LINE_SEPARATOR);
 				}
 				System.out.println("DEBUG DEBUG DEBUG - PROGRAMHASRECEIVERS: " + programHasReceivers);

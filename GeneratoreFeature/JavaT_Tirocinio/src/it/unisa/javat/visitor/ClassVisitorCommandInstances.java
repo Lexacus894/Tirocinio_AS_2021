@@ -76,12 +76,16 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
 		listaFeatureCommandInstances = listaFeature;
-		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
-			if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")
-					|| listaFeatureCommandInstances.get(i).toString().contains(" (Receiver) - RE")) {
-				programHasReceivers = 1;
-			}
-		}
+		/*
+		 * for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
+		 * if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")
+		 * ||
+		 * listaFeatureCommandInstances.get(i).toString().contains(" (Receiver) - RE"))
+		 * {
+		 * programHasReceivers = 1;
+		 * }
+		 * }
+		 */
 	}
 
 	// Compilation Unit
@@ -116,21 +120,30 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		if (getTypeDeclaration(node) != null) {
-			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
+		if (getTypeDeclaration(node) == null) {
+			return false;
+		}
+		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 
-			for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
-				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
+			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 
-				if (riga.toString().contains(classeAnalizzata + " - IN")
-						|| riga.toString().contains(classeAnalizzata + " (Invoker) - IN")) {
-					listaFeatureCommandInstances.get(i).setHasExecutor(2);
-				} else if (riga.toString().contains(classeAnalizzata + " - CL")
-						|| riga.toString().contains(classeAnalizzata + " (Client) - CL")) {
-					if (node.toString().toLowerCase().contains(".execute(")) {
-						listaFeatureCommandInstances.get(i).setHasExecutor(2);
-					}
+			if (riga.toString().contains(classeAnalizzata + " - IN")
+					|| riga.toString().contains(classeAnalizzata + " (Invoker) - IN")) {
+				listaFeatureCommandInstances.get(i).setHasInvoker(2);
+			} else if (riga.toString().contains(classeAnalizzata + " - CL")
+					|| riga.toString().contains(classeAnalizzata + " (Client) - CL")) {
+				if (node.toString().toLowerCase().contains(".execute(")) {
+					listaFeatureCommandInstances.get(i).setHasExecutorClient(2);
 				}
+			}
+			if (riga.toString().contains(classeAnalizzata + " - CC")
+					|| riga.toString().contains(classeAnalizzata + " (Command) - CC")) {
+				listaFeatureCommandInstances.get(i).setHasConcreteCommand(2);
+			}
+			if (riga.toString().contains(classeAnalizzata + " - RE")
+					|| riga.toString().contains(classeAnalizzata + " (Receiver) - RE")) {
+				listaFeatureCommandInstances.get(i).setHasReceiver(2);
 			}
 		}
 
@@ -143,86 +156,97 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodInvocation node) {
+
+		/*
+		 * if (getTypeDeclaration(node) == null) {
+		 * return false;
+		 * }
+		 */
 		String istruzioneChiamata = node.toString().toLowerCase();
+		String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
 
-		if (getTypeDeclaration(node) != null) {
-			String classeAnalizzata = getTypeDeclaration(node).resolveBinding().getName().toString();
+		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
+			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+			// System.out.println(riga.toString());
+			String receiver = ricercaReceiver(riga);
+			String concretecommand = ricercaClasse(riga, "CC");
+			String invoker = ricercaClasse(riga, "IN"); // CERCA CC E IN
 
-			for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
-				FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
+			/*
+			 * 
+			 * break;
+			 * 
+			 */
+			if (!riga.toString().contains(classeAnalizzata + " - CC")
+					|| !riga.toString().contains(classeAnalizzata + " (ConcreteCommand) - CC")) {
+				// CLASSE DICHIARANTE E' RECEIVER DELLA COMBINAZIONE
+				if (node.resolveMethodBinding() != null) {
 
-				// HASEXECUTED - CONTROLLA SE IL CONCRETECOMMAND INVOCA UN METODO DEL RECEIVER
-				// DELLA COMBINAZIONE
-				if (riga.toString().contains(classeAnalizzata + " - CC")
-						|| riga.toString().contains(classeAnalizzata + " (ConcreteCommand) - CC")) {
-					String receiver = ricercaClasse(riga, "RE");
+					String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
 
-					if (node.resolveMethodBinding() != null) {
-						String classeDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
-						if (!receiver.equals("") && receiver != null) {
-							// CLASSE DICHIARANTE E' RECEIVER DELLA COMBINAZIONE
-							if (classeDichiarante.replaceAll(".+\\.", "").equals(receiver)) {
-								listaFeatureCommandInstances.get(i).setHasExecuted(2);
-							}
+					if (!receiver.equals("") && receiver != null) {
+						// System.out.println("CD: " + classeDichiarante.replaceAll(".+\\.", "") + " -
+						// REC: " + receiver);
+						if (classeDichiarante.replaceAll(".+\\.", "").equals(receiver)) {
+							listaFeatureCommandInstances.get(i).setHasCCRERelationship(2);
 						}
 					}
-				}
-				// HASEXECUTED
 
-				// EXECUTIONRELATIONSHIP
-				if (riga.toString().contains(classeAnalizzata + " - CL")
-						|| riga.toString().contains(classeAnalizzata + " (Client) - CL")) {
+					// EXECUTIONRELATIONSHIP
+					/*
+					 * if (riga.toString().contains(classeAnalizzata + " - CL")
+					 * || riga.toString().contains(classeAnalizzata + " (Client) - CL")) {
+					 */ // SE CONTIENE IL CLIENT
 					// System.out.println(istruzioneChiamata);
-					String concretecommand = ricercaClasse(riga, "CC");
-					String invoker = ricercaClasse(riga, "IN");
 
-					if (!concretecommand.equals("") && concretecommand != null) {
-						// if (!invoker.equals("") && invoker != null) {
-						// SE IL CLIENT AGGIUNGE COMANDI AD UN INVOKER CHE HA ISTANZIATO IN PRECEDENZA
-						// (SIA INVOKER CHE FANNO PARTE DEL PROGRAMMA CHE ESTERNI)
+					if (!concretecommand.equals("") && concretecommand != null) {// SE LA COMBINAZIONE CONTIENE UN CC
+						/* break; */
+
 						if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put"))
-								&& istruzioneChiamata.contains(concretecommand.toLowerCase())) {
-							if (node.resolveMethodBinding() != null) {
-								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass()
-										.getQualifiedName();
-								if (!invoker.equals("") && invoker != null) {
-									if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)
-											|| (classeDichiarante.replaceAll(".+\\.", "") + " (Invoker)")
-													.equals(invoker)) {
-										String receiver = ricercaClasse(riga, "RE");
-										if (programHasReceivers == 1) {
-											if (!receiver.equals("") && receiver != null) {
-												listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
-											}
-										} else if (receiver.equals("") || receiver == null) {
-											listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
-										}
-
-									}
-								} else if (classeDichiarante.contains("javax.swing")
-										|| classeDichiarante.contains("java.awt")) {
-									listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
-									listaFeatureCommandInstances.get(i).setHasExecutor(2);
-								} else if (istruzioneChiamata.contains("new " + concretecommand.toLowerCase())
-										&& listaFeatureCommandInstances.get(i).getHasExecutor() == 2) {
-									listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+								&& istruzioneChiamata.contains(concretecommand.toLowerCase())) { // SE L'ISTRUZIONE
+																									// CHIAMATA
+																									// CONTIENE ADD
+																									// PUT
+																									// E IL
+																									// CONCRETE
+																									// COMMAND
+							if (!invoker.equals("") && invoker != null) { // SE LA COMBINAZIONE CONTIENE UN INVOKER
+								if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)
+										|| (classeDichiarante.replaceAll(".+\\.", "") + " (Invoker)")
+												.equals(invoker)) { // SE LA CLASSE CHE DICHIARA IL METODO E'
+																	// L'INVOKER
+									listaFeatureCommandInstances.get(i).setHasExecutorCCRelationship(2);
+									// INVOKER ESEGUE CC
 								}
+								/*
+								 * if (receiver.equals("") || receiver == null) {
+								 * listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+								 * }
+								 */
+							} else if (classeDichiarante.contains("javax.swing")
+									|| classeDichiarante.contains("java.awt")) {
+								listaFeatureCommandInstances.get(i).setHasExecutorCCRelationship(2);
+								listaFeatureCommandInstances.get(i).setHasInvoker(2);
+								// INVOKER ESTERNO ESEGUE CC
 							}
 						}
 						/*
-						 * }
-						 * else if (istruzioneChiamata.contains("new " + concretecommand.toLowerCase())
-						 * && listaFeatureCommandInstances.get(i).getHasExecutor()==2) {
-						 * listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+						 * if (istruzioneChiamata.contains(".execute") ||
+						 * istruzioneChiamata.contains(".dispatch")) {
+						 * if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)
+						 * || (classeDichiarante.replaceAll(".+\\.", "") + " (Invoker)")
+						 * .equals(invoker)) {
+						 * 
 						 * }
 						 */
 					}
+					/* } */
 				}
-				// EXECUTIONRELATIONSHIP
-
 			}
 		}
+
 		return true;
+
 	}
 
 	@Override
@@ -245,7 +269,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					if (invoker.equals("") || invoker == null) {
 						if (!concretecommand.equals("") && concretecommand != null) {
 							if (dichiarazione.contains("new " + concretecommand.toLowerCase())) {
-								listaFeatureCommandInstances.get(i).setExecutionRelationship(2);
+								listaFeatureCommandInstances.get(i).setHasExecutorCCRelationship(2);
 							}
 						}
 					}
@@ -521,6 +545,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	}
 
 	private String ricercaClasse(FeatureCommandInstances riga, String ruolo) {
+
 		String rigaAb = "";
 		if (riga.getClass1().contains(" - " + ruolo)) {
 			rigaAb = riga.getClass1().substring(0, riga.getClass1().length() - 5);
@@ -533,6 +558,7 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		} else if (riga.getClass5().contains(" - " + ruolo)) {
 			rigaAb = riga.getClass5().substring(0, riga.getClass5().length() - 5);
 		}
+
 		if (rigaAb.contains("(Client)")) {
 			rigaAb = rigaAb.substring(0, rigaAb.length() - 9);
 
@@ -545,12 +571,35 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			rigaAb = rigaAb.substring(0, rigaAb.length() - 10);
 
 		}
-		if (rigaAb.contains("(Receiver)")) {
+
+		if (rigaAb.contains("(Command)")) {
 			rigaAb = rigaAb.substring(0, rigaAb.length() - 11);
 
 		}
-		if (rigaAb.contains("(Command)")) {
-			rigaAb = rigaAb.substring(0, rigaAb.length() - 11);
+
+		return rigaAb;
+	}
+
+	private String ricercaReceiver(FeatureCommandInstances riga) {
+		String rigaAb = "";
+		// System.out.println(riga.toString());
+		if (riga.toString().contains(" - RE") || riga.toString().contains(" - RE,")) {
+			if (riga.getClass1().contains(" - RE")) {
+				rigaAb = riga.getClass1().substring(0, riga.getClass1().length() - 5);
+			} else if (riga.getClass2().contains(" - RE")) {
+				rigaAb = riga.getClass2().substring(0, riga.getClass2().length() - 5);
+			} else if (riga.getClass3().contains(" - RE")) {
+				rigaAb = riga.getClass3().substring(0, riga.getClass3().length() - 5);
+			} else if (riga.getClass4().contains(" - RE")) {
+				rigaAb = riga.getClass4().substring(0, riga.getClass4().length() - 5);
+			} else if (riga.getClass5().contains(" - RE")) {
+				rigaAb = riga.getClass5().substring(0, riga.getClass5().length() - 5);
+			}
+			if (rigaAb.contains("(Receiver)")) {
+				rigaAb = rigaAb.substring(0, rigaAb.length() - 11);
+
+			}
+			// System.out.println(rigaAb);
 
 		}
 		return rigaAb;
