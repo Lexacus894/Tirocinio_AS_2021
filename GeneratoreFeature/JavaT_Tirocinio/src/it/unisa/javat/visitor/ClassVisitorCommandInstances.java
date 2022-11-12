@@ -186,7 +186,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 								String classeDichiarante = node.resolveMethodBinding().getDeclaringClass()
 										.getQualifiedName();
 								if (!invoker.equals("") && invoker != null) {
-									if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)) {
+									if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)
+											|| (classeDichiarante.replaceAll(".+\\.", "") + " (Invoker)")
+													.equals(invoker)) {
 										String receiver = ricercaClasse(riga, "RE");
 										if (programHasReceivers == 1) {
 											if (!receiver.equals("") && receiver != null) {
@@ -519,19 +521,39 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 	}
 
 	private String ricercaClasse(FeatureCommandInstances riga, String ruolo) {
+		String rigaAb = "";
 		if (riga.getClass1().contains(" - " + ruolo)) {
-			return riga.getClass1().substring(0, riga.getClass1().length() - 5);
+			rigaAb = riga.getClass1().substring(0, riga.getClass1().length() - 5);
 		} else if (riga.getClass2().contains(" - " + ruolo)) {
-			return riga.getClass2().substring(0, riga.getClass2().length() - 5);
+			rigaAb = riga.getClass2().substring(0, riga.getClass2().length() - 5);
 		} else if (riga.getClass3().contains(" - " + ruolo)) {
-			return riga.getClass3().substring(0, riga.getClass3().length() - 5);
+			rigaAb = riga.getClass3().substring(0, riga.getClass3().length() - 5);
 		} else if (riga.getClass4().contains(" - " + ruolo)) {
-			return riga.getClass4().substring(0, riga.getClass4().length() - 5);
+			rigaAb = riga.getClass4().substring(0, riga.getClass4().length() - 5);
 		} else if (riga.getClass5().contains(" - " + ruolo)) {
-			return riga.getClass5().substring(0, riga.getClass5().length() - 5);
-		} else {
-			return "";
+			rigaAb = riga.getClass5().substring(0, riga.getClass5().length() - 5);
 		}
+		if (rigaAb.contains("(Client)")) {
+			rigaAb = rigaAb.substring(0, rigaAb.length() - 9);
+
+		}
+		if (rigaAb.contains("(ConcreteCommand)")) {
+			rigaAb = rigaAb.substring(0, rigaAb.length() - 18);
+
+		}
+		if (rigaAb.contains("(Invoker)")) {
+			rigaAb = rigaAb.substring(0, rigaAb.length() - 10);
+
+		}
+		if (rigaAb.contains("(Receiver)")) {
+			rigaAb = rigaAb.substring(0, rigaAb.length() - 11);
+
+		}
+		if (rigaAb.contains("(Command)")) {
+			rigaAb = rigaAb.substring(0, rigaAb.length() - 11);
+
+		}
+		return rigaAb;
 	}
 
 	public Integer getProgramHasReceivers() {

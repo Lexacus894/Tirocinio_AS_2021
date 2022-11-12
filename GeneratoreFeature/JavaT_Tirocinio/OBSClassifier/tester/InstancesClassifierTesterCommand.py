@@ -12,9 +12,9 @@ INSTANCES_DATASET_PATH = "datasets/com_instances_dataset.csv"
 
 FOLDERS_NUMBER = 10
 
-INSTANCES_TRAIN_BATCH_SIZE = 3
-INSTANCES_EVALUATE_BATCH_SIZE = 3
-INSTANCES_TRAINING_STEPS = 100
+INSTANCES_TRAIN_BATCH_SIZE = 13
+INSTANCES_EVALUATE_BATCH_SIZE = 13
+INSTANCES_TRAINING_STEPS = 5000
 
 PREDICTIONS_ROOT_DIRECTORY = 'results/command/instances_predictions'
 COMBINATIONS_ROOT_DIRECTORY = "results/combinations"
@@ -30,7 +30,7 @@ INSTANCES_PREDICTIONS_HEADER = ['Combinations', 'Result', 'Probability']
 # INSTANCES_PREDICTIONS_HEADER     = ['Combinations','Result','Probability']
 
 def main():
-    SW_CLASSES_COMBINATIONS_BATCH_SIZE = 3
+    SW_CLASSES_COMBINATIONS_BATCH_SIZE = 13
 
     instancesClassifier = InstancesClassifier(INSTANCES_FEATURE_COLUMNS, INSTANCES_LABELS, FOLDERS_NUMBER)
     instancesClassifier.initFeatureColumns()
