@@ -22,7 +22,7 @@ def get_roles_predictions_list(data, predictions, labels):
 
         if (class_id != 5):
 
-            if ((probability * 100)<50):
+            if ((probability * 100)<80):
                 for x in range(5):
                     if (pred['probabilities'][x] * 100)>19:
                         predictionResults.update({classNames[i] + " (" + labels[x] + ")": (labels[x], pred['probabilities'][x] * 100)})

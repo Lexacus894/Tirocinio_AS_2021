@@ -530,9 +530,11 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			rigaAb = riga.getClass3().substring(0, riga.getClass3().length() - 5);
 		} else if (riga.getClass4().contains(" - " + ruolo)) {
 			rigaAb = riga.getClass4().substring(0, riga.getClass4().length() - 5);
-		} else if (riga.getClass5().contains(" - " + ruolo)) {
-			rigaAb = riga.getClass5().substring(0, riga.getClass5().length() - 5);
-		}
+		} /*
+			 * else if (riga.getClass5().contains(" - " + ruolo)) {
+			 * rigaAb = riga.getClass5().substring(0, riga.getClass5().length() - 5);
+			 * }
+			 */
 		if (rigaAb.contains("(Client)")) {
 			rigaAb = rigaAb.substring(0, rigaAb.length() - 9);
 

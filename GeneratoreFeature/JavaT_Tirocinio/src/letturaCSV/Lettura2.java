@@ -74,15 +74,17 @@ public class Lettura2 {
 	}
 
 	private nomiCombinazioni ordinaClassi(ArrayList<String> listaClassi) {
-		String cc = "", ci = "", re = "", cl = "", in = "";
-		for (int i = 0; i < 5; i++) {
+		String cc = "", /* ci = "", */ re = "", cl = "", in = "";
+		for (int i = 0; i < 4; i++) {
 			if (!listaClassi.get(i).equals("")) {
 				if (listaClassi.get(i).contains(" - CC")) {
 					cc = listaClassi.get(i);
 				}
-				if (listaClassi.get(i).contains(" - CI")) {
-					ci = listaClassi.get(i);
-				}
+				/*
+				 * if (listaClassi.get(i).contains(" - CI")) {
+				 * ci = listaClassi.get(i);
+				 * }
+				 */
 				if (listaClassi.get(i).contains(" - RE")) {
 					re = listaClassi.get(i);
 				}
@@ -94,7 +96,7 @@ public class Lettura2 {
 				}
 			}
 		}
-		nomiCombinazioni rigaNomi = new nomiCombinazioni(cl, cc, re, in, ci);
+		nomiCombinazioni rigaNomi = new nomiCombinazioni(cl, cc, re, in);
 		return rigaNomi;
 	}
 

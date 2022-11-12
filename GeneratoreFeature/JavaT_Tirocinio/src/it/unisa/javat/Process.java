@@ -63,7 +63,7 @@ public class Process {
 			+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 
 	// CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecuted;HasExecutor;ExecutionRelationship";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;HasExecuted;HasExecutor;ExecutionRelationship";
 
 	public Process(String[] args) throws IOException, InterruptedException {
 
@@ -323,7 +323,7 @@ public class Process {
 
 				for (nomiCombinazioni nomi : listaCombinazioni) {
 					FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(), nomi.getClasse2(),
-							nomi.getClasse3(), nomi.getClasse4(), nomi.getClasse5(), 1, 1, 1, 1);
+							nomi.getClasse3(), nomi.getClasse4()/* , nomi.getClasse5() */, 1, 1, 1, 1);
 					listaFeatureCommandInstances.add(elemento);
 					// System.out.println(nomi.toString());
 				}
@@ -628,13 +628,15 @@ public class Process {
 					}
 					fileWriter.append(COMMA_DELIMITER);
 
-					if (vettoreFeat.getClass5().equals("")) {
-						fileWriter.append("None");
-					} else {
-						fileWriter.append(vettoreFeat.getClass5());
-						numC++;
-					}
-					fileWriter.append(COMMA_DELIMITER);
+					/*
+					 * if (vettoreFeat.getClass5().equals("")) {
+					 * fileWriter.append("None");
+					 * } else {
+					 * fileWriter.append(vettoreFeat.getClass5());
+					 * numC++;
+					 * }
+					 * fileWriter.append(COMMA_DELIMITER);
+					 */
 
 					// HAS EXECUTED
 					// SE IL PROGRAMMA NON HA RECEIVER, I CONCRETE COMMAND VENGONO CONTATI COME
