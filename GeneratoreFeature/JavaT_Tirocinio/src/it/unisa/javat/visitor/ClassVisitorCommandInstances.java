@@ -76,16 +76,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
 		listaFeatureCommandInstances = listaFeature;
-		/*
-		 * for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
-		 * if (listaFeatureCommandInstances.get(i).toString().contains(" - RE")
-		 * ||
-		 * listaFeatureCommandInstances.get(i).toString().contains(" (Receiver) - RE"))
-		 * {
-		 * programHasReceivers = 1;
-		 * }
-		 * }
-		 */
 	}
 
 	// Compilation Unit
@@ -114,6 +104,17 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		ITypeBinding superclass = binding.getSuperclass();
 		ITypeBinding[] interfaces = binding.getInterfaces();
 
+		ITypeBinding superSuperclass = null;
+		ITypeBinding[] superInterfaces = null;
+		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
+			superSuperclass = superclass.getSuperclass();
+			superInterfaces = superclass.getInterfaces();
+			System.out.println(superSuperclass.getName());
+			for (ITypeBinding superInterface : superInterfaces) {
+				System.out.println(superInterface.getName());
+			}
+		}
+
 		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
 			FeatureCommandInstances riga = listaFeatureCommandInstances.get(i);
 			String commandInterface = ricercaClasse(riga, "CI");
@@ -128,6 +129,10 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 
 					if (superclass.getName().equalsIgnoreCase(commandInterface.toLowerCase())) {
 						listaFeatureCommandInstances.get(i).setHasCommandRelationship(2);
+					} else if (superSuperclass != null && !superSuperclass.getName().equalsIgnoreCase("Object")) {
+						if (superSuperclass.getName().equalsIgnoreCase(commandInterface.toLowerCase())) {
+							listaFeatureCommandInstances.get(i).setHasCommandRelationship(2);
+						}
 					}
 				}
 				for (ITypeBinding sInterface : interfaces) {
@@ -138,6 +143,31 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					 */
 					if (sInterface.getName().toLowerCase().equals(commandInterface.toLowerCase())) {
 						listaFeatureCommandInstances.get(i).setHasCommandRelationship(2);
+					} /*
+						 * else if (superSuperclass != null &&
+						 * !superSuperclass.getName().equalsIgnoreCase("Object")) {
+						 * 
+						 * if
+						 * (sInterface.getName().equalsIgnoreCase(superSuperclass.getName().toLowerCase(
+						 * ))) {
+						 * listaFeatureCommandInstances.get(i).setHasCommandRelationship(2);
+						 * 
+						 * }
+						 * }
+						 */
+				}
+				if (superSuperclass != null /* && !superSuperclass.getName().equalsIgnoreCase("Object") */) {
+					for (ITypeBinding superInterface : superInterfaces) {
+
+						/*
+						 * System.out.println(
+						 * "COMMAND INTERFACE: " + commandInterface + " - SUPER INTERFACE: "
+						 * + superInterface.getName().toLowerCase());
+						 */
+
+						if (superInterface.getName().toLowerCase().equals(commandInterface.toLowerCase())) {
+							listaFeatureCommandInstances.get(i).setHasCommandRelationship(2);
+						}
 					}
 				}
 			}
