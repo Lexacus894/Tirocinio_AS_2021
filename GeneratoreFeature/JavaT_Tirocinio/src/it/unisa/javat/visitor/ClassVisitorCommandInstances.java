@@ -109,10 +109,6 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
 			superSuperclass = superclass.getSuperclass();
 			superInterfaces = superclass.getInterfaces();
-			System.out.println(superSuperclass.getName());
-			for (ITypeBinding superInterface : superInterfaces) {
-				System.out.println(superInterface.getName());
-			}
 		}
 
 		for (int i = 0; i < listaFeatureCommandInstances.size(); i++) {
@@ -202,12 +198,16 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 				}
 			}
 			if (riga.toString().contains(classeAnalizzata + " - CC")
-					|| riga.toString().contains(classeAnalizzata + " (Command) - CC")) {
+					|| riga.toString().contains(classeAnalizzata + " (ConcreteCommand) - CC")) {
 				listaFeatureCommandInstances.get(i).setHasConcreteCommand(2);
 			}
 			if (riga.toString().contains(classeAnalizzata + " - RE")
 					|| riga.toString().contains(classeAnalizzata + " (Receiver) - RE")) {
 				listaFeatureCommandInstances.get(i).setHasReceiver(2);
+			}
+			if (riga.toString().contains(classeAnalizzata + " - CI")
+					|| riga.toString().contains(classeAnalizzata + " (CommandInterface) - CI")) {
+				listaFeatureCommandInstances.get(i).setHasCommandInterface(2);
 			}
 		}
 

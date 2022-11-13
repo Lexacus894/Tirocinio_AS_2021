@@ -63,7 +63,7 @@ public class Process {
 			+ "SubjectsRelationship;SubObsDependencies;CSubObsDependencies;ObserversRelationship;CallListeners;CObsAccessSubject;NoC";
 
 	// CSV file header (Combinazioni Command)
-	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecutorClient;HasInvoker;HasConcreteCommand;hasReceiver;hasCommandRelationship;hasExecutorCCRelationship;hasCCRERelationship;NumC";
+	private static final String FILE_HEADER_COMMAND_INSTANCES = "Client;ConcreteCommand;Receiver;Invoker;CommandInterface;HasExecutorClient;HasInvoker;HasConcreteCommand;hasReceiver;hasCommandInterface;hasCommandRelationship;hasExecutorCCRelationship;hasCCRERelationship;NumC";
 
 	public Process(String[] args) throws IOException, InterruptedException {
 
@@ -323,7 +323,7 @@ public class Process {
 
 				for (nomiCombinazioni nomi : listaCombinazioni) {
 					FeatureCommandInstances elemento = new FeatureCommandInstances(nomi.getClasse1(), nomi.getClasse2(),
-							nomi.getClasse3(), nomi.getClasse4(), nomi.getClasse5(), 1, 1, 1, 1, 1, 1, 1, 1);
+							nomi.getClasse3(), nomi.getClasse4(), nomi.getClasse5(), 1, 1, 1, 1, 1, 1, 1, 1, 1);
 					listaFeatureCommandInstances.add(elemento);
 					// System.out.println(nomi.toString());
 				}
@@ -663,6 +663,9 @@ public class Process {
 					fileWriter.append(COMMA_DELIMITER);
 
 					fileWriter.append(String.valueOf(vettoreFeat.getHasReceiver()));
+					fileWriter.append(COMMA_DELIMITER);
+
+					fileWriter.append(String.valueOf(vettoreFeat.getHasCommandInterface()));
 					fileWriter.append(COMMA_DELIMITER);
 
 					fileWriter.append(String.valueOf(vettoreFeat.getHasCommandRelationship()));

@@ -11,6 +11,7 @@ public class FeatureCommandInstances {
 	private int HasInvoker;
 	private int HasConcreteCommand;
 	private int HasReceiver;
+	private int HasCommandInterface;
 	private int HasCommandRelationship;
 	private int HasCCRERelationship;
 	private int HasExecutorCCRelationship;
@@ -19,8 +20,9 @@ public class FeatureCommandInstances {
 
 	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5,
 			int hasExecutorClient, int hasInvoker,
-			int hasReceiver, int HasCommandRelationship, int hasCCRERelationship, int hasExecutorCCRelationship,
-			int hasConcreteCommand,
+			int hasReceiver, int hasConcreteCommand, int hasCommandInterface, int hasCommandRelationship,
+			int hasCCRERelationship, int hasExecutorCCRelationship,
+
 			/* int executionRelationship, */
 			int numC) {
 		this.class1 = class1;
@@ -32,7 +34,8 @@ public class FeatureCommandInstances {
 		this.HasInvoker = hasInvoker;
 		this.HasConcreteCommand = hasConcreteCommand;
 		this.HasReceiver = hasReceiver;
-		this.HasCommandRelationship = HasCommandRelationship;
+		this.HasCommandInterface = hasCommandInterface;
+		this.HasCommandRelationship = hasCommandRelationship;
 		this.HasCCRERelationship = hasCCRERelationship;
 		this.HasExecutorCCRelationship = hasExecutorCCRelationship;
 		// this.ExecutionRelationship = executionRelationship;
@@ -159,6 +162,14 @@ public class FeatureCommandInstances {
 
 	public void setHasCommandRelationship(int hasCommandRelationship) {
 		HasCommandRelationship = hasCommandRelationship;
+	}
+
+	public int getHasCommandInterface() {
+		return HasCommandInterface;
+	}
+
+	public void setHasCommandInterface(int hasCommandInterface) {
+		HasCommandInterface = hasCommandInterface;
 	}
 
 }
