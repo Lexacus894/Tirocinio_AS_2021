@@ -236,13 +236,8 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 			String concretecommand = ricercaClasse(riga, "CC");
 			String invoker = ricercaClasse(riga, "IN"); // CERCA CC E IN
 
-			/*
-			 * 
-			 * break;
-			 * 
-			 */
-			if (!riga.toString().contains(classeAnalizzata + " - CC")
-					|| !riga.toString().contains(classeAnalizzata + " (ConcreteCommand) - CC")) {
+			if (riga.toString().contains(classeAnalizzata + " - CC")
+					|| riga.toString().contains(classeAnalizzata + " (ConcreteCommand) - CC")) {
 				// CLASSE DICHIARANTE E' RECEIVER DELLA COMBINAZIONE
 				if (node.resolveMethodBinding() != null) {
 
@@ -264,16 +259,9 @@ public class ClassVisitorCommandInstances extends ASTVisitor {
 					// System.out.println(istruzioneChiamata);
 
 					if (!concretecommand.equals("") && concretecommand != null) {// SE LA COMBINAZIONE CONTIENE UN CC
-						/* break; */
-
 						if ((istruzioneChiamata.contains(".add") || istruzioneChiamata.contains(".put"))
-								&& istruzioneChiamata.contains(concretecommand.toLowerCase())) { // SE L'ISTRUZIONE
-																									// CHIAMATA
-																									// CONTIENE ADD
-																									// PUT
-																									// E IL
-																									// CONCRETE
-																									// COMMAND
+								&& istruzioneChiamata.contains(concretecommand.toLowerCase())) {
+
 							if (!invoker.equals("") && invoker != null) { // SE LA COMBINAZIONE CONTIENE UN INVOKER
 								if (classeDichiarante.replaceAll(".+\\.", "").equals(invoker)
 										|| (classeDichiarante.replaceAll(".+\\.", "") + " (Invoker)")
