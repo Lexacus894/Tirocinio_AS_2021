@@ -53,14 +53,14 @@ import dataset.strutturaVariabile;
 import it.unisa.javat.Utils;
 
 public class ClassVisitorCommand extends ASTVisitor {
-	
-	//private static final int i = 0;
+
+	// private static final int i = 0;
 
 	CompilationUnit _compilation;
 	Document _document;
 	ASTRewrite _rewriter;
 	Stack<Scope> _scope;
-	
+
 	ArrayList<FeatureCommandRoles> arrayListFeature;
 	FeatureCommandRoles feat;
 	ArrayList<FeatureCommandRoles> arrayListTemp;
@@ -69,23 +69,22 @@ public class ClassVisitorCommand extends ASTVisitor {
 	static ArrayList<String> listaClassiInExecute = new ArrayList<String>();
 	int tempval;
 	int importscommand = 1;
-	
-	//ArrayList<String> importedCommands = new ArrayList<String>();
 
-	
-	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter, ArrayList<FeatureCommandRoles> arrayListFeatureVisitor, String folder,String nomeProgetto) {
+	// ArrayList<String> importedCommands = new ArrayList<String>();
+
+	public ClassVisitorCommand(CompilationUnit compilation, Document document, ASTRewrite rewriter,
+			ArrayList<FeatureCommandRoles> arrayListFeatureVisitor, String folder, String nomeProgetto) {
 		_compilation = compilation;
 		_document = document;
 		_rewriter = rewriter;
 		_scope = new Stack<Scope>();
-		
 
 		this.arrayListFeature = arrayListFeatureVisitor;
-	    
-	    this.arrayListTemp = new ArrayList<FeatureCommandRoles>();
-	    this.folder = folder;
-	    this.nomeProgetto = nomeProgetto;
-	    
+
+		this.arrayListTemp = new ArrayList<FeatureCommandRoles>();
+		this.folder = folder;
+		this.nomeProgetto = nomeProgetto;
+
 	}
 
 	// Compilation Unit
@@ -97,8 +96,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 		for (Comment c : comments) {
 			try {
 				String codeComment = _document.get(c.getStartPosition(), c.getLength());
-			} 
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 			}
 		}
 		_scope.push(new Scope(ScopeType.COMPILATIONUNIT));
@@ -108,13 +106,13 @@ public class ClassVisitorCommand extends ASTVisitor {
 	@Override
 	public void endVisit(CompilationUnit node) {
 		ArrayList<FeatureCommandRoles> arrayListScissione = new ArrayList<FeatureCommandRoles>();
-		for(int i=0; i<arrayListTemp.size();i++) {
-				arrayListFeature.add(arrayListTemp.get(i));
+		for (int i = 0; i < arrayListTemp.size(); i++) {
+			arrayListFeature.add(arrayListTemp.get(i));
 		}
-		for(int i=0; i<arrayListScissione.size();i++) {
+		for (int i = 0; i < arrayListScissione.size(); i++) {
 			arrayListFeature.add(arrayListScissione.get(i));
 		}
-		
+
 		_scope.pop();
 	}
 
@@ -125,18 +123,19 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (binding == null) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public void endVisit(PackageDeclaration node) {
 	}
-	
+
 	// Import Declaration
 	@Override
 	public boolean visit(ImportDeclaration node) {
-		if ((node.toString().toLowerCase().contains("command") || node.toString().toLowerCase().contains("command")) && !node.toString().toLowerCase().contains("actionlistener")) {
+		if ((node.toString().toLowerCase().contains("command") || node.toString().toLowerCase().contains("command"))
+				&& !node.toString().toLowerCase().contains("actionlistener")) {
 			importscommand = 2;
 		}
 		return true;
@@ -146,57 +145,53 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(ImportDeclaration node) {
 	}
 
-	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword, HasSuperclass, ImplementsInterface
+	// Type Declaration - FNQClass, ClassType, ClassDeclarationKeyword,
+	// HasSuperclass, ImplementsInterface
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding binding = node.resolveBinding();
 		if (binding == null) {
 			return false;
 		}
-	    feat = new FeatureCommandRoles(nomeProgetto,folder,"",1,1,1,1,1,1,1,1,1);
+		feat = new FeatureCommandRoles(nomeProgetto, folder, "", 1, 1, 1, 1, 1, 1, 1, 1, 1);
 		feat.setFQNClass(binding.getName());
 		feat.setImportDeclarationKeyword(importscommand);
-		
-		//ClassType
+
+		// ClassType
 		if (binding.isInterface()) {
 			feat.setClassType(3);
-		} 
-		else if(Modifier.isAbstract(binding.getModifiers())) {
-				feat.setClassType(2);
-			}
-		else {
-				feat.setClassType(1);
+		} else if (Modifier.isAbstract(binding.getModifiers())) {
+			feat.setClassType(2);
+		} else {
+			feat.setClassType(1);
 		}
-		
-		//ClassDeclarationKeyword
+
+		// ClassDeclarationKeyword
 		if (binding.getName().toLowerCase().equals("command")) {
 			feat.setClassDeclarationKeyword(3);
-		}
-		else if (binding.getName().toLowerCase().contains("command") || binding.getName().toLowerCase().contains("action")) {
+		} else if (binding.getName().toLowerCase().contains("command")
+				|| binding.getName().toLowerCase().contains("action")) {
 			feat.setClassDeclarationKeyword(2);
-		}
-		else {
+		} else {
 			feat.setClassDeclarationKeyword(1);
 		}
-		
-		//HasSuperclass - Controllo superclasse e nome superclasse
-	    ITypeBinding superclass = binding.getSuperclass();
+
+		// HasSuperclass - Controllo superclasse e nome superclasse
+		ITypeBinding superclass = binding.getSuperclass();
 		if (superclass != null && !superclass.getName().equalsIgnoreCase("Object")) {
 			if (superclass.getName().toLowerCase().contains("command")) {
 				feat.setHasSuperclass(3);
-			}
-			else {
+			} else {
 				feat.setHasSuperclass(2);
-			}	
-		} 
+			}
+		}
 
-		//ImplementsInterfaces(1);
+		// ImplementsInterfaces(1);
 		ITypeBinding[] interfaces = binding.getInterfaces();
 		for (ITypeBinding sInterface : interfaces) {
 			if (sInterface.getName().toLowerCase().contains("command")) {
 				feat.setImplementsInterfaces(3);
-			}
-			else {
+			} else {
 				feat.setImplementsInterfaces(2);
 			}
 		}
@@ -217,159 +212,180 @@ public class ClassVisitorCommand extends ASTVisitor {
 		if (binding == null) {
 			return false;
 		}
-		
-		String nomeClasseDichiarante = node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "");
-		
+
+		String nomeClasseDichiarante = node.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.",
+				"");
+
 		String metodo = binding.toString().toLowerCase();
-		
-		if ((metodo.contains(" execute") || metodo.contains(" actionperformed")) && !metodo.contains("executeQuery") /* || nomeMetodo.contains("run(")*/) {
-			//Ricerca classe
-			for(int i = 0;i < arrayListTemp.size();i++) {
+
+		if ((metodo.contains(" execute") || metodo.contains(" actionperformed"))
+				&& !metodo.contains("executeQuery") /* || nomeMetodo.contains("run(") */) {
+			// Ricerca classe
+			for (int i = 0; i < arrayListTemp.size(); i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
 				if (nomeClasseDichiarante.equals(FQN)) {
 					arrayListTemp.get(i).setMethodDeclarationKeyword(2);
 				}
 			}
 		}
-		
+
 		if (node.toString().toLowerCase().contains(".execute(")) {
-			//Ricerca classe
-			for(int i = 0;i < arrayListTemp.size();i++) {
+			// Ricerca classe
+			for (int i = 0; i < arrayListTemp.size(); i++) {
 				String FQN = arrayListTemp.get(i).getFQNClass();
 				if (nomeClasseDichiarante.equals(FQN)) {
 					arrayListTemp.get(i).setExecutesCommand(2);
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public void endVisit(MethodDeclaration node) {
 	}
-	
-	// Method Invocation - Instantiates, ExecutesCommand, Ricerca Classi in execute()
+
+	// Method Invocation - Instantiates, ExecutesCommand, Ricerca Classi in
+	// execute()
 	@Override
 	public boolean visit(MethodInvocation node) {
-			
+
 		String istruzioneChiamata = node.toString().toLowerCase();
-		
-		//mnode.toString() restituisce il metodo per intero dalla dichiarazione all'ultima parentesi graffa.
+
+		// mnode.toString() restituisce il metodo per intero dalla dichiarazione
+		// all'ultima parentesi graffa.
 		MethodDeclaration mnode = getMethodDeclaration(node);
-		
-		
-		
-			if (mnode != null) {
-				IMethodBinding mbinding = mnode.resolveBinding(); 
-				
-				if (node.resolveMethodBinding() != null) {
-					String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", ""); 
-			
-				//mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il nome della classe che ha dichiarato il metodo in mnode.toString
-				//node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "") restituisce il nome della classe che ha dichiarato il metodo in questo node
-			
-				//ricerca delle classi che dichiarano metodi invocati in un metodo execute() o actionPerformed(Action event e) di un possibile Concrete Command
+
+		if (mnode != null) {
+			IMethodBinding mbinding = mnode.resolveBinding();
+
+			if (node.resolveMethodBinding() != null) {
+				String nomeClasseDichiarante = node.resolveMethodBinding().getDeclaringClass().getQualifiedName()
+						.replaceAll(".+\\.", "");
+
+				// mnode.resolveBinding().getDeclaringClass().getQualifiedName() restituisce il
+				// nome della classe che ha dichiarato il metodo in mnode.toString
+				// node.resolveMethodBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.",
+				// "") restituisce il nome della classe che ha dichiarato il metodo in questo
+				// node
+
+				// ricerca delle classi che dichiarano metodi invocati in un metodo execute() o
+				// actionPerformed(Action event e) di un possibile Concrete Command
 				String primariga = mnode.toString().substring(0, mnode.toString().indexOf("{")).toLowerCase();
-				
+
 				boolean bool = false;
-				if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed")) && !primariga.contains("executequery") && !primariga.contains("abstract"))) { //IF il metodo è chiamato execute e non è astratto(?)
+				if (mbinding != null && ((primariga.contains("execute") || primariga.contains("actionperformed"))
+						&& !primariga.contains("executequery") /* && !primariga.contains("abstract") */)) { // IF il
+																											// metodo ï¿½
+																											// chiamato
+																											// execute e
+																											// non ï¿½
+																											// astratto(?)
 					if (!listaClassiInExecute.contains(nomeClasseDichiarante)) {
 						listaClassiInExecute.add(nomeClasseDichiarante);
 					}
 				}
 			}
-			
-			//ExecutesCommand
+
+			// ExecutesCommand
 			if (istruzioneChiamata.contains(".execute")) {
 				if (node.resolveMethodBinding() != null) {
-					String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName(); 
-					if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
+					String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass()
+							.getQualifiedName();
+					if (nomeClasseDichiaranteLong.contains("javax.swing")
+							|| nomeClasseDichiaranteLong.contains("java.awt")) {
 						tempval = 4;
-					}
-					else {
+					} else {
 						tempval = 3;
-					}	
+					}
 				}
-				
-				
-				//Ricerca classe
-				for(int i=0;i<arrayListTemp.size();i++) {
+
+				// Ricerca classe
+				for (int i = 0; i < arrayListTemp.size(); i++) {
 					String FQN = arrayListTemp.get(i).getFQNClass();
-					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+							.equals(FQN)) {
 						if (tempval > arrayListTemp.get(i).getExecutesCommand()) {
 							arrayListTemp.get(i).setExecutesCommand(tempval);
 						}
 					}
 				}
-			
+
 			}
-			
-			
-			//InstantiatesCommand
+
+			// InstantiatesCommand
 			tempval = 1;
 			if (istruzioneChiamata.contains(".add")) {
-				if (istruzioneChiamata.contains("new") && (istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action")) && !istruzioneChiamata.contains("actionlistener")) {
+				if (istruzioneChiamata.contains("new")
+						&& (istruzioneChiamata.contains("command") || istruzioneChiamata.contains("action"))
+						&& !istruzioneChiamata.contains("actionlistener")) {
 					tempval = 2;
-					/*if (node.resolveMethodBinding() != null) {
-						String nomeClasseDichiaranteLong = node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
-						if (nomeClasseDichiaranteLong.contains("javax.swing") || nomeClasseDichiaranteLong.contains("java.awt")) {
-							tempval = 3;
+					/*
+					 * if (node.resolveMethodBinding() != null) {
+					 * String nomeClasseDichiaranteLong =
+					 * node.resolveMethodBinding().getDeclaringClass().getQualifiedName();
+					 * if (nomeClasseDichiaranteLong.contains("javax.swing") ||
+					 * nomeClasseDichiaranteLong.contains("java.awt")) {
+					 * tempval = 3;
+					 * }
+					 * else {
+					 * tempval = 2;
+					 * }
+					 */
+					// Ricerca classe DA CAMBIARE
+					for (int j = 0; j < arrayListTemp.size(); j++) {
+						String FQN = arrayListTemp.get(j).getFQNClass();
+						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+								.equals(FQN)) {
+							arrayListTemp.get(j).setInstantiatesCommand(tempval);
 						}
-						else {
-							tempval = 2;
-						}*/
-						//Ricerca classe DA CAMBIARE
-						for(int j=0;j<arrayListTemp.size();j++) {
-							String FQN = arrayListTemp.get(j).getFQNClass();
-							if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN)) {
-								arrayListTemp.get(j).setInstantiatesCommand(tempval);
-							}
-						}
-						
-					//}
+					}
+
+					// }
 				}
 			}
 
 		}
-		
-		return true;	
-			
+
+		return true;
+
 	}
 
 	@Override
 	public void endVisit(MethodInvocation node) {
 	}
-	
-	//Instantiates Command
-	@Override 
+
+	// Instantiates Command
+	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		MethodDeclaration mnode = getMethodDeclaration(node);
-		//System.out.println(node.toString());
+		// System.out.println(node.toString());
 		if (mnode != null) {
-			String ist = node.toString().substring(0,node.toString().indexOf("(")).toLowerCase();
-			if ((ist.contains("command") || ist.contains("action"))  && !ist.contains("actionlistener")) {
+			String ist = node.toString().substring(0, node.toString().indexOf("(")).toLowerCase();
+			if ((ist.contains("command") || ist.contains("action")) && !ist.contains("actionlistener")) {
 
-					//Ricerca classe DA CAMBIARE
-					for(int j=0;j<arrayListTemp.size();j++) {
-						String FQN = arrayListTemp.get(j).getFQNClass();
-						if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "").equals(FQN) && arrayListTemp.get(j).getInstantiatesCommand()==1) {
-							arrayListTemp.get(j).setInstantiatesCommand(2);
-						}
+				// Ricerca classe DA CAMBIARE
+				for (int j = 0; j < arrayListTemp.size(); j++) {
+					String FQN = arrayListTemp.get(j).getFQNClass();
+					if (mnode.resolveBinding().getDeclaringClass().getQualifiedName().replaceAll(".+\\.", "")
+							.equals(FQN) && arrayListTemp.get(j).getInstantiatesCommand() == 1) {
+						arrayListTemp.get(j).setInstantiatesCommand(2);
 					}
-					
+				}
+
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
-	
+
 	public void endVisit(ClassInstanceCreation node) {
-		
+
 	}
-	
+
 	// Package Declaration
 	@Override
 	public boolean visit(Assignment node) {
@@ -380,8 +396,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 	public void endVisit(Assignment node) {
 	}
 
-	
-	//FINE VISITE
+	// FINE VISITE
 
 	private String printModifiers(int mod) {
 		String modifier = "";
@@ -433,7 +448,7 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 		return (MethodDeclaration) pnode;
 	}
-	
+
 	private Assignment getAssignment(ASTNode node) {
 		ASTNode pnode = node;
 		while (pnode != null && pnode.getNodeType() != ASTNode.ASSIGNMENT) {
@@ -442,8 +457,8 @@ public class ClassVisitorCommand extends ASTVisitor {
 
 		return (Assignment) pnode;
 	}
-	
-	//Metodo getMethodInvocation
+
+	// Metodo getMethodInvocation
 	private MethodInvocation getMethodInvocation(ASTNode node) {
 		ASTNode pnode = node;
 		while (pnode != null && pnode.getNodeType() != ASTNode.METHOD_INVOCATION) {
@@ -493,9 +508,9 @@ public class ClassVisitorCommand extends ASTVisitor {
 		}
 	}
 
-	//getListaClassiInExecute
+	// getListaClassiInExecute
 	public ArrayList<String> getListaClassiInExecute() {
-			return listaClassiInExecute;
+		return listaClassiInExecute;
 	}
-	
+
 }

@@ -28,7 +28,6 @@ def get_roles_predictions_list(data, predictions, labels):
                         predictionResults.update({classNames[i] + " (" + labels[x] + ")": (labels[x], pred['probabilities'][x] * 100)})
             else:
                 predictionResults.update({classNames[i]: (labels[class_id], probability * 100)})
-            #print(classNames[i] + " ha probabilità CI " + (str(pred['probabilities'][0] * 100)) + " e ha probabilità IN " + (str(pred['probabilities'][2] * 100)))
         i = i + 1
 
     return predictionResults
