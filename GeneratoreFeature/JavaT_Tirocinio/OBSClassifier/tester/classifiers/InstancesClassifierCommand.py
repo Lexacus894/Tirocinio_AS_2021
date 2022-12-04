@@ -15,21 +15,15 @@ class InstancesClassifier(AbstractClassifier):
 
     def initFeatureColumns(self):
         self.featureColumns = []
-        #print("ECCOMI ECCOMI ECCOMI " +str(self.columnsName[0]) + " " + str(self.columnsName[1]) + " " + str(self.columnsName[2]) + " " + str(self.columnsName[6]) + " ECCOMI ECCOMI ECCOMI")
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[0], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[1], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[2], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[3], num_buckets=3))
-
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[4], num_buckets=3))
-
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[5], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[6], num_buckets=3))
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[7], num_buckets=3))
-
         self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[8], num_buckets=7))
-
-        #self.featureColumns.append(tf.feature_column.categorical_column_with_identity(key=self.columnsName[7], num_buckets=3))
 
     def initClassifier(self):
         self.classifier=tf.estimator.LinearClassifier(feature_columns=self.featureColumns,
