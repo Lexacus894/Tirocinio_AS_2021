@@ -38,6 +38,7 @@ def main():
     rolesClassifier.suffleDataset()
     rolesClassifier.kFoldersTrainAndEvaluation(ROLES_TRAIN_BATCH_SIZE,ROLES_TRAINING_STEPS,ROLES_EVALUATE_BATCH_SIZE,True)
 
+    Tk.attributes("-topmost", True)
     Tk().withdraw() 
     filename = askopenfilename(initialdir="./results/command/role_features") 
     fileBaseName = os.path.basename(filename)
