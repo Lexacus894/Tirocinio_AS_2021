@@ -1,44 +1,27 @@
 package dataset;
 
 public class FeatureCommandInstances {
-
+	
 	private String class1;
 	private String class2;
 	private String class3;
 	private String class4;
 	private String class5;
-	private int HasExecutorClient;
-	private int HasInvoker;
-	private int HasConcreteCommand;
-	private int HasReceiver;
-	private int HasCommandInterface;
-	private int HasCommandRelationship;
-	private int HasCCRERelationship;
-	private int HasExecutorCCRelationship;
-	// private int ExecutionRelationship;
+	private int HasExecuted;
+	private int HasExecutor;
+	private int ExecutionRelationship;
 	private int NumC;
-
+	
 	public FeatureCommandInstances(String class1, String class2, String class3, String class4, String class5,
-			int hasExecutorClient, int hasInvoker,
-			int hasReceiver, int hasConcreteCommand, int hasCommandInterface, int hasCommandRelationship,
-			int hasCCRERelationship, int hasExecutorCCRelationship,
-
-			/* int executionRelationship, */
-			int numC) {
+			int hasExecuted, int hasExecutor, int executionRelationship, int numC) {
 		this.class1 = class1;
 		this.class2 = class2;
 		this.class3 = class3;
 		this.class4 = class4;
 		this.class5 = class5;
-		this.HasExecutorClient = hasExecutorClient;
-		this.HasInvoker = hasInvoker;
-		this.HasConcreteCommand = hasConcreteCommand;
-		this.HasReceiver = hasReceiver;
-		this.HasCommandInterface = hasCommandInterface;
-		this.HasCommandRelationship = hasCommandRelationship;
-		this.HasCCRERelationship = hasCCRERelationship;
-		this.HasExecutorCCRelationship = hasExecutorCCRelationship;
-		// this.ExecutionRelationship = executionRelationship;
+		this.HasExecuted = hasExecuted;
+		this.HasExecutor = hasExecutor;
+		this.ExecutionRelationship = executionRelationship;
 		this.NumC = numC;
 	}
 
@@ -57,7 +40,7 @@ public class FeatureCommandInstances {
 	public void setClass2(String class2) {
 		this.class2 = class2;
 	}
-
+	
 	public String getClass3() {
 		return class3;
 	}
@@ -65,7 +48,7 @@ public class FeatureCommandInstances {
 	public void setClass3(String class3) {
 		this.class3 = class3;
 	}
-
+	
 	public String getClass4() {
 		return class4;
 	}
@@ -73,7 +56,7 @@ public class FeatureCommandInstances {
 	public void setClass4(String class4) {
 		this.class4 = class4;
 	}
-
+	
 	public String getClass5() {
 		return class5;
 	}
@@ -82,94 +65,42 @@ public class FeatureCommandInstances {
 		this.class5 = class5;
 	}
 
-	public int getHasExecutorCCRelationship() {
-		return HasExecutorCCRelationship;
+	public int getHasExecuted() {
+		return HasExecuted;
 	}
 
-	public void setHasExecutorCCRelationship(int hasExecutorCCRelationship) {
-		HasExecutorCCRelationship = hasExecutorCCRelationship;
-
+	public void setHasExecuted(int hasExecuted) {
+		HasExecuted = hasExecuted;
 	}
 
-	public int getHasCCRERelationship() {
-		return HasCCRERelationship;
+	public int getHasExecutor() {
+		return HasExecutor;
 	}
 
-	public void setHasCCRERelationship(int hasCCRERelationship) {
-		HasCCRERelationship = hasCCRERelationship;
+	public void setHasExecutor(int hasExecutor) {
+		HasExecutor = hasExecutor;
 	}
 
-	public int getHasExecutorClient() {
-		return HasExecutorClient;
+	public int getExecutionRelationship() {
+		return ExecutionRelationship;
 	}
 
-	public void setHasExecutorClient(int hasExecutorClient) {
-		HasExecutorClient = hasExecutorClient;
-	}
-
-	/*
-	 * public int getExecutionRelationship() {
-	 * return ExecutionRelationship;
-	 * }
-	 * 
-	 * public void setExecutionRelationship(int executionRelationship) {
-	 * ExecutionRelationship = executionRelationship;
-	 * }
-	 */
-
-	public int getHasConcreteCommand() {
-		return HasConcreteCommand;
-	}
-
-	public void setHasConcreteCommand(int hasConcreteCommand) {
-		HasConcreteCommand = hasConcreteCommand;
-	}
-
-	public int getHasReceiver() {
-		return HasReceiver;
-	}
-
-	public void setHasReceiver(int hasReceiver) {
-		HasReceiver = hasReceiver;
-	}
-
-	public void setNumC(int numC) {
-		NumC = numC;
+	public void setExecutionRelationship(int executionRelationship) {
+		ExecutionRelationship = executionRelationship;
 	}
 
 	public int getNumC() {
 		return NumC;
 	}
 
+	public void setNumC(int numC) {
+		NumC = numC;
+	}
+
 	@Override
-	// TODO: AGGIORNARE
 	public String toString() {
-		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4
-				+ ", Classe 5: " + class5);
+		return ("Classe 1: " + class1 + ", Classe 2: " + class2 + ", Classe 3: " + class3 + ", Classe 4: " + class4 + ", Classe 5: " + class5 + ", HasExecuted: " + HasExecuted 
+				+ ", HasExecutor: " + HasExecutor  +  ", ExecutionRelationship: " + ExecutionRelationship + ", N Classes: " + NumC);
 	}
-
-	public int getHasInvoker() {
-		return HasInvoker;
-	}
-
-	public void setHasInvoker(int hasInvoker) {
-		HasInvoker = hasInvoker;
-	}
-
-	public int getHasCommandRelationship() {
-		return HasCommandRelationship;
-	}
-
-	public void setHasCommandRelationship(int hasCommandRelationship) {
-		HasCommandRelationship = hasCommandRelationship;
-	}
-
-	public int getHasCommandInterface() {
-		return HasCommandInterface;
-	}
-
-	public void setHasCommandInterface(int hasCommandInterface) {
-		HasCommandInterface = hasCommandInterface;
-	}
-
+	
 }

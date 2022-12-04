@@ -63,36 +63,36 @@ public class Parser {
 		}
 
 		switch (javaVersion) {
-			case 1:
-				_javaVersion = JavaCore.VERSION_1_1;
-				break;
-			case 2:
-				_javaVersion = JavaCore.VERSION_1_2;
-				break;
-			case 3:
-				_javaVersion = JavaCore.VERSION_1_3;
-				break;
-			case 4:
-				_javaVersion = JavaCore.VERSION_1_4;
-				break;
-			case 5:
-				_javaVersion = JavaCore.VERSION_1_5;
-				break;
-			case 6:
-				_javaVersion = JavaCore.VERSION_1_6;
-				break;
-			case 7:
-				_javaVersion = JavaCore.VERSION_1_7;
-				break;
-			case 8:
-				_javaVersion = JavaCore.VERSION_1_8;
-				break;
-			case 9:
-				_javaVersion = JavaCore.VERSION_9;
-				break;
-			default:
-				_javaVersion = JavaCore.VERSION_9;
-				break;
+		case 1:
+			_javaVersion = JavaCore.VERSION_1_1;
+			break;
+		case 2:
+			_javaVersion = JavaCore.VERSION_1_2;
+			break;
+		case 3:
+			_javaVersion = JavaCore.VERSION_1_3;
+			break;
+		case 4:
+			_javaVersion = JavaCore.VERSION_1_4;
+			break;
+		case 5:
+			_javaVersion = JavaCore.VERSION_1_5;
+			break;
+		case 6:
+			_javaVersion = JavaCore.VERSION_1_6;
+			break;
+		case 7:
+			_javaVersion = JavaCore.VERSION_1_7;
+			break;
+		case 8:
+			_javaVersion = JavaCore.VERSION_1_8;
+			break;
+		case 9:
+			_javaVersion = JavaCore.VERSION_9;
+			break;
+		default:
+			_javaVersion = JavaCore.VERSION_9;
+			break;
 		}
 	}
 
@@ -180,11 +180,9 @@ public class Parser {
 			throw new LocalException("Error compiling file '" + fileName + "': " + ioe.getMessage());
 		}
 	}
-
-	// Parser per l'Observer pattern
-	public void parse(String projectPath, String project, String filePath, String fileName, String outputPath,
-			ArrayList<Feature> listaFeatureParser, String folder, boolean visitor, ArrayList<Feature3> listafeature3,
-			String nomeProgetto) throws LocalException {
+	
+	//Parser per l'Observer pattern
+	public void parse(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<Feature> listaFeatureParser, String folder ,boolean visitor,ArrayList<Feature3> listafeature3,String nomeProgetto) throws LocalException {
 
 		Utils.print("Parsing file:" + fileName);
 		try {
@@ -212,33 +210,29 @@ public class Parser {
 			ASTRewrite rewriter = ASTRewrite.create(ast);
 			compilation.recordModifications();
 
-			// HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL
-			// CLASSVISITOR
-
-			if (visitor == true) {
-				ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter, listafeature3);
+			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
+			
+			if(visitor==true) {
+				ClassVisitor2 visitor2 = new ClassVisitor2(compilation, document, rewriter,listafeature3);
 				compilation.accept(visitor2);
-			} else {
-				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter, listaFeatureParser, folder,
-						nomeProgetto);
+			} 
+			else {
+				ClassVisitor visitor0 = new ClassVisitor(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
 			}
 			System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
-
+			
 		} catch (IOException ioe) {
 			throw new LocalException("Error parsing file '" + fileName + "': " + ioe.getMessage());
 		}
 	}
-
-	// Parser per il Command pattern
-	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath,
-			ArrayList<FeatureCommandRoles> listaFeatureParser, String folder, boolean visitor,
-			ArrayList<FeatureCommandInstances> listaFeatureCommandInstances, String nomeProgetto)
-			throws LocalException {
-
+	
+	//Parser per il Command pattern
+	public void parseCommand(String projectPath, String project, String filePath, String fileName, String outputPath, ArrayList<FeatureCommandRoles> listaFeatureParser, String folder ,boolean visitor, ArrayList<FeatureCommandInstances> listaFeatureCommandInstances,String nomeProgetto) throws LocalException {
+		
 		Utils.print("Parsing file:" + fileName);
 		try {
-
+			
 			String str = FileManager.readFileToString(filePath + File.separator + fileName);
 
 			ASTParser parser = ASTParser.newParser(AST.JLS9);
@@ -264,42 +258,36 @@ public class Parser {
 			ASTRewrite rewriter = ASTRewrite.create(ast);
 			compilation.recordModifications();
 
-			// HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL
-			// CLASSVISITOR
-
+			//HO INSERITO L'ARRAYLIST DI FEATURE NEI PARAMETRI DEL COSTRUTTORE DEL CLASSVISITOR
+			
 			if (visitor == true) {
-				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document,
-						rewriter, listaFeatureCommandInstances);
+				ClassVisitorCommandInstances visitor2 = new ClassVisitorCommandInstances(compilation, document, rewriter, listaFeatureCommandInstances);
 				compilation.accept(visitor2);
-				/*
-				 * if (visitor2.getProgramHasReceivers() == 1) {
-				 * programHasReceivers = 1;
-				 * }
-				 */
-			} else {
-				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter,
-						listaFeatureParser, folder, nomeProgetto);
+				if (visitor2.getProgramHasReceivers() == 1) {
+					programHasReceivers = 1;
+				}
+			} 
+			else {
+				ClassVisitorCommand visitor0 = new ClassVisitorCommand(compilation, document, rewriter ,listaFeatureParser,folder,nomeProgetto);
 				compilation.accept(visitor0);
-
-				// Lista delle classi che dichiarano metodi invocati in un metodo execute() di
-				// un Concrete Command
+				
+				//Lista delle classi che dichiarano metodi invocati in un metodo execute() di un Concrete Command
 				lista = visitor0.getListaClassiInExecute();
 			}
-			// System.out.println("************ IL VISITOR RITORNA AL PARSER
-			// ****************");
-
-		}
-
+			//System.out.println("************  IL VISITOR RITORNA AL PARSER ****************");
+			
+		} 
+		
 		catch (IOException ioe) {
 			throw new LocalException("Error parsing file '" + fileName + "': " + ioe.getMessage());
 		}
-
+		
 	}
 
 	public ArrayList<String> getListaNomiInExecute() {
 		return lista;
 	}
-
+	
 	public Integer getProgramHasReceivers() {
 		return programHasReceivers;
 	}

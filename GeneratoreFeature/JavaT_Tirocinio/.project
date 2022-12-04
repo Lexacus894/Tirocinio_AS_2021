@@ -2,7 +2,8 @@
 <projectDescription>
 	<name>JavaT</name>
 	<comment></comment>
-	<projects></projects>
+	<projects>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
@@ -16,7 +17,8 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments></arguments>
+			<arguments>
+			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
