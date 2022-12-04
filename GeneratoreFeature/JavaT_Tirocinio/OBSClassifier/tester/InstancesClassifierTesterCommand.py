@@ -31,7 +31,7 @@ def main():
     instancesClassifier.suffleDataset()
     instancesClassifier.kFoldersTrainAndEvaluation(INSTANCES_TRAIN_BATCH_SIZE, INSTANCES_TRAINING_STEPS,
                                                    INSTANCES_EVALUATE_BATCH_SIZE, True)
-
+    Tk.attributes("-topmost", True)
     Tk().withdraw() 
     filename = askopenfilename(initialdir="./results/command/combination_features")
     fileBaseName = os.path.basename(filename)

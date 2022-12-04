@@ -3,22 +3,14 @@ package it.unisa.javat;
 import letturaCSV.Lettura;
 import letturaCSV.Lettura2;
 import letturaCSV.nomiCombinazioni;
-import letturaCSV.provaLettura;
-
-import java.awt.FileDialog;
-import java.io.BufferedReader;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -45,6 +37,9 @@ public class Process {
 
 	// Folder path
 	static String path = "Non selezionata";
+
+	// Python.exe path
+	static String pythonPath = "C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe";
 
 	// Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ";";
@@ -768,11 +763,11 @@ public class Process {
 
 						if (dpType == "Observer") {
 							bc.execCommand(
-									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTester.py");
+									pythonPath + " " + "./OBSClassifier/tester/RolesClassifierTester.py");
 						}
 						if (dpType == "Command") {
 							bc.execCommand(
-									"C:\\Users\\alex8\\AppData\\Local\\Programs\\Python\\Python37\\python.exe ./OBSClassifier/tester/RolesClassifierTesterCommand.py");
+									pythonPath + " " + "./OBSClassifier/tester/RolesClassifierTesterCommand.py");
 						}
 					}
 					// CLASSIFICAZIONE COMBINAZIONI
