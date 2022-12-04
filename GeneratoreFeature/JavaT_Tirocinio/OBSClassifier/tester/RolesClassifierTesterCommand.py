@@ -43,28 +43,22 @@ def main():
     filename = askopenfilename(initialdir="./results/command/role_features") 
     fileBaseName = os.path.basename(filename)
     projectName = fileBaseName.split("_")[3]
-    #print(filename)
+
     sw_classes,roles_predictions = rolesClassifier.predict(filename, 0, ';', SW_ROLES_BATCH_SIZE)
     roles_predictions_list=p_utils.get_roles_predictions_list(sw_classes,roles_predictions,ROLES_LABELS)
     p_utils.log_predictions_on_file(PREDICTIONS_ROOT_DIRECTORY,ROLES_PREDICTIONS_FILE_PATH  + "_" + projectName,ROLES_PREDICTIONS_HEADER,roles_predictions_list)
 
     classes_pairs_pred,classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_combinations(roles_predictions_list)
-    #classes_triplets_pred, classes_quadruplets_pred, classes_quintuplets_pred = p_utils.roles_combinations(roles_predictions_list)
 
     classes_pairs_act,classes_pairs_roles = p_utils.filter_pairs_list(roles_predictions_list, classes_pairs_pred)
     classes_triplets_act, classes_triplets_roles = p_utils.filter_triplets_list(roles_predictions_list, classes_triplets_pred)
     classes_quadruplets_act, classes_quadruplets_roles = p_utils.filter_quadruplets_list(roles_predictions_list,classes_quadruplets_pred)
     classes_quintuplets_act, classes_quintuplets_roles = p_utils.filter_quintuplets_list(roles_predictions_list,classes_quintuplets_pred)
 
-    #combinations = [classes_pairs_act, classes_triplets_act]
-    #roles = [classes_pairs_roles, classes_triplets_roles]
-
     p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH, INSTANCES_COMBINATIONS_HEADER, classes_pairs_act, classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_pairs_roles, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
-    #p_utils.log_combinations_on_file(INSTANCES_COMBINATIONS_FILE_PATH, INSTANCES_COMBINATIONS_HEADER,classes_triplets_act, classes_quadruplets_act, classes_quintuplets_act, classes_triplets_roles, classes_quadruplets_roles, classes_quintuplets_roles)
 
     print("Role predictions can be found in " + ROLES_PREDICTIONS_FILE_PATH  + "_" + projectName)
-    print('The combinations to test as Command instances are in '+ INSTANCES_COMBINATIONS_FILE_PATH) # + "_" + projectName
-    print('Please, assign values to features columns before proceeding.')
+    print('The combinations to test as Command instances are in '+ INSTANCES_COMBINATIONS_FILE_PATH)
 
 if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
